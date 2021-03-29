@@ -7,18 +7,16 @@ router.post('/', function (req, res) {
     const name = req.body.name;
     const role = req.body.role;
     const arrested = req.body.arrested;
-    const location = req.body.location;
 
     let player = {};
     player.name = name;
     player.role = role;
     player.arrested = arrested;
-    player.location = location;
 
     let playerModel = new Player(player);
     playerModel.save();
 
-    res.json(playerModel);
+    res.json(playerModel.id);
 });
 
 router.get('/', function (req, res) {
@@ -45,7 +43,6 @@ router.get('/distances/:id', function (req, res) {
                         { latitude: playerLoc.latitude, longitude: playerLoc.longitude },
                         { latitude: item.location.latitude, longitude: item.location.longitude }
                     );
-
                     distances.push({
                         'id': item.id,
                         'distance': s
