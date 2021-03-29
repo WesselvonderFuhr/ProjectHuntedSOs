@@ -7,13 +7,11 @@ router.post('/', function (req, res) {
     const emptyLoc = { latitude: null, longitude: null}
     const name = req.body.name;
     const role = req.body.role;
-    const arrested = req.body.arrested;
 
     let player = {};
     player.name = name;
     player.role = role;
-    player.arrested = arrested;
-    player.location = emptyLoc;
+    player.arrested = false;
 
     let playerModel = new Player(player);
     playerModel.save();
@@ -23,6 +21,15 @@ router.post('/', function (req, res) {
 
 router.get('/', function (req, res) {
     var players = Player.find({}, function (err, result) {
+        if (!err) {
+            return res.send(result);
+        }
+    });
+});
+
+router.get('/:id', function (req, res) {
+    var query = { _id: req.params.id };
+    var players = Player.find(query, function (err, result) {
         if (!err) {
             return res.send(result);
         }
