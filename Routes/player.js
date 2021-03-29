@@ -4,6 +4,7 @@ var router = express.Router();
 var geolib = require('geolib');
 
 router.post('/', function (req, res) {
+    const emptyLoc = { latitude: null, longitude: null}
     const name = req.body.name;
     const role = req.body.role;
     const arrested = req.body.arrested;
@@ -12,6 +13,7 @@ router.post('/', function (req, res) {
     player.name = name;
     player.role = role;
     player.arrested = arrested;
+    player.location = emptyLoc;
 
     let playerModel = new Player(player);
     playerModel.save();
