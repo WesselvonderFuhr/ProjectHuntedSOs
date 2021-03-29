@@ -37,18 +37,26 @@ router.get('/distances/:id', function (req, res) {
                     playerLoc = player.location
                 }
             })
+            if (playerLoc.latitude == null) {
+                res.send("Deze speler heeft geen location")
+                return
+            }
+
             result.forEach(item => {
                 if (item.id != req.params.id) {
-                    var s = geolib.getPreciseDistance(
-                        { latitude: playerLoc.latitude, longitude: playerLoc.longitude },
-                        { latitude: item.location.latitude, longitude: item.location.longitude }
-                    );
-                    distances.push({
-                        'id': item.id,
-                        'distance': s
-                    });
+                    if (item.location.latitude != null) {
+                        var s = geolib.getPreciseDistance(
+                            { latitude: playerLoc.latitude, longitude: playerLoc.longitude },
+                            { latitude: item.location.latitude, longitude: item.location.longitude }
+                        );
+                        distances.push({
+                            'id': item.id,
+                            'distance': s
+                        });
+                    }
                 }
             })
+
             function finished(err) {
                 console.log(err)
             }
@@ -67,7 +75,7 @@ router.put('/location/:id', function (req, res) {
             longitude: req.body.location.longitude
         }
     }
-    Player.updateOne(query, newLoc, function(err, result){
+    Player.updateOne(query, newLoc, function (err, result) {
         function finished(err) {
             console.log(err)
         }
