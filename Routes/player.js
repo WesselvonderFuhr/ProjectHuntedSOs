@@ -7,12 +7,12 @@ router.post('/', function (req, res) {
     const emptyLoc = { latitude: null, longitude: null}
     const name = req.body.name;
     const role = req.body.role;
-    const arrested = req.body.arrested;
+    //const arrested = req.body.arrested;
 
     let player = {};
     player.name = name;
     player.role = role;
-    player.arrested = arrested;
+    player.arrested = false;
     player.location = emptyLoc;
 
     let playerModel = new Player(player);
