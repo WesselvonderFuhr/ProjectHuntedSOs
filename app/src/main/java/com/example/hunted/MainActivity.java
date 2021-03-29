@@ -12,6 +12,7 @@ import com.example.hunted.thieves.ThievesActivity;
 
 //First activity screen with police/thieves choice
 public class MainActivity extends AppCompatActivity {
+
     Button buttonPolice;
     Button buttonThieves;
 

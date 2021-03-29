@@ -33,7 +33,7 @@ import java.util.Observer;
 
 public class ThievesActivity extends AppCompatActivity implements Observer {
 
-    public final String URL = "https://apihuntedsos.herokuapp.com/";
+    public final String URL = getString(R.string.url);
     private RequestQueue queue;
 
     private DrawerLayout drawerLayout;

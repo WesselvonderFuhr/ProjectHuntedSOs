@@ -9,6 +9,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.hunted.R;
 
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -16,7 +17,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static java.lang.Thread.sleep;
 
 public class RepeatingTaskService extends Service {
-    private final String URL = "https://apihuntedsos.herokuapp.com/";
+    private final String URL = getString(R.string.url);
     private final long DELAY = 200;
 
     private RequestQueue queue;

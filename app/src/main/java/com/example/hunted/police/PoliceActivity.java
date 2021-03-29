@@ -35,7 +35,7 @@ import java.util.Observer;
 
 public class PoliceActivity extends AppCompatActivity implements Observer {
 
-    public final String URL = "https://apihuntedsos.herokuapp.com/";
+    public final String URL = getString(R.string.url);
     private RequestQueue queue;
 
     private DrawerLayout drawerLayout;
@@ -61,7 +61,6 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
                 Map<String, String> params = new HashMap<>();
                 params.put("name", "Default");
                 params.put("role", "Agent");
-                params.put("arrested", "false");
                 return params;
             }
         };
