@@ -33,8 +33,10 @@ import java.util.Observer;
 
 public class ThievesActivity extends AppCompatActivity implements Observer {
 
-    public final String URL = getString(R.string.url);
+    public String URL;
     private RequestQueue queue;
+
+    public String ID;
 
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
@@ -44,26 +46,11 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_thieves);
+        URL = getString(R.string.url);
 
         queue = Volley.newRequestQueue(this);
 
-        final String getArrestedUrl = URL + "player";
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getArrestedUrl,
-                response -> {
-                    // set role
-                }, error -> {
-            // crash app
-        }) {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<>();
-                params.put("name", "Default");
-                params.put("role", "Agent");
-                params.put("arrested", "false");
-                return params;
-            }
-        };
-        queue.add(stringRequest);
+        ID = getIntent().getStringExtra("ID");
 
         // Bind to RepeatingTaskService
         doBindService();
@@ -152,6 +139,13 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
 
     @Override
     public void update(Observable observable, Object o) {
+        RepeatingTask repeatingTask = (RepeatingTask) observable;
+        switch(repeatingTask.getTask()){
+            case CHECK_ARRESTED:
+                boolean arrested = (boolean) o;
+                // method
+                break;
+        }
         //runOnUiThread(() -> Toast.makeText(ThievesActivity.this, "Observable update: " + o.toString(), Toast.LENGTH_SHORT).show());
     }
 

@@ -18,6 +18,7 @@ import android.os.IBinder;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
@@ -35,8 +36,10 @@ import java.util.Observer;
 
 public class PoliceActivity extends AppCompatActivity implements Observer {
 
-    public final String URL = getString(R.string.url);
+    public String URL;
     private RequestQueue queue;
+
+    public String ID;
 
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
@@ -47,24 +50,10 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_police);
 
+        URL = getString(R.string.url);
         queue = Volley.newRequestQueue(this);
 
-        final String getArrestedUrl = URL + "player";
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getArrestedUrl,
-            response -> {
-                // set role
-            }, error -> {
-                // crash app
-            }) {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new HashMap<>();
-                params.put("name", "Default");
-                params.put("role", "Agent");
-                return params;
-            }
-        };
-        queue.add(stringRequest);
+        ID = getIntent().getStringExtra("ID");
 
         //TODO Remove if not used for Police.
         //doBindService();

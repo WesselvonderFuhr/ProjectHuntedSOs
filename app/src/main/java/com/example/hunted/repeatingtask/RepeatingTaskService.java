@@ -17,7 +17,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static java.lang.Thread.sleep;
 
 public class RepeatingTaskService extends Service {
-    private final String URL = getString(R.string.url);
+    private String URL;
     private final long DELAY = 200;
 
     private RequestQueue queue;
@@ -85,6 +85,7 @@ public class RepeatingTaskService extends Service {
     @Override
     public void onCreate() {
         repeatingTasks = new ArrayList<>();
+        URL = getString(R.string.url);
         new Thread(runnable).start();
         queue = Volley.newRequestQueue(this);
     }
