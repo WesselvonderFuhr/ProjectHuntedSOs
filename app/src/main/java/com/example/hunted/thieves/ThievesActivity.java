@@ -16,16 +16,26 @@ import android.os.IBinder;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.hunted.R;
 import com.example.hunted.repeatingtask.RepeatingTask;
 import com.example.hunted.repeatingtask.RepeatingTaskName;
 import com.example.hunted.repeatingtask.RepeatingTaskService;
 import com.google.android.material.navigation.NavigationView;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
 public class ThievesActivity extends AppCompatActivity implements Observer {
+
+    public final String URL = "https://apihuntedsos.herokuapp.com/";
+    private RequestQueue queue;
+
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
     private NavigationView navigationView;
@@ -34,6 +44,26 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_thieves);
+
+        queue = Volley.newRequestQueue(this);
+
+        final String getArrestedUrl = URL + "player";
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, getArrestedUrl,
+                response -> {
+                    // set role
+                }, error -> {
+            // crash app
+        }) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put("name", "Default");
+                params.put("role", "Agent");
+                params.put("arrested", "false");
+                return params;
+            }
+        };
+        queue.add(stringRequest);
 
         // Bind to RepeatingTaskService
         doBindService();
