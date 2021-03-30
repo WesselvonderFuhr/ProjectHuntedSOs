@@ -60,6 +60,10 @@ public class RepeatingTaskService extends Service {
         switch(task.getTask()){
             case CHECK_ARRESTED:
                 this.checkArrested(task);
+                break;
+            case CHECK_THIEF_NEARBY:
+                this.checkThievesNearby(task);
+                break;
         }
     }
 
@@ -79,6 +83,13 @@ public class RepeatingTaskService extends Service {
         }
         );
         queue.add(stringRequest);
+    }
+
+    private void checkThievesNearby(RepeatingTask task){
+        //call to api
+        //get closest player json, we need it's location and preferably also distance
+        //give json to police activity (observer)
+        task.notifyObservers("dit is een checkThievesNearby test");
     }
 
     @Override

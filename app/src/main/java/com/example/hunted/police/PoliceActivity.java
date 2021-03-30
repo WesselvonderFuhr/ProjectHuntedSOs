@@ -15,6 +15,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -29,6 +30,9 @@ import java.util.Observer;
 
 
 public class PoliceActivity extends AppCompatActivity implements Observer {
+    final int PING_MS = 3000;
+    final int CATCH_THIEVES_DISTANCE_METERS = 100;
+
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
     private NavigationView navigationView;
@@ -38,8 +42,7 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_police);
 
-        //TODO Remove if not used for Police.
-        //doBindService();
+        doBindService();
 
         //Set toolbar
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -63,6 +66,17 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
         doUnbindService();
     }
 
+    // FRAGMENT CONTROLLING
+    private void checkClosestThief(String stuff){
+        //check if closestPlayer.distance < CATCH_THIEVES_DISTANCE_METERS
+        //display info on PoliceFragmentArrest
+
+        Toast.makeText(PoliceActivity.this, "Observable update: " + stuff, Toast.LENGTH_SHORT).show();
+    }
+
+
+    // DRAWER LOADING
+
     private void setupDrawerContent(NavigationView navigationView){
         navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
             @Override
@@ -72,7 +86,6 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
             }
         });
     }
-
     public void selectDrawerItem(MenuItem menuItem) {
         // Create a new fragment and specify the fragment to show based on nav item clicked
         Fragment fragment = null;
@@ -103,14 +116,14 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
         // Close the navigation drawer
         drawerLayout.closeDrawers();
     }
-
     private void setFragment(Fragment fragment){
         // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.mainContentPolice, fragment).commit();
     }
 
-    //region Service code
+
+    // REGION SERVICE CODE
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -125,7 +138,14 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
 
     @Override
     public void update(Observable observable, Object o) {
-        runOnUiThread(() -> Toast.makeText(PoliceActivity.this, "Observable update: " + o.toString(), Toast.LENGTH_SHORT).show());
+        RepeatingTask repeatingTask = (RepeatingTask) observable;
+        switch (repeatingTask.getTask()){
+            case CHECK_THIEF_NEARBY:
+                //for now a toast
+                Log.d("update", "observable in police activated");
+                runOnUiThread(() -> checkClosestThief("update stuff"));
+                break;
+        }
     }
 
     // Clean service binding
@@ -137,9 +157,9 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
             mBoundService = ((RepeatingTaskService.LocalBinder)service).getService();
 
             //Add repeatingTask.
-            //RepeatingTask repeatingTask = new RepeatingTask(RepeatingTaskName.ENUM_NAME, MILLIS);
-            //repeatingTask.addObserver(PoliceActivity.this);
-            //mBoundService.addRepeatingTask(repeatingTask);
+            RepeatingTask repeatingTask = new RepeatingTask(RepeatingTaskName.CHECK_THIEF_NEARBY, PING_MS);
+            repeatingTask.addObserver(PoliceActivity.this);
+            mBoundService.addRepeatingTask(repeatingTask);
         }
 
         public void onServiceDisconnected(ComponentName className) {
