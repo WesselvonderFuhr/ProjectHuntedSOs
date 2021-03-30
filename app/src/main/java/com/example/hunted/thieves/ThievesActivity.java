@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -25,8 +26,11 @@ import com.example.hunted.repeatingtask.RepeatingTask;
 import com.example.hunted.repeatingtask.RepeatingTaskName;
 import com.example.hunted.repeatingtask.RepeatingTaskService;
 import com.google.android.material.navigation.NavigationView;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
@@ -116,12 +120,26 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
         setTitle(menuItem.getTitle());
         // Close the navigation drawer
         drawerLayout.closeDrawers();
+
+        if(menuItem.getItemId() == R.id.nav_scanner){
+            scanCode();
+        }
     }
 
     private void setFragment(Fragment fragment){
         // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.mainContentThieves, fragment).commit();
+    }
+
+    public Fragment getCurrentFragment(){
+        FragmentManager fragmentManager = this.getSupportFragmentManager();
+        List<Fragment> fragments = fragmentManager.getFragments();
+        for(Fragment fragment : fragments){
+            if(fragment != null && fragment.isVisible())
+                return fragment;
+        }
+        return null;
     }
 
     @Override
@@ -135,17 +153,50 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
         return super.onOptionsItemSelected(item);
     }
 
+
+    //region Scanner
+
+    private void scanCode(){
+        IntentIntegrator integrator = new IntentIntegrator(this);
+        integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE);
+        integrator.setPrompt("");
+        integrator.setBeepEnabled(false);
+        integrator.initiateScan();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+
+        boolean success = false;
+        String result;
+
+        if(intentResult != null) {
+            if(intentResult.getContents() == null) {
+                result = "Stopped stealing.";
+            } else {
+                success = true;
+                result = intentResult.getContents();
+            }
+        } else {
+            result = "Couldn't steal, try again.";
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+
+        // Send data to ThievesFragmentScanner
+        Fragment fragment = getCurrentFragment();
+        if(fragment instanceof ThievesFragmentScanner){
+            ThievesFragmentScanner thievesFragmentScanner = (ThievesFragmentScanner) fragment;
+            thievesFragmentScanner.setResult(success, result);
+        }
+    }
+
+    //endregion
+
     //region Service code
 
     @Override
     public void update(Observable observable, Object o) {
-        RepeatingTask repeatingTask = (RepeatingTask) observable;
-        switch(repeatingTask.getTask()){
-            case CHECK_ARRESTED:
-                boolean arrested = (boolean) o;
-                // method
-                break;
-        }
         //runOnUiThread(() -> Toast.makeText(ThievesActivity.this, "Observable update: " + o.toString(), Toast.LENGTH_SHORT).show());
     }
 
