@@ -86,8 +86,32 @@ router.put('/location/:id', function (req, res) {
     })
 });
 
-router.post('/stolen/:name', function (req, res) {
-    
+router.post('/stolen/:playername/:lootname', function (req, res) {
+    var playerquery = { name: req.params.playername };
+    var lootquery =  { name: req.params.lootname };
+    Player.findOne(playerquery,function(err,result){
+        if(result == null){
+            res.send("Deze speler bestaat niet")
+        }else{
+            let player = result
+            Loot.findOne(lootquery, function(err, result) {
+                if(result == null){
+                    res.send("Deze loot bestaat niet")
+                }else{
+                    let loot=result
+                   Player.findOne({loot: loot._id},function(err,result){
+                        if(result != null){
+                            res.send("deze speler heeft al deze loot")
+                        }else{
+                            player.loot.push(loot)
+                            player.save();
+                            res.send("stolen succesfully")
+                        }
+                    });
+                }  
+            });
+        }      
+    });
 });
 
 module.exports = router;
