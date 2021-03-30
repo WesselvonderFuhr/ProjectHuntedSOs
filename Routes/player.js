@@ -1,5 +1,6 @@
 var express = require('express');
 var Player = require('../MongoDB/player');
+var Loot = require('../MongoDB/loot');
 var router = express.Router();
 var geolib = require('geolib');
 
@@ -83,6 +84,10 @@ router.put('/location/:id', function (req, res) {
         }
         res.send("Update gelukt");
     })
+});
+
+router.post('/stolen/:name', function (req, res) {
+    
 });
 
 module.exports = router;
