@@ -98,16 +98,21 @@ router.post('/stolen/:playername/:lootname', function (req, res) {
                 if(result == null){
                     res.send("Deze loot bestaat niet")
                 }else{
-                    let loot=result
-                   Player.findOne({loot: loot._id},function(err,result){
-                        if(result != null){
-                            res.send("deze speler heeft al deze loot")
-                        }else{
-                            player.loot.push(loot)
-                            player.save();
-                            res.send("stolen succesfully")
+                    let hasLoot = false;
+                    let loot=result;
+                   
+                    for(let i =0; i < player.loot.length; i++){
+                        if(player.loot[i].equals(loot._id)){
+                            hasLoot = true;
                         }
-                    });
+                    }
+                    if(!hasLoot){
+                        player.loot.push(loot)
+                        player.save();
+                        res.send("stolen succesfully")
+                    }else{
+                        res.send("deze speler heeft al deze loot")
+                    }
                 }  
             });
         }      
