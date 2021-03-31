@@ -29,6 +29,46 @@ router.get('/', function (req, res) {
     });
 });
 
+router.get('/arrestableThieves/:id/:distance', function(req, res){
+    //return list of id's that are close within distance
+    var playerLoc
+    var players = Player.find({}, function (err, result) {
+        if (!err) {
+            var distances = [];
+            result.map(function (player) {
+                if (req.params.id == player.id) {
+                    playerLoc = player.location
+                }
+            })
+            if (playerLoc.latitude == null) {
+                res.send("Deze speler heeft geen location")
+                return
+            }
+
+            result.forEach(item => {
+                if (item.id != req.params.id) {
+                    if (item.location.latitude != null) {
+                        var s = geolib.getPreciseDistance(
+                            { latitude: playerLoc.latitude, longitude: playerLoc.longitude },
+                            { latitude: item.location.latitude, longitude: item.location.longitude }
+                        );
+                        if (s <= req.params.distance){
+                            distances.push({
+                                'id': item.id
+                            });
+                        }
+                    }
+                }
+            })
+
+            function finished(err) {
+                console.log(err)
+            }
+            res.send(JSON.stringify(distances, null, 2))
+        }
+    });
+});
+
 router.get('/distances/:id', function (req, res) {
     var playerLoc
     var players = Player.find({}, function (err, result) {
