@@ -4,15 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:gravity="center"
+    android:gravity="center_horizontal"
     android:id="@+id/fragment_police_arrest">
 
     <TextView
         android:id="@+id/fragment_arrest_textview1"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="arrest view"
-        android:textSize="10sp"/>
+        android:gravity="center_horizontal"
+        android:textSize="15sp"/>
 
 
 </LinearLayout>

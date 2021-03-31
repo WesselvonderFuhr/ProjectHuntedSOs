@@ -11,6 +11,10 @@ import androidx.fragment.app.Fragment;
 
 import com.example.hunted.R;
 
+import org.json.JSONArray;
+
+import java.util.ArrayList;
+
 
 public class PoliceFragmentArrest extends Fragment {
     private TextView textView1;
@@ -40,6 +44,26 @@ public class PoliceFragmentArrest extends Fragment {
         return fragment;
     }
 
+    public void giveArrestablePlayers(ArrayList<String> list){
+        if (list.size() > 0){
+            if (list.size() == 1){
+                setTextBox("Er is een boef in de buurt!\nDit is zijn  ID: " + list.get(1));
+            } else {
+                String text = "Er zijn boeven in de buurt!\nDit zijn de ID's van de boeven: ";
+
+                for(int i = 0; i < list.size(); i++){
+                    if (i > 0){
+                        text = text + ", ";
+                    }
+                    text = text + list.get(i);
+                }
+                setTextBox(text);
+            }
+
+        } else {
+            setTextBox("Er zijn geen boeven in de buurt.");
+        }
+    }
 
     public void setTextBox(String text){
         textView1.setText(text);

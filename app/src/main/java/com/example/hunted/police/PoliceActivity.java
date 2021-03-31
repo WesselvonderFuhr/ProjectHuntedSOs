@@ -64,7 +64,6 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         setupDrawerContent(navigationView);
 
-        getArrestableThieves(); //TODO
     }
 
     @Override
@@ -96,11 +95,11 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
         // Send data to ThievesFragmentScanner
         Fragment fragment = getCurrentFragment();
         if(fragment instanceof PoliceFragmentArrest){
-            PoliceFragmentArrest thievesFragmentScanner = (PoliceFragmentArrest) fragment;
-            thievesFragmentScanner.setTextBox(object.toString());
+            PoliceFragmentArrest policeFragmentArrest = (PoliceFragmentArrest) fragment;
+            Log.d("checkClosestThief_error", object.toString());
             arrestableThieves = (JSONArray) object;
+            policeFragmentArrest.giveArrestablePlayers(getArrestableThieves());
         }
-        getArrestableThieves();
     }
 
     public Fragment getCurrentFragment(){
