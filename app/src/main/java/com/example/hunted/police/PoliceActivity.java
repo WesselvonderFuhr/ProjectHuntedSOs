@@ -1,6 +1,5 @@
 package com.example.hunted.police;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
@@ -8,7 +7,6 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -25,13 +23,19 @@ import com.example.hunted.repeatingtask.RepeatingTaskName;
 import com.example.hunted.repeatingtask.RepeatingTaskService;
 import com.google.android.material.navigation.NavigationView;
 
+import org.json.JSONObject;
+
+import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
 
 public class PoliceActivity extends AppCompatActivity implements Observer {
-    final int PING_MS = 3000;
+    final int PING_MS = 30;
     final int CATCH_THIEVES_DISTANCE_METERS = 100;
+
+    //todo remove
+    private int counter = 0;
 
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
@@ -71,9 +75,32 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
         //check if closestPlayer.distance < CATCH_THIEVES_DISTANCE_METERS
         //display info on PoliceFragmentArrest
 
-        Toast.makeText(PoliceActivity.this, "Observable update: " + stuff, Toast.LENGTH_SHORT).show();
+        counter++;
+
+
+        // Send data to ThievesFragmentScanner
+        Fragment fragment = getCurrentFragment();
+        if(fragment instanceof PoliceFragmentArrest){
+            PoliceFragmentArrest thievesFragmentScanner = (PoliceFragmentArrest) fragment;
+            thievesFragmentScanner.setTextBox("Counter: " + counter);
+        }
     }
 
+    public Fragment getCurrentFragment(){
+        FragmentManager fragmentManager = this.getSupportFragmentManager();
+        List<Fragment> fragments = fragmentManager.getFragments();
+        for(Fragment fragment : fragments){
+            if(fragment != null && fragment.isVisible())
+                return fragment;
+        }
+        return null;
+    }
+
+    private void setFragment(Fragment fragment){
+        // Insert the fragment by replacing any existing fragment
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction().replace(R.id.mainContentPolice, fragment).commit();
+    }
 
     // DRAWER LOADING
 
@@ -116,11 +143,7 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
         // Close the navigation drawer
         drawerLayout.closeDrawers();
     }
-    private void setFragment(Fragment fragment){
-        // Insert the fragment by replacing any existing fragment
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager.beginTransaction().replace(R.id.mainContentPolice, fragment).commit();
-    }
+
 
 
     // REGION SERVICE CODE
@@ -142,7 +165,6 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
         switch (repeatingTask.getTask()){
             case CHECK_THIEF_NEARBY:
                 //for now a toast
-                Log.d("update", "observable in police activated");
                 runOnUiThread(() -> checkClosestThief("update stuff"));
                 break;
         }
