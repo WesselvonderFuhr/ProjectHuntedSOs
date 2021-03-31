@@ -4,11 +4,15 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
+import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -16,8 +20,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static java.lang.Thread.sleep;
 
 public class RepeatingTaskService extends Service {
-    private final String URL = "https://apihuntedsos.herokuapp.com/";
+    private final String URL = "http://192.168.31.1:3000";
     private final long DELAY = 200;
+    final int CATCH_THIEVES_DISTANCE_METERS = 100;
 
     private RequestQueue queue;
     private ArrayList<RepeatingTask> repeatingTasks;
@@ -86,10 +91,26 @@ public class RepeatingTaskService extends Service {
     }
 
     private void checkThievesNearby(RepeatingTask task){
-        //call to api
-        //get closest player json, we need it's location and preferably also distance
-        //give json to police activity (observer)
-        task.notifyObservers("dit is een checkThievesNearby test");
+        final String getArrestableThieves = URL + "/player/arrestableThieves/605db7aadecb3667c865c213/" + CATCH_THIEVES_DISTANCE_METERS;
+//        Log.d("bla", getArrestableThieves);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getArrestableThieves,
+                response -> {
+                    try {
+                        JSONArray obj = new JSONArray(response);
+
+                        //Observable
+                        task.notifyObservers(obj);
+
+                    } catch (Throwable t) {
+                        Log.e("checkThieveNearby", t.toString());
+                    }
+                }, error -> {
+                Log.d("bla", error.toString());
+                //Bad request :frowning:
+                task.notifyObservers("Big oof.");
+                }
+        );
+        queue.add(stringRequest);
     }
 
     @Override

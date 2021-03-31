@@ -23,23 +23,23 @@ import com.example.hunted.repeatingtask.RepeatingTaskName;
 import com.example.hunted.repeatingtask.RepeatingTaskService;
 import com.google.android.material.navigation.NavigationView;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.Observer;
 
 
 public class PoliceActivity extends AppCompatActivity implements Observer {
-    final int PING_MS = 30;
-    final int CATCH_THIEVES_DISTANCE_METERS = 100;
-
-    //todo remove
-    private int counter = 0;
+    final int PING_MS = 1000;
 
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
     private NavigationView navigationView;
+    private JSONArray arrestableThieves;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,10 +58,13 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
         setFragment(new PoliceFragmentLocations());
         setTitle("Locaties");
 
+        arrestableThieves = new JSONArray();
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_police);
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         setupDrawerContent(navigationView);
+
+        getArrestableThieves(); //TODO
     }
 
     @Override
@@ -70,20 +73,34 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
         doUnbindService();
     }
 
+    public ArrayList<String> getArrestableThieves(){
+        ArrayList<String> tempList = new ArrayList<>();
+        if (arrestableThieves != null){
+            for(int i = 0; i < arrestableThieves.length(); i++)
+            {
+                try {
+                    JSONObject jsonObject = arrestableThieves.getJSONObject(i);
+                    tempList.add(jsonObject.get("id").toString());
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        }
+        Log.d("templist", tempList.toString());
+        return tempList;
+    }
+
     // FRAGMENT CONTROLLING
-    private void checkClosestThief(String stuff){
-        //check if closestPlayer.distance < CATCH_THIEVES_DISTANCE_METERS
-        //display info on PoliceFragmentArrest
-
-        counter++;
-
-
+    private void checkClosestThief(Object object){
         // Send data to ThievesFragmentScanner
         Fragment fragment = getCurrentFragment();
         if(fragment instanceof PoliceFragmentArrest){
             PoliceFragmentArrest thievesFragmentScanner = (PoliceFragmentArrest) fragment;
-            thievesFragmentScanner.setTextBox("Counter: " + counter);
+            thievesFragmentScanner.setTextBox(object.toString());
+            arrestableThieves = (JSONArray) object;
         }
+        getArrestableThieves();
     }
 
     public Fragment getCurrentFragment(){
@@ -165,7 +182,7 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
         switch (repeatingTask.getTask()){
             case CHECK_THIEF_NEARBY:
                 //for now a toast
-                runOnUiThread(() -> checkClosestThief("update stuff"));
+                runOnUiThread(() -> checkClosestThief(o));
                 break;
         }
     }
