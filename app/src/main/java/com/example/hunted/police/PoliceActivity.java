@@ -85,6 +85,8 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
                 }
 
             }
+        } else {
+
         }
         Log.d("templist", tempList.toString());
         return tempList;
@@ -99,8 +101,23 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
             Log.d("checkClosestThief_error", object.toString());
             arrestableThieves = (JSONArray) object;
             policeFragmentArrest.giveArrestablePlayers(getArrestableThieves());
+            policeFragmentArrest.setArrestButtonActive(shouldUpdateArrestButton());
         }
     }
+
+    //if thief is close to police
+    //police can arrest the thief with the touch of a button
+
+
+    //sets the arrest button to active or non-active based on
+    private boolean shouldUpdateArrestButton() {
+        if(getArrestableThieves() != null){
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 
     public Fragment getCurrentFragment(){
         FragmentManager fragmentManager = this.getSupportFragmentManager();

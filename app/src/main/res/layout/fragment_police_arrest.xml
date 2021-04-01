@@ -14,5 +14,11 @@
         android:gravity="center_horizontal"
         android:textSize="15sp"/>
 
+    <Button
+        android:id="@+id/arrestButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Arresteer!" />
+
 
 </LinearLayout>
