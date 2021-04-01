@@ -71,6 +71,20 @@ router.get('/arrestableThieves/:id/:distance', function(req, res){
     });
 });
 
+router.put('/arrest/:thiefId', async (req, res) => {
+    var thief = await Player.findById(req.params.id)
+    var arrestQuery = {arrested: true,
+    loot: []}
+
+    Player.updateOne(thief, arrestQuery, function (err, result) {
+        function finished(err) {
+            console.log(err)
+        }
+        res.send("Boef gevangen!");
+    })
+
+})
+
 router.get('/distances/:id', function (req, res) {
     var playerLoc
     var players = Player.find({}, function (err, result) {
@@ -108,6 +122,7 @@ router.get('/distances/:id', function (req, res) {
         }
     });
 });
+
 
 
 router.put('/location/:id', function (req, res) {
