@@ -48,14 +48,16 @@ router.get('/arrestableThieves/:id/:distance', function(req, res){
             result.forEach(item => {
                 if (item.id != req.params.id) {
                     if (item.location.latitude != null) {
-                        var s = geolib.getPreciseDistance(
-                            { latitude: playerLoc.latitude, longitude: playerLoc.longitude },
-                            { latitude: item.location.latitude, longitude: item.location.longitude }
-                        );
-                        if (s <= req.params.distance){
-                            distances.push({
-                                'id': item.id
-                            });
+                        if (item.arrested == false && item.role == "Boef"){
+                            var s = geolib.getPreciseDistance(
+                                { latitude: playerLoc.latitude, longitude: playerLoc.longitude },
+                                { latitude: item.location.latitude, longitude: item.location.longitude }
+                            );
+                            if (s <= req.params.distance){
+                                distances.push({
+                                    'id': item.id
+                                });
+                            }
                         }
                     }
                 }
