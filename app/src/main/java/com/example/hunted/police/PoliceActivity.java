@@ -17,6 +17,10 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.hunted.R;
 import com.example.hunted.repeatingtask.RepeatingTask;
 import com.example.hunted.repeatingtask.RepeatingTaskName;
@@ -35,16 +39,22 @@ import java.util.Observer;
 
 public class PoliceActivity extends AppCompatActivity implements Observer {
     final int PING_MS = 1000;
+    private final String URL = "http://192.168.1.87:3000";
 
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
     private NavigationView navigationView;
     private JSONArray arrestableThieves;
 
+    private RequestQueue queue;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_police);
+        queue = Volley.newRequestQueue(this);
+
+        arrestThiefAPICall("605c8fb7d96441448cac6689");
 
         doBindService();
 
@@ -85,8 +95,6 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
                 }
 
             }
-        } else {
-
         }
         Log.d("templist", tempList.toString());
         return tempList;
@@ -105,17 +113,46 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
         }
     }
 
+    public void arrestThieves() {
+        Log.e("arrestThieves", "hij is gekomen bij arrestthieves gelukkig");
+        ArrayList<String> tempList = getArrestableThieves();
+        if(tempList != null) {
+            if(tempList.size() > 0) {
+                for(int i = 0; i < tempList.size(); i++) {
+                    arrestThiefAPICall(tempList.get(i));
+                }
+            }
+        }
+    }
+
+    private void arrestThiefAPICall(String thiefId) {
+        final String getArrestedUrl = URL + "/player/arrest/" + thiefId;
+
+        StringRequest stringRequest = new StringRequest(Request.Method.PUT, getArrestedUrl,
+                response -> {
+            Log.d("arrestResponse", "Boef is gearresteerd! - Response: " + response);
+                }, error -> {
+            Log.e("Error", error.toString());
+        }
+        );
+
+        queue.add(stringRequest);
+    }
+
     //if thief is close to police
     //police can arrest the thief with the touch of a button
 
 
     //sets the arrest button to active or non-active based on
     private boolean shouldUpdateArrestButton() {
-        if(getArrestableThieves() != null){
-            return true;
-        } else {
-            return false;
+        ArrayList<String> tempList = getArrestableThieves();
+        if(tempList != null) {
+            if(tempList.size() > 0) {
+                return true;
+            }
         }
+
+        return false;
     }
 
 

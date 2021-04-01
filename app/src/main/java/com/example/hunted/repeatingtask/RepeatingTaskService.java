@@ -94,7 +94,6 @@ public class RepeatingTaskService extends Service {
 
     private void checkThievesNearby(RepeatingTask task){
         final String getArrestableThieves = URL + "/player/arrestableThieves/605db7aadecb3667c865c213/" + CATCH_THIEVES_DISTANCE_METERS;
-//        Log.d("bla", getArrestableThieves);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, getArrestableThieves,
                 response -> {
                     try {

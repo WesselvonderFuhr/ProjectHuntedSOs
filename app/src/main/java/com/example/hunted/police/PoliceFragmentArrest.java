@@ -25,7 +25,6 @@ public class PoliceFragmentArrest extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -34,6 +33,12 @@ public class PoliceFragmentArrest extends Fragment {
 
         textView1 = (TextView) view.findViewById(R.id.fragment_arrest_textview1);
         arrestButton = (Button) view.findViewById(R.id.arrestButton);
+        arrestButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                arrestButtonClicked();
+            }
+        });
         setTextBox("gruis");
         return view;
     }
@@ -45,6 +50,10 @@ public class PoliceFragmentArrest extends Fragment {
         args.putString("ARG_PARAM2", param2);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    private void arrestButtonClicked() {
+        ((PoliceActivity)getActivity()).arrestThieves();
     }
 
 
@@ -71,7 +80,8 @@ public class PoliceFragmentArrest extends Fragment {
     }
 
     public void setArrestButtonActive(boolean active) {
-        if(arrestButton.isActivated()) {
+        Log.d("button", "doe ff active ofzo: " + active);
+        if(arrestButton.isEnabled()) {
             if (!active) {
                 arrestButton.setEnabled(false);
             }
