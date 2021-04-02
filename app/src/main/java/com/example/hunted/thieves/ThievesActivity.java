@@ -17,8 +17,14 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.android.volley.ClientError;
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.hunted.R;
@@ -29,6 +35,10 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -82,12 +92,9 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
     }
 
     private void setupDrawerContent(NavigationView navigationView){
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(MenuItem menuItem) {
-                selectDrawerItem(menuItem);
-                return true;
-            }
+        navigationView.setNavigationItemSelectedListener(menuItem -> {
+            selectDrawerItem(menuItem);
+            return true;
         });
     }
 
@@ -173,16 +180,41 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
 
         if(intentResult != null) {
             if(intentResult.getContents() == null) {
-                result = "Stopped stealing.";
+                result = "Gestopt met stelen!";
             } else {
                 success = true;
                 result = intentResult.getContents();
             }
         } else {
-            result = "Couldn't steal, try again.";
+            result = "Stelen is mislukt, probeer opnieuw.";
             super.onActivityResult(requestCode, resultCode, data);
         }
 
+        if(success){
+            //http://localhost:3000/player/605c8faed96441448cac6688/stolen/605cd906a13024000496f2ff
+            final String postStolenLoot = URL + "player/" + ID + "/stolen/" + result;
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, postStolenLoot,
+                    response -> sendDataToFragmentScanner(true, response),
+
+                    error -> {
+                        NetworkResponse response = error.networkResponse;
+                        if (error instanceof ServerError && response != null) {
+                            try {
+                                String res = new String(response.data, HttpHeaderParser.parseCharset(response.headers, "utf-8"));
+                                sendDataToFragmentScanner(false, res);
+                            } catch (Exception e) {
+                                sendDataToFragmentScanner(false, "Er ging iets mis.");
+                            }
+                        }
+                    });
+
+            queue.add(stringRequest);
+        } else {
+            sendDataToFragmentScanner(false, result);
+        }
+    }
+
+    private void sendDataToFragmentScanner(boolean success, String result){
         // Send data to ThievesFragmentScanner
         Fragment fragment = getCurrentFragment();
         if(fragment instanceof ThievesFragmentScanner){

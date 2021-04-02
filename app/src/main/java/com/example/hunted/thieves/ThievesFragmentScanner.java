@@ -14,10 +14,8 @@ import com.example.hunted.R;
 
 public class ThievesFragmentScanner extends Fragment {
 
-    private boolean stolen;
-    private String result;
-
     private TextView resultTextView;
+    private TextView successTextView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -26,9 +24,18 @@ public class ThievesFragmentScanner extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         resultTextView = getView().findViewById(R.id.resultTextView);
+        successTextView = getView().findViewById(R.id.successTextView);
     }
 
     public void setResult(boolean success, String result) {
+        if(success){
+            successTextView.setTextColor(getResources().getColor(R.color.success));
+            successTextView.setText("Succesvol gestolen!");
+            result = "Gestolen buit:\n" + result.substring(0, 1).toUpperCase() + result.substring(1).toLowerCase();
+        } else {
+            successTextView.setTextColor(getResources().getColor(R.color.error));
+            successTextView.setText("Gefaald in stelen.");
+        }
         resultTextView.setText(result);
     }
 }

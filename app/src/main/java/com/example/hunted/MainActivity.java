@@ -47,7 +47,7 @@ public class MainActivity extends AppCompatActivity {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getArrestedUrl,
                 response -> {
                     String ID = response;
-                    intent.putExtra("ID", ID);
+                    intent.putExtra("ID", ID.replaceAll("\"",""));
                     startActivity(intent);
                 }, error -> {
             Toast.makeText(this, "De rol Agent is onbeschikbaar.", Toast.LENGTH_LONG).show();
@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
         StringRequest stringRequest = new StringRequest(Request.Method.POST, getArrestedUrl,
                 response -> {
                     String ID = response;
-                    intent.putExtra("ID", ID);
+                    intent.putExtra("ID", ID.replaceAll("\"",""));
                     startActivity(intent);
                 }, error -> {
             Toast.makeText(this, "De rol Boef is onbeschikbaar.", Toast.LENGTH_LONG).show();
