@@ -40,7 +40,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 public class PoliceActivity extends AppCompatActivity implements Observer {
-    final int PING_MS = 1000;
+    private final int PING_MS = 1000;
 
     public String URL;
     private RequestQueue queue;
@@ -52,13 +52,10 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
     private NavigationView navigationView;
     private JSONArray arrestableThieves;
 
-    private RequestQueue queue;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_police);
-        queue = Volley.newRequestQueue(this);
 		
         URL = getString(R.string.url);
         queue = Volley.newRequestQueue(this);
