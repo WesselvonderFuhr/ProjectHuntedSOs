@@ -11,14 +11,14 @@ import { QRCodeModule } from 'angularx-qrcode';
 import { SetupComponent } from './components/setup/setup.component';
 import { SetupJailComponent } from './components/setup-jail/setup-jail.component';
 import { SetupQrComponent } from './components/setup-qr/setup-qr.component';
-import { SetupQrCardComponent } from './components/setup-qr-card/setup-qr-card.component'
+import { SetupQrCardComponent } from './components/setup-qr-card/setup-qr-card.component';
 
-import { JailService } from './services/jail/jail.service'
+import { JailService } from './services/jail/jail.service';
 import { LootService } from './services/loot/loot.service';
 
-import { MatButtonModule } from '@angular/material/button'
-import { MatInputModule } from '@angular/material/input'
-import { MatFormFieldModule } from '@angular/material/form-field'
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 @NgModule({
   declarations: [

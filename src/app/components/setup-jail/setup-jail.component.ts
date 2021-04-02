@@ -3,7 +3,7 @@ import { from, Subscriber, VirtualTimeScheduler } from 'rxjs';
 import { FormBuilder } from '@angular/forms';
 import { JailService } from 'src/app/services/jail/jail.service';
 import { Jail } from 'src/app/models/jail.model';
-import { Location } from 'src/app/models/jail.model'
+import { Location } from 'src/app/models/jail.model';
 import { MatDialog } from '@angular/material/dialog';
 
 
@@ -17,20 +17,20 @@ export class SetupJailComponent implements OnInit {
 
   public location: Location;
 
-  constructor(private jailService: JailService, private formBuilder: FormBuilder) { 
+  constructor(private jailService: JailService, private formBuilder: FormBuilder) {
     this.location = new Location();
   }
 
-  ngOnInit() {
+  ngOnInit(): void {
 
   }
 
-  onClickSubmit() {
-    var jail = new Jail()
-    jail.location = this.location
+  onClickSubmit(): void {
+    const jail = new Jail();
+    jail.location = this.location;
 
-    this.jailService.updateJail(jail).subscribe((res)=>{
-      console.log("Updated the jail");
+    this.jailService.updateJail(jail).subscribe( (res) => {
+      console.log('Updated the jail');
    });
   }
 }

@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { LootService } from 'src/app/services/loot/loot.service'
-import { Loot } from 'src/app/models/loot.model'
+import { LootService } from 'src/app/services/loot/loot.service';
+import { Loot } from 'src/app/models/loot.model';
 
 @Component({
   selector: 'app-setup-qr',
@@ -9,24 +9,24 @@ import { Loot } from 'src/app/models/loot.model'
 })
 export class SetupQrComponent implements OnInit {
 
-  public loot_array: Loot[];
+  public lootArray: Loot[];
   public loot: Loot;
 
-  constructor(private lootService: LootService) { 
+  constructor(private lootService: LootService) {
     this.loot = new Loot();
   }
 
   ngOnInit(): void {
     this.lootService.getLoot().subscribe((res) => {
-      this.loot_array = res
-      console.log(this.loot_array)
-    })
+      this.lootArray = res;
+      console.log(this.lootArray);
+    });
   }
 
-  onClickSubmit() {
-    this.lootService.postLoot(this.loot).subscribe((res)=> {
-      console.log('Added ' + this.loot.name + ' to loot')
-    })
+  onClickSubmit(): void {
+    this.lootService.postLoot(this.loot).subscribe((res) => {
+      console.log('Added ' + this.loot.name + ' to loot');
+    });
   }
 
 }

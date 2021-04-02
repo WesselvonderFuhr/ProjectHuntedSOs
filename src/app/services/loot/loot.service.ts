@@ -8,17 +8,17 @@ import { Loot } from 'src/app/models/loot.model';
 })
 export class LootService {
 
-  private lootURL = 'http://127.0.0.1:3000/loot'
+  private lootURL = 'http://127.0.0.1:3000/loot';
 
   constructor(private http: HttpClient) { }
 
   getLoot(): Observable<any> {
     return this.http.get(this.lootURL);
   }
-  
-  postLoot(loot: Loot){
-    console.log(JSON.stringify(loot))
-    return this.http.post(`${this.lootURL}`,loot, {responseType: 'text'});
+
+  postLoot(loot: Loot) {
+    console.log(JSON.stringify(loot));
+    return this.http.post(`${this.lootURL}`, loot, {responseType: 'text'});
   }
 }
 

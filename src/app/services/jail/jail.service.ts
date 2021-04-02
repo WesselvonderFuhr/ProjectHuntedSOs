@@ -8,17 +8,17 @@ import { Jail } from 'src/app/models/jail.model';
 })
 export class JailService {
 
-  private jailURL = 'http://127.0.0.1:3000/jail'
+  private jailURL = 'http://127.0.0.1:3000/jail';
 
   constructor(private http: HttpClient) { }
 
   getJail(): Observable<any> {
     return this.http.get(this.jailURL);
   }
-  
-  updateJail(jail: Jail){
-    console.log(JSON.stringify(jail))
-    return this.http.put(`${this.jailURL}/60630751e2a3b624586ed575`,jail, {responseType: 'text'});
+
+  updateJail(jail: Jail) {
+    console.log(JSON.stringify(jail));
+    return this.http.put(`${this.jailURL}/60630751e2a3b624586ed575`, jail, {responseType: 'text'});
   }
 }
 
