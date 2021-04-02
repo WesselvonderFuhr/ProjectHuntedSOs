@@ -1,0 +1,16 @@
+<h2>Gevangenis</h2>
+<div>
+  <form class="example-form" #locationData="ngForm" (ngSubmit)="onClickSubmit()" >
+    <mat-form-field class="example-full-width" appearance="standard">
+      <mat-label>Latitude</mat-label>
+      <input matInput [(ngModel)]="location.latitude" name="latitude" placeholder="51.-------">
+    </mat-form-field>
+    <br/>
+    <mat-form-field class="example-full-width" appearance="standard">
+      <mat-label>Longitude</mat-label>
+      <input matInput [(ngModel)]="location.longitude" name="longitude" placeholder="5.-------">
+    </mat-form-field>
+    <br/>
+    <button mat-raised-button color="primary" type="submit" color="primary">Gevangenis opslaan</button>
+ </form>
+</div>

@@ -1,0 +1,17 @@
+<h2>Buit toevoegen</h2>
+<div>
+    <form #lootData="ngForm" (ngSubmit)="onClickSubmit()" >
+      <mat-form-field class="example-full-width" appearance="standard">
+        <mat-label>Loot</mat-label>
+        <input matInput [(ngModel)]="loot.name" name="loot" placeholder="Bijv. 'Ketting'">
+      </mat-form-field>
+      <br/>
+      <button mat-raised-button color="primary" type="submit" color="primary">Buit opslaan</button>
+   </form>
+</div>
+
+<h2>Buit overzicht</h2>
+<div class="container">
+  <app-setup-qr-card *ngFor="let loot of loot_array" [loot]="loot">
+  </app-setup-qr-card>
+</div>
