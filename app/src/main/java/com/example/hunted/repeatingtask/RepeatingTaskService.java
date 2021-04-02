@@ -4,6 +4,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
+import android.util.Log;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -11,12 +12,15 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.hunted.R;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static java.lang.Thread.sleep;
 
 public class RepeatingTaskService extends Service {
+	
     private String URL;
     private final long DELAY = 200;
 
@@ -69,11 +73,24 @@ public class RepeatingTaskService extends Service {
     private void checkArrested(RepeatingTask task) {
         /*TODO API Call doesn't exist yet.
            - should be 'URL + "player/" + id' */
-        final String getArrestedUrl = URL + "player";
+
+        //big time test ID
+        final String getArrestedUrl = URL + "/player/605db7aadecb3667c865c213";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, getArrestedUrl,
                 response -> {
-                    //Observable
-                    task.notifyObservers(response.length()  + " (count)");
+                    try {
+                        //Ik heb deze shit van StackOverflow(waar anders) geplukt, deze maakt de string halal om te converteren jaar JSON object. Ja het werkt.
+                        response = response.replaceAll("[\\\\]{1}[\"]{1}","\"");
+                        response = response.substring(response.indexOf("{"),response.lastIndexOf("}")+1);
+
+                        JSONObject obj = new JSONObject(response);
+
+                        //Observable
+                        task.notifyObservers(obj.get("arrested"));
+
+                    } catch (Throwable t) {
+                        Log.e("", "RIP");
+                    }
                 }, error -> {
             //Bad request :(
             task.notifyObservers("Big oof.");

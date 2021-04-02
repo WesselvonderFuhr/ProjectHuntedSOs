@@ -11,9 +11,13 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.util.Log;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.MenuItem;
 import android.widget.Toast;
 
@@ -55,6 +59,8 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
     private NavigationView navigationView;
+
+    private boolean isArrested = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -230,6 +236,35 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
     @Override
     public void update(Observable observable, Object o) {
         //runOnUiThread(() -> Toast.makeText(ThievesActivity.this, "Observable update: " + o.toString(), Toast.LENGTH_SHORT).show());
+        RepeatingTask repeatingTask = (RepeatingTask) observable;
+        switch(repeatingTask.getTask()){
+            case CHECK_ARRESTED:
+                if ((boolean)o) {
+                    setArrested((boolean) o);
+                }
+                // method
+                break;
+        }
+    }
+
+    private void setArrested(boolean isArrested){
+        //Get scanner button
+        MenuItem scanBtn = navigationView.getMenu().findItem(R.id.nav_scanner);
+
+        //Disable it cuz caught (lol noob)
+        scanBtn.setEnabled(false);
+
+        //Change title color to make it more obvious
+        SpannableString s = new SpannableString(scanBtn.getTitle());
+        s.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.teal_200)), 0, s.length(), 0);
+        scanBtn.setTitle(s);
+
+        //Show is arrested text
+        Fragment fragment = getCurrentFragment();
+        if(fragment instanceof ThievesFragmentLocations){
+            ThievesFragmentLocations thievesFragmentLocations = (ThievesFragmentLocations) fragment;
+            thievesFragmentLocations.setTextBox("Je bent gepakt!");
+        }
     }
 
     // Clean service binding
@@ -243,6 +278,7 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
             // Add task to the service.
             RepeatingTask repeatingTask = new RepeatingTask(RepeatingTaskName.CHECK_ARRESTED, 3000);
             repeatingTask.addObserver(ThievesActivity.this);
+
             mBoundService.addRepeatingTask(repeatingTask);
         }
 
