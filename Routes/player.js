@@ -1,10 +1,11 @@
 var express = require('express');
+var app = express();
 var Player = require('../MongoDB/player');
 var router = express.Router();
 var geolib = require('geolib');
 
 router.post('/', function (req, res) {
-    const emptyLoc = { latitude: null, longitude: null}
+    const emptyLoc = { latitude: null, longitude: null }
     const name = req.body.name;
     const role = req.body.role;
 
@@ -12,6 +13,7 @@ router.post('/', function (req, res) {
     player.name = name;
     player.role = role;
     player.arrested = false;
+    player.location = emptyLoc;
 
     let playerModel = new Player(player);
     playerModel.save();
