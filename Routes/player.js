@@ -1,14 +1,14 @@
 var express = require('express');
+var app = express();
 var Player = require('../MongoDB/player');
 var Loot = require('../MongoDB/loot');
 var router = express.Router();
 var geolib = require('geolib');
 
 router.post('/', function (req, res) {
-    const emptyLoc = { latitude: null, longitude: null}
+    const emptyLoc = { latitude: null, longitude: null }
     const name = req.body.name;
     const role = req.body.role;
-    //const arrested = req.body.arrested;
 
     let player = {};
     player.name = name;
@@ -24,6 +24,15 @@ router.post('/', function (req, res) {
 
 router.get('/', function (req, res) {
     var players = Player.find({}, function (err, result) {
+        if (!err) {
+            return res.send(result);
+        }
+    });
+});
+
+router.get('/:id', function (req, res) {
+    var query = { _id: req.params.id };
+    var players = Player.find(query, function (err, result) {
         if (!err) {
             return res.send(result);
         }
