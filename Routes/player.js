@@ -32,10 +32,12 @@ router.get('/', function (req, res) {
 
 router.get('/:id', function (req, res) {
     var query = { _id: req.params.id };
-    var players = Player.find(query, function (err, result) {
+    Player.findOne(query, function (err, result) {
         if (!err) {
-            return res.send(result);
-        }
+            res.send(result);
+        } else {
+            res.status(404).send("Deze speler bestaat niet")
+		}
     });
 });
 
