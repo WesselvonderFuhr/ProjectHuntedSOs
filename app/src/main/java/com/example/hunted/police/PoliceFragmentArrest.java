@@ -80,7 +80,6 @@ public class PoliceFragmentArrest extends Fragment {
     }
 
     public void setArrestButtonActive(boolean active) {
-        Log.d("button", "doe ff active ofzo: " + active);
         if(arrestButton.isEnabled()) {
             if (!active) {
                 arrestButton.setEnabled(false);

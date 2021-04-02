@@ -54,8 +54,6 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
         setContentView(R.layout.activity_police);
         queue = Volley.newRequestQueue(this);
 
-        arrestThiefAPICall("605c8fb7d96441448cac6689");
-
         doBindService();
 
         //Set toolbar
