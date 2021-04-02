@@ -6,28 +6,34 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.hunted.R;
 
 public class ThievesFragmentLocations extends Fragment {
-    private TextView textView1;
+    private TextView tvIsArrested;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_thieves_location, container, false);
-
-        textView1 = (TextView) view.findViewById(R.id.tvIsArrested);
-        return view;
+        return inflater.inflate(R.layout.fragment_thieves_location, container, false);
     }
 
-    public void setTextBox(String text){
-        textView1.setText(text);
+    @Override
+    public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
+        tvIsArrested = getView().findViewById(R.id.tvIsArrested);
+
+        if(requireArguments().getBoolean("isArrested")){
+            isArrested();
+        }
+    }
+
+    public void isArrested(){
+        tvIsArrested.setText("Je bent gepakt!");
     }
 }

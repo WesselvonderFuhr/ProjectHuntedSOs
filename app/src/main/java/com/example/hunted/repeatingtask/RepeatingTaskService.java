@@ -6,8 +6,11 @@ import android.os.Binder;
 import android.os.IBinder;
 import android.util.Log;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.ServerError;
+import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.hunted.R;
@@ -22,6 +25,7 @@ import static java.lang.Thread.sleep;
 public class RepeatingTaskService extends Service {
 	
     private String URL;
+    private String ID;
     private final long DELAY = 200;
 
     private RequestQueue queue;
@@ -71,31 +75,32 @@ public class RepeatingTaskService extends Service {
     // REPEATING TASK METHODS
 
     private void checkArrested(RepeatingTask task) {
-        /*TODO API Call doesn't exist yet.
-           - should be 'URL + "player/" + id' */
-
-        //big time test ID
-        final String getArrestedUrl = URL + "/player/605db7aadecb3667c865c213";
+        final String getArrestedUrl = URL + "player/" + ID;
         StringRequest stringRequest = new StringRequest(Request.Method.GET, getArrestedUrl,
                 response -> {
                     try {
-                        //Ik heb deze shit van StackOverflow(waar anders) geplukt, deze maakt de string halal om te converteren jaar JSON object. Ja het werkt.
                         response = response.replaceAll("[\\\\]{1}[\"]{1}","\"");
                         response = response.substring(response.indexOf("{"),response.lastIndexOf("}")+1);
 
                         JSONObject obj = new JSONObject(response);
-
                         //Observable
                         task.notifyObservers(obj.get("arrested"));
-
                     } catch (Throwable t) {
-                        Log.e("", "RIP");
+                        task.notifyObservers("Er ging iets mis met het ophalen van je status");
+                        System.out.println("ERROR: url is " + getArrestedUrl);
+                        t.printStackTrace();
                     }
                 }, error -> {
-            //Bad request :(
-            task.notifyObservers("Big oof.");
-        }
-        );
+                    NetworkResponse response = error.networkResponse;
+                    if (error instanceof ServerError && response != null) {
+                        try {
+                            String res = new String(response.data, HttpHeaderParser.parseCharset(response.headers, "utf-8"));
+                            task.notifyObservers(res);
+                        } catch (Exception e) {
+                            task.notifyObservers("Er ging iets mis met het communiceren met de server");
+                        }
+                    }
+        });
         queue.add(stringRequest);
     }
 
@@ -103,8 +108,13 @@ public class RepeatingTaskService extends Service {
     public void onCreate() {
         repeatingTasks = new ArrayList<>();
         URL = getString(R.string.url);
+        ID = "";
         new Thread(runnable).start();
         queue = Volley.newRequestQueue(this);
+    }
+
+    public void setID(String ID){
+        this.ID = ID;
     }
 
     @Override

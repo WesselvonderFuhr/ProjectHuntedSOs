@@ -21,6 +21,7 @@ public class ThievesFragmentScanner extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_thieves_scanner, container, false);
     }
+
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         resultTextView = getView().findViewById(R.id.resultTextView);

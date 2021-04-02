@@ -51,10 +51,12 @@ import java.util.Observer;
 
 public class ThievesActivity extends AppCompatActivity implements Observer {
 
-    public String URL;
+    private String URL;
     private RequestQueue queue;
 
-    public String ID;
+    private RepeatingTask arrestedRepeatingTask;
+
+    private String ID;
 
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
@@ -140,6 +142,11 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
     }
 
     private void setFragment(Fragment fragment){
+        if (fragment instanceof ThievesFragmentLocations){
+            Bundle bundle = new Bundle();
+            bundle.putBoolean("isArrested", isArrested);
+            fragment.setArguments(bundle);
+        }
         // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.mainContentThieves, fragment).commit();
@@ -231,27 +238,13 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
 
     //endregion
 
-    //region Service code
+    //region Arrested
 
-    @Override
-    public void update(Observable observable, Object o) {
-        //runOnUiThread(() -> Toast.makeText(ThievesActivity.this, "Observable update: " + o.toString(), Toast.LENGTH_SHORT).show());
-        RepeatingTask repeatingTask = (RepeatingTask) observable;
-        switch(repeatingTask.getTask()){
-            case CHECK_ARRESTED:
-                if ((boolean)o) {
-                    setArrested((boolean) o);
-                }
-                // method
-                break;
-        }
-    }
+    private void isArrested(){
+        isArrested = true;
 
-    private void setArrested(boolean isArrested){
-        //Get scanner button
+        //Get scanner button & disable
         MenuItem scanBtn = navigationView.getMenu().findItem(R.id.nav_scanner);
-
-        //Disable it cuz caught (lol noob)
         scanBtn.setEnabled(false);
 
         //Change title color to make it more obvious
@@ -259,11 +252,32 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
         s.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.teal_200)), 0, s.length(), 0);
         scanBtn.setTitle(s);
 
-        //Show is arrested text
+        //Update fragment to arrested.
         Fragment fragment = getCurrentFragment();
         if(fragment instanceof ThievesFragmentLocations){
             ThievesFragmentLocations thievesFragmentLocations = (ThievesFragmentLocations) fragment;
-            thievesFragmentLocations.setTextBox("Je bent gepakt!");
+            thievesFragmentLocations.isArrested();
+        }
+
+        mBoundService.removeRepeatingTask(arrestedRepeatingTask);
+    }
+
+    //endregion
+
+    //region Service code
+
+    @Override
+    public void update(Observable observable, Object o) {
+        RepeatingTask repeatingTask = (RepeatingTask) observable;
+        switch(repeatingTask.getTask()){
+            case CHECK_ARRESTED:
+                if(o instanceof String){
+                    Toast.makeText(this, "Error: " + o.toString(), Toast.LENGTH_SHORT).show();
+                } else if ((boolean)o) {
+                    isArrested();
+                }
+                // method
+                break;
         }
     }
 
@@ -274,12 +288,13 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
     private final ServiceConnection mConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className, IBinder service) {
             mBoundService = ((RepeatingTaskService.LocalBinder)service).getService();
+            mBoundService.setID(ID);
 
             // Add task to the service.
-            RepeatingTask repeatingTask = new RepeatingTask(RepeatingTaskName.CHECK_ARRESTED, 3000);
-            repeatingTask.addObserver(ThievesActivity.this);
+            arrestedRepeatingTask = new RepeatingTask(RepeatingTaskName.CHECK_ARRESTED, 3000);
+            arrestedRepeatingTask.addObserver(ThievesActivity.this);
 
-            mBoundService.addRepeatingTask(repeatingTask);
+            mBoundService.addRepeatingTask(arrestedRepeatingTask);
         }
 
         public void onServiceDisconnected(ComponentName className) {

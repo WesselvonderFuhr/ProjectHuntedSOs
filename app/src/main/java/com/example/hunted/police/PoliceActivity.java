@@ -152,6 +152,7 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
     private final ServiceConnection mConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className, IBinder service) {
             mBoundService = ((RepeatingTaskService.LocalBinder)service).getService();
+            mBoundService.setID(ID);
 
             //Add repeatingTask.
             //RepeatingTask repeatingTask = new RepeatingTask(RepeatingTaskName.ENUM_NAME, MILLIS);
