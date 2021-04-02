@@ -20,8 +20,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static java.lang.Thread.sleep;
 
 public class RepeatingTaskService extends Service {
-    //private final String URL = "http://192.168.31.1:3000";
-    private final String URL = "http://192.168.1.87:3000";
+    private final String URL = "http://192.168.31.1:3000";    //string ivo
+//    private final String URL = "http://192.168.1.87:3000";      //string ayman
 
     private final long DELAY = 200;
     final int CATCH_THIEVES_DISTANCE_METERS = 100;

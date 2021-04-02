@@ -20,7 +20,6 @@ import java.util.ArrayList;
 public class PoliceFragmentArrest extends Fragment {
     private TextView textView1;
     private Button arrestButton;
-    private boolean isScanning = false;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -39,17 +38,7 @@ public class PoliceFragmentArrest extends Fragment {
                 arrestButtonClicked();
             }
         });
-        setTextBox("gruis");
         return view;
-    }
-
-    public static PoliceFragmentArrest newInstance(String param1, String param2){
-        PoliceFragmentArrest fragment = new PoliceFragmentArrest();
-        Bundle args = new Bundle();
-        args.putString("ARG_PARAM1", param1);
-        args.putString("ARG_PARAM2", param2);
-        fragment.setArguments(args);
-        return fragment;
     }
 
     private void arrestButtonClicked() {
@@ -61,16 +50,16 @@ public class PoliceFragmentArrest extends Fragment {
     public void giveArrestablePlayers(ArrayList<String> list){
         if (list.size() > 0){
             if (list.size() == 1){
-                setTextBox("Er is een boef in de buurt!\nDit is zijn  ID: " + list.get(1));
+                setTextBox("Er is 1 boef in de buurt!");
             } else {
-                String text = "Er zijn boeven in de buurt!\nDit zijn de ID's van de boeven: ";
-
-                for(int i = 0; i < list.size(); i++){
-                    if (i > 0){
-                        text = text + ", ";
-                    }
-                    text = text + list.get(i);
-                }
+//                String text = "Er zijn boeven in de buurt!\nDit zijn de ID's van de boeven: ";
+                String text = "Er zijn " + list.size() + " boeven in de buurt!";
+//                for(int i = 0; i < list.size(); i++){
+//                    if (i > 0){
+//                        text = text + ", ";
+//                    }
+//                    text = text + list.get(i);
+//                }
                 setTextBox(text);
             }
 
