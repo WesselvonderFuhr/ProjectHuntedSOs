@@ -11,29 +11,68 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.text.SpannableString;
+import android.text.style.ForegroundColorSpan;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.android.volley.ClientError;
+import com.android.volley.NetworkResponse;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.ServerError;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.HttpHeaderParser;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.example.hunted.R;
 import com.example.hunted.repeatingtask.RepeatingTask;
 import com.example.hunted.repeatingtask.RepeatingTaskName;
 import com.example.hunted.repeatingtask.RepeatingTaskService;
 import com.google.android.material.navigation.NavigationView;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
 public class ThievesActivity extends AppCompatActivity implements Observer {
+
+    private String URL;
+    private RequestQueue queue;
+
+    private RepeatingTask arrestedRepeatingTask;
+
+    private String ID;
+
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
     private NavigationView navigationView;
+
+    private boolean isArrested = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_thieves);
+        URL = getString(R.string.url);
+
+        queue = Volley.newRequestQueue(this);
+
+        ID = getIntent().getStringExtra("ID");
 
         // Bind to RepeatingTaskService
         doBindService();
@@ -61,12 +100,9 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
     }
 
     private void setupDrawerContent(NavigationView navigationView){
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(MenuItem menuItem) {
-                selectDrawerItem(menuItem);
-                return true;
-            }
+        navigationView.setNavigationItemSelectedListener(menuItem -> {
+            selectDrawerItem(menuItem);
+            return true;
         });
     }
 
@@ -99,12 +135,31 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
         setTitle(menuItem.getTitle());
         // Close the navigation drawer
         drawerLayout.closeDrawers();
+
+        if(menuItem.getItemId() == R.id.nav_scanner){
+            scanCode();
+        }
     }
 
     private void setFragment(Fragment fragment){
+        if (fragment instanceof ThievesFragmentLocations){
+            Bundle bundle = new Bundle();
+            bundle.putBoolean("isArrested", isArrested);
+            fragment.setArguments(bundle);
+        }
         // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.mainContentThieves, fragment).commit();
+    }
+
+    public Fragment getCurrentFragment(){
+        FragmentManager fragmentManager = this.getSupportFragmentManager();
+        List<Fragment> fragments = fragmentManager.getFragments();
+        for(Fragment fragment : fragments){
+            if(fragment != null && fragment.isVisible())
+                return fragment;
+        }
+        return null;
     }
 
     @Override
@@ -118,11 +173,112 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
         return super.onOptionsItemSelected(item);
     }
 
+
+    //region Scanner
+
+    private void scanCode(){
+        IntentIntegrator integrator = new IntentIntegrator(this);
+        integrator.setDesiredBarcodeFormats(IntentIntegrator.QR_CODE);
+        integrator.setPrompt("");
+        integrator.setBeepEnabled(false);
+        integrator.initiateScan();
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        IntentResult intentResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, data);
+
+        boolean success = false;
+        String result;
+
+        if(intentResult != null) {
+            if(intentResult.getContents() == null) {
+                result = "Gestopt met stelen!";
+            } else {
+                success = true;
+                result = intentResult.getContents();
+            }
+        } else {
+            result = "Stelen is mislukt, probeer opnieuw.";
+            super.onActivityResult(requestCode, resultCode, data);
+        }
+
+        if(success){
+            //http://localhost:3000/player/605c8faed96441448cac6688/stolen/605cd906a13024000496f2ff
+            final String postStolenLoot = URL + "player/" + ID + "/stolen/" + result;
+            StringRequest stringRequest = new StringRequest(Request.Method.POST, postStolenLoot,
+                    response -> sendDataToFragmentScanner(true, response),
+
+                    error -> {
+                        NetworkResponse response = error.networkResponse;
+                        if (error instanceof ServerError && response != null) {
+                            try {
+                                String res = new String(response.data, HttpHeaderParser.parseCharset(response.headers, "utf-8"));
+                                sendDataToFragmentScanner(false, res);
+                            } catch (Exception e) {
+                                sendDataToFragmentScanner(false, "Er ging iets mis.");
+                            }
+                        }
+                    });
+
+            queue.add(stringRequest);
+        } else {
+            sendDataToFragmentScanner(false, result);
+        }
+    }
+
+    private void sendDataToFragmentScanner(boolean success, String result){
+        // Send data to ThievesFragmentScanner
+        Fragment fragment = getCurrentFragment();
+        if(fragment instanceof ThievesFragmentScanner){
+            ThievesFragmentScanner thievesFragmentScanner = (ThievesFragmentScanner) fragment;
+            thievesFragmentScanner.setResult(success, result);
+        }
+    }
+
+    //endregion
+
+    //region Arrested
+
+    private void isArrested(){
+        isArrested = true;
+
+        //Get scanner button & disable
+        MenuItem scanBtn = navigationView.getMenu().findItem(R.id.nav_scanner);
+        scanBtn.setEnabled(false);
+
+        //Change title color to make it more obvious
+        SpannableString s = new SpannableString(scanBtn.getTitle());
+        s.setSpan(new ForegroundColorSpan(getResources().getColor(R.color.teal_200)), 0, s.length(), 0);
+        scanBtn.setTitle(s);
+
+        //Update fragment to arrested.
+        Fragment fragment = getCurrentFragment();
+        if(fragment instanceof ThievesFragmentLocations){
+            ThievesFragmentLocations thievesFragmentLocations = (ThievesFragmentLocations) fragment;
+            thievesFragmentLocations.isArrested();
+        }
+
+        mBoundService.removeRepeatingTask(arrestedRepeatingTask);
+    }
+
+    //endregion
+
     //region Service code
 
     @Override
     public void update(Observable observable, Object o) {
-        //runOnUiThread(() -> Toast.makeText(ThievesActivity.this, "Observable update: " + o.toString(), Toast.LENGTH_SHORT).show());
+        RepeatingTask repeatingTask = (RepeatingTask) observable;
+        switch(repeatingTask.getTask()){
+            case CHECK_ARRESTED:
+                if(o instanceof String){
+                    Toast.makeText(this, "Error: " + o.toString(), Toast.LENGTH_SHORT).show();
+                } else if ((boolean)o) {
+                    isArrested();
+                }
+                // method
+                break;
+        }
     }
 
     // Clean service binding
@@ -132,11 +288,13 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
     private final ServiceConnection mConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className, IBinder service) {
             mBoundService = ((RepeatingTaskService.LocalBinder)service).getService();
+            mBoundService.setID(ID);
 
             // Add task to the service.
-            RepeatingTask repeatingTask = new RepeatingTask(RepeatingTaskName.CHECK_ARRESTED, 3000);
-            repeatingTask.addObserver(ThievesActivity.this);
-            mBoundService.addRepeatingTask(repeatingTask);
+            arrestedRepeatingTask = new RepeatingTask(RepeatingTaskName.CHECK_ARRESTED, 3000);
+            arrestedRepeatingTask.addObserver(ThievesActivity.this);
+
+            mBoundService.addRepeatingTask(arrestedRepeatingTask);
         }
 
         public void onServiceDisconnected(ComponentName className) {

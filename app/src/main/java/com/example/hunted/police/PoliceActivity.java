@@ -17,6 +17,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
@@ -33,13 +34,18 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
-
 public class PoliceActivity extends AppCompatActivity implements Observer {
     final int PING_MS = 1000;
-    private final String URL = "http://192.168.1.87:3000";
+
+    public String URL;
+    private RequestQueue queue;
+
+    public String ID;
 
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
@@ -53,7 +59,12 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_police);
         queue = Volley.newRequestQueue(this);
+		
+        URL = getString(R.string.url);
+        queue = Volley.newRequestQueue(this);
 
+        ID = getIntent().getStringExtra("ID");
+		
         doBindService();
 
         //Set toolbar
@@ -245,6 +256,7 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
     private final ServiceConnection mConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className, IBinder service) {
             mBoundService = ((RepeatingTaskService.LocalBinder)service).getService();
+            mBoundService.setID(ID);
 
             //Add repeatingTask.
             RepeatingTask repeatingTask = new RepeatingTask(RepeatingTaskName.CHECK_THIEF_NEARBY, PING_MS);
