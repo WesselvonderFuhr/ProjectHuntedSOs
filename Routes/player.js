@@ -30,45 +30,62 @@ router.get('/', function (req, res) {
 });
 
 router.get('/arrestableThieves/:id/:distance', function(req, res){
-    //return list of id's that are close within distance
-    var playerLoc
-    var players = Player.find({}, function (err, result) {
-        if (!err) {
-            var distances = [];
-            result.map(function (player) {
-                if (req.params.id == player.id) {
-                    playerLoc = player.location
-                }
-            })
-            if (playerLoc.latitude == null) {
-                res.send("Deze speler heeft geen location")
-                return
-            }
 
-            result.forEach(item => {
-                if (item.id != req.params.id) {
-                    if (item.location.latitude != null) {
-                        if (item.arrested == false && item.role == "Boef"){
-                            var s = geolib.getPreciseDistance(
-                                { latitude: playerLoc.latitude, longitude: playerLoc.longitude },
-                                { latitude: item.location.latitude, longitude: item.location.longitude }
-                            );
-                            if (s <= req.params.distance){
-                                distances.push({
-                                    'id': item.id
-                                });
+    if(req.params.id.length < 25){
+        if(!parseInt(req.params.distance)){
+            res.status(400).send("Could not parse int distance")
+            return
+        }
+        //return list of id's that are close within distance
+        var playerLoc
+        var players = Player.find({}, function (err, result) {
+            if (!err) {
+                var distances = [];
+                result.map(function (player) {
+                    if (req.params.id == player.id) {
+                        playerLoc = player.location
+                    }
+                })
+                if (playerLoc == null){
+                    res.status(404).send("User does not exist")
+                    return
+                } else{
+                    if (playerLoc.latitude == null) {
+                        res.status(400).send("Player has no valid distance")
+                        return
+                    }
+                    result.forEach(item => {
+                        if (item.id != req.params.id) {
+                            if (item.location.latitude != null) {
+                                if (item.arrested == false && item.role == "Boef"){
+                                    var s = geolib.getPreciseDistance(
+                                        { latitude: playerLoc.latitude, longitude: playerLoc.longitude },
+                                        { latitude: item.location.latitude, longitude: item.location.longitude }
+                                    );
+                                    if (s <= req.params.distance){
+                                        distances.push({
+                                            'id': item.id
+                                        });
+                                    }
+                                }
                             }
                         }
-                    }
+                    })
                 }
-            })
-
-            function finished(err) {
-                console.log(err)
+                
+                function finished(err) {
+                    console.log(err)
+                }
+                res.send(JSON.stringify(distances, null, 2))
             }
-            res.send(JSON.stringify(distances, null, 2))
-        }
-    });
+            else{
+                res.send(error);
+            }
+        });
+    }else{
+        res.sendStatus(404);
+    }
+    
 });
 
 router.put('/arrest/:thiefId', async (req, res) => {
