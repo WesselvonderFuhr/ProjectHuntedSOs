@@ -1,6 +1,7 @@
 var express = require('express');
 var app = express();
 var Player = require('../MongoDB/player');
+var Loot = require('../MongoDB/loot');
 var router = express.Router();
 var geolib = require('geolib');
 
@@ -29,13 +30,54 @@ router.get('/', function (req, res) {
     });
 });
 
+
 router.get('/:id', function (req, res) {
     var query = { _id: req.params.id };
-    var players = Player.find(query, function (err, result) {
+    Player.findOne(query, function (err, result) {
         if (!err) {
             res.status(200).send(result);
         }else{
             res.status(404).send("User does not exist")
+		    }
+    });
+});
+
+router.get('/arrestableThieves/:id/:distance', function(req, res){
+    //return list of id's that are close within distance
+    var playerLoc
+    var players = Player.find({}, function (err, result) {
+        if (!err) {
+            var distances = [];
+            result.map(function (player) {
+                if (req.params.id == player.id) {
+                    playerLoc = player.location
+                }
+            })
+            if (playerLoc.latitude == null) {
+                res.send("Deze speler heeft geen location")
+                return
+            }
+
+            result.forEach(item => {
+                if (item.id != req.params.id) {
+                    if (item.location.latitude != null) {
+                        var s = geolib.getPreciseDistance(
+                            { latitude: playerLoc.latitude, longitude: playerLoc.longitude },
+                            { latitude: item.location.latitude, longitude: item.location.longitude }
+                        );
+                        if (s <= req.params.distance){
+                            distances.push({
+                                'id': item.id
+                            });
+                        }
+                    }
+                }
+            })
+
+            function finished(err) {
+                console.log(err)
+            }
+            res.send(JSON.stringify(distances, null, 2))
         }
     });
 });
@@ -94,6 +136,39 @@ router.put('/location/:id', function (req, res) {
         }
         res.send("Update gelukt");
     })
+});
+
+router.post('/:playerid/stolen/:lootid', function (req, res) {
+    var playerquery = { _id: req.params.playerid };
+    var lootquery =  { _id: req.params.lootid };
+    Player.findOne(playerquery,function(err,result){
+        if(result == null){
+            res.status(404).send("Deze speler bestaat niet")
+        }else{
+            let player = result
+            Loot.findOne(lootquery, function(err, result) {
+                if(result == null){
+                    res.status(404).send("Deze loot bestaat niet")
+                }else{
+                    let hasLoot = false;
+                    let loot=result;
+                   
+                    for(let i =0; i < player.loot.length; i++){
+                        if(player.loot[i].equals(loot._id)){
+                            hasLoot = true;
+                        }
+                    }
+                    if(!hasLoot){
+                        player.loot.push(loot)
+                        player.save();
+                        res.send(loot.name)
+                    }else{
+                        res.status(400).send("U heeft deze loot al")
+                    }
+                }  
+            });
+        }      
+    });
 });
 
 module.exports = router;
