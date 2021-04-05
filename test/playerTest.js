@@ -43,8 +43,7 @@ describe('Testing player route', function(){
 					done();
 				});
 		});
-	});/*
-    this will need a local db
+	});
     describe('stolen valid loot', function(){
 		it('should return 200 ', function(done){
 			request(server)
@@ -56,5 +55,5 @@ describe('Testing player route', function(){
 					done();
 				});
 		});
-	});*/
+	});
 });
