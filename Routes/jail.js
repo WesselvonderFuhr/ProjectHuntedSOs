@@ -1,17 +1,7 @@
 var express = require('express');
+const jail = require('../MongoDB/jail');
 var Jail = require('../MongoDB/jail');
 var router = express.Router();
-
-router.post('/', function (req, res) {
-    const location = req.body.location;
-    let jail = {};
-    jail.location = location;
-
-    let jailModel = new Jail(jail);
-    jailModel.save();
-
-    res.json(jailModel);
-});
 
 router.get('/', function (req, res) {
     var jail = Jail.find({}, function (err, result) {
@@ -21,8 +11,8 @@ router.get('/', function (req, res) {
     });
 });
 
-router.put('/:id', function (req, res) {
-    var query = { _id: req.params.id };
+router.put('/', function (req, res) {
+    
     var newLoc = {
         location:
         {
@@ -30,12 +20,25 @@ router.put('/:id', function (req, res) {
             longitude: req.body.location.longitude
         }
     }
-    Jail.updateOne(query, newLoc, function(err, result){
-        function finished(err) {
-            console.log(err)
+    Jail.countDocuments({}, function (err, count){ 
+        if(count==0){
+            const location = req.body.location;
+            let jail = {};
+            jail.location = location;
+        
+            let jailModel = new Jail(jail);
+            jailModel.save();
+        
+            res.json(jailModel);
+        }else if(count ==1){
+            Jail.updateOne({}, newLoc, function(err, result){
+                function finished(err) {
+                    console.log(err)
+                }
+                res.send("Update gelukt");
+            })
         }
-        res.send("Update gelukt");
-    })
+    });
 });
 
 module.exports = router;
