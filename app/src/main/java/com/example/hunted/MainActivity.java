@@ -1,8 +1,12 @@
 package com.example.hunted;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -18,6 +22,7 @@ import com.example.hunted.thieves.ThievesActivity;
 
 //First activity screen with police/thieves choice
 public class MainActivity extends AppCompatActivity {
+    private final int LOCATION_REQUEST_CODE = 1234;
 
     public String URL;
     private RequestQueue queue;
@@ -35,6 +40,8 @@ public class MainActivity extends AppCompatActivity {
 
         buttonPolice = findViewById(R.id.button_police);
         buttonThieves = findViewById(R.id.button_thieves);
+
+        getTrackPermission();
 
         buttonPolice.setOnClickListener(v -> openPoliceActivity());
         buttonThieves.setOnClickListener(v -> openThievesActivity());
@@ -92,5 +99,11 @@ public class MainActivity extends AppCompatActivity {
             }
         };
         queue.add(stringRequest);
+    }
+
+    private void getTrackPermission(){
+        if (ActivityCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
+        }
     }
 }

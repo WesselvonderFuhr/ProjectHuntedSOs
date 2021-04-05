@@ -1,19 +1,26 @@
 package com.example.hunted.thieves;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.Manifest;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.text.SpannableString;
@@ -32,6 +39,7 @@ import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.hunted.R;
+import com.example.hunted.police.PoliceActivity;
 import com.example.hunted.repeatingtask.RepeatingTask;
 import com.example.hunted.repeatingtask.RepeatingTaskName;
 import com.example.hunted.repeatingtask.RepeatingTaskService;
@@ -50,9 +58,13 @@ import java.util.Observable;
 import java.util.Observer;
 
 public class ThievesActivity extends AppCompatActivity implements Observer {
+    private final int LOCATION_REQUEST_CODE = 1234;
 
     private String URL;
     private RequestQueue queue;
+
+    private LocationManager locationManager;
+    private LocationListener locationListener;
 
     private RepeatingTask arrestedRepeatingTask;
 
@@ -74,6 +86,8 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
 
         ID = getIntent().getStringExtra("ID");
 
+        initLocation();
+
         // Bind to RepeatingTaskService
         doBindService();
 
@@ -91,6 +105,66 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         setupDrawerContent(navigationView);
+    }
+
+    private void initLocation() {
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        locationListener =  new LocationListener() {
+
+            @Override
+            public void onLocationChanged(Location location) {
+                double latitude = location.getLatitude();
+                double longitude = location.getLongitude();
+
+                String setlocURL = URL + "player/location/" + ID;
+                StringRequest stringRequest = new StringRequest(Request.Method.PUT, setlocURL,
+                        response -> {
+                        }, error -> {
+                }) {
+
+                    @Override
+                    public String getBodyContentType() {
+                        return "application/json; charset=utf-8";
+                    }
+
+                    @Override
+                    public byte[] getBody() {
+                        String body = "{\"location\": {\"latitude\":" + latitude + ", \"longitude\":" + longitude + "}}";
+                        return body.getBytes();
+                    }
+                };
+                queue.add(stringRequest);
+            }
+
+            @Override
+            public void onProviderEnabled(@NonNull String provider) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(@NonNull String provider) {
+
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+
+            }
+        };
+
+        if (ActivityCompat.checkSelfPermission(ThievesActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, locationListener);
+        } else {
+            ActivityCompat.requestPermissions(ThievesActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (ActivityCompat.checkSelfPermission(ThievesActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+        }
     }
 
     @Override
@@ -204,7 +278,6 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
         }
 
         if(success){
-            //http://localhost:3000/player/605c8faed96441448cac6688/stolen/605cd906a13024000496f2ff
             final String postStolenLoot = URL + "player/" + ID + "/stolen/" + result;
             StringRequest stringRequest = new StringRequest(Request.Method.POST, postStolenLoot,
                     response -> sendDataToFragmentScanner(true, response),
