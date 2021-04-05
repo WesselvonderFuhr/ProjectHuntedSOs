@@ -26,6 +26,7 @@ export class SetupQrComponent implements OnInit {
   onClickSubmit(): void {
     this.lootService.postLoot(this.loot).subscribe((res) => {
       console.log('Added ' + this.loot.name + ' to loot');
+      this.ngOnInit();
     });
   }
 
