@@ -25,7 +25,7 @@ router.post('/', function (req, res) {
 router.get('/', function (req, res) {
     var players = Player.find({}, function (err, result) {
         if (!err) {
-            return res.send(result);
+            res.send(result);
         }
     });
 });
@@ -35,9 +35,9 @@ router.get('/:id', function (req, res) {
     var query = { _id: req.params.id };
     Player.findOne(query, function (err, result) {
         if (!err) {
-            res.send(result);
-        } else {
-            res.status(404).send("Deze speler bestaat niet")
+            res.status(200).send(result);
+        }else{
+            res.status(404).send("User does not exist")
 		    }
     });
 });
