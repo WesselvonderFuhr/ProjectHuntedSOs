@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { SetupJailComponent } from './setup-jail.component';
 
 describe('SetupJailComponent', () => {
@@ -8,7 +8,8 @@ describe('SetupJailComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ SetupJailComponent ]
+      declarations: [ SetupJailComponent ],
+      imports: [ HttpClientTestingModule ]
     })
     .compileComponents();
   });

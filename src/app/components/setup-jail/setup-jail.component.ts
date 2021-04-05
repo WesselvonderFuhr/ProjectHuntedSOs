@@ -17,7 +17,7 @@ export class SetupJailComponent implements OnInit {
 
   public location: Location;
 
-  constructor(private jailService: JailService, private formBuilder: FormBuilder) {
+  constructor(private jailService: JailService) {
     this.location = new Location();
   }
 
