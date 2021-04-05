@@ -102,11 +102,11 @@ router.get('/arrestableThieves/:id/:distance', function(req, res){
 });
 
 router.put('/arrest/:thiefId', async (req, res) => {
-    var thief = await Player.findById(req.params.id)
+    var query = { _id: req.params.thiefId };
     var arrestQuery = {arrested: true,
     loot: []}
 
-    Player.updateOne(thief, arrestQuery, function (err, result) {
+    Player.updateOne(query, arrestQuery, function (err, result) {
         function finished(err) {
             console.log(err)
         }
