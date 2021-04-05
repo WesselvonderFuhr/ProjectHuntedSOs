@@ -109,7 +109,7 @@ public class RepeatingTaskService extends Service {
     }
 
     private void checkThievesNearby(RepeatingTask task){
-        final String getArrestableThieves = URL + "/player/arrestableThieves/" + ID + "/" + CATCH_THIEVES_DISTANCE_METERS;
+        final String getArrestableThieves = URL + "player/arrestableThieves/" + ID + "/" + CATCH_THIEVES_DISTANCE_METERS;
         StringRequest stringRequest = new StringRequest(Request.Method.GET, getArrestableThieves,
                 response -> {
                     try {
@@ -122,7 +122,15 @@ public class RepeatingTaskService extends Service {
                         task.notifyObservers("Er ging iets mis met het ophalen van de richting van boeven.");
                     }
                 }, error -> {
-                    task.notifyObservers("Er ging iets mis met het ophalen van de richting van boeven.");
+                    NetworkResponse response = error.networkResponse;
+                    if (error instanceof ServerError && response != null) {
+                        try {
+                            String res = new String(response.data, HttpHeaderParser.parseCharset(response.headers, "utf-8"));
+                            task.notifyObservers(res);
+                        } catch (Exception e) {
+                            task.notifyObservers("Er ging iets mis met laden van de boeven");
+                        }
+                    }
                 }
         );
         queue.add(stringRequest);
