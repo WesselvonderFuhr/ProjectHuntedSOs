@@ -102,7 +102,6 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
 
             }
         }
-        Log.d("templist", tempList.toString());
         return tempList;
     }
 
@@ -112,7 +111,6 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
         Fragment fragment = getCurrentFragment();
         if(fragment instanceof PoliceFragmentArrest){
             PoliceFragmentArrest policeFragmentArrest = (PoliceFragmentArrest) fragment;
-            Log.d("checkClosestThief_error", object.toString());
             arrestableThieves = (JSONArray) object;
             policeFragmentArrest.giveArrestablePlayers(getArrestableThieves());
             policeFragmentArrest.setArrestButtonActive(shouldUpdateArrestButton());
@@ -120,7 +118,6 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
     }
 
     public void arrestThieves() {
-        Log.e("arrestThieves", "hij is gekomen bij arrestthieves gelukkig");
         ArrayList<String> tempList = getArrestableThieves();
         if(tempList != null) {
             if(tempList.size() > 0) {
@@ -136,18 +133,14 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
 
         StringRequest stringRequest = new StringRequest(Request.Method.PUT, getArrestedUrl,
                 response -> {
-            Log.d("arrestResponse", "Boef is gearresteerd! - Response: " + response);
+
                 }, error -> {
-            Log.e("Error", error.toString());
-        }
+
+            }
         );
 
         queue.add(stringRequest);
     }
-
-    //if thief is close to police
-    //police can arrest the thief with the touch of a button
-
 
     //sets the arrest button to active or non-active based on
     private boolean shouldUpdateArrestButton() {
@@ -157,7 +150,6 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
                 return true;
             }
         }
-
         return false;
     }
 
@@ -181,12 +173,9 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
     // DRAWER LOADING
 
     private void setupDrawerContent(NavigationView navigationView){
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(MenuItem menuItem) {
-                selectDrawerItem(menuItem);
-                return true;
-            }
+        navigationView.setNavigationItemSelectedListener(menuItem -> {
+            selectDrawerItem(menuItem);
+            return true;
         });
     }
     public void selectDrawerItem(MenuItem menuItem) {
@@ -240,8 +229,11 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
         RepeatingTask repeatingTask = (RepeatingTask) observable;
         switch (repeatingTask.getTask()){
             case CHECK_THIEF_NEARBY:
-                //for now a toast
-                runOnUiThread(() -> checkClosestThief(o));
+                if(o instanceof JSONArray){
+                    runOnUiThread(() -> checkClosestThief(o));
+                } else {
+                    runOnUiThread(() -> Toast.makeText(this, "Error: " + o.toString(), Toast.LENGTH_SHORT).show());
+                }
                 break;
         }
     }

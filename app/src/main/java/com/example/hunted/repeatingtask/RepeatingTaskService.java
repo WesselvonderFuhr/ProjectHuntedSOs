@@ -4,7 +4,6 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
-import android.util.Log;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -16,9 +15,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.hunted.R;
 
 import org.json.JSONObject;
-
 import org.json.JSONArray;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -96,8 +93,6 @@ public class RepeatingTaskService extends Service {
                         task.notifyObservers(obj.get("arrested"));
                     } catch (Throwable t) {
                         task.notifyObservers("Er ging iets mis met het ophalen van je status");
-                        System.out.println("ERROR: url is " + getArrestedUrl);
-                        t.printStackTrace();
                     }
                 }, error -> {
                     NetworkResponse response = error.networkResponse;
@@ -114,7 +109,7 @@ public class RepeatingTaskService extends Service {
     }
 
     private void checkThievesNearby(RepeatingTask task){
-        final String getArrestableThieves = URL + "/player/arrestableThieves/605db7aadecb3667c865c213/" + CATCH_THIEVES_DISTANCE_METERS;
+        final String getArrestableThieves = URL + "/player/arrestableThieves/" + ID + "/" + CATCH_THIEVES_DISTANCE_METERS;
         StringRequest stringRequest = new StringRequest(Request.Method.GET, getArrestableThieves,
                 response -> {
                     try {
@@ -124,12 +119,10 @@ public class RepeatingTaskService extends Service {
                         task.notifyObservers(obj);
 
                     } catch (Throwable t) {
-                        Log.e("checkThieveNearby", t.toString());
+                        task.notifyObservers("Er ging iets mis met het ophalen van de richting van boeven.");
                     }
                 }, error -> {
-                Log.d("bla", error.toString());
-                //Bad request :frowning:
-                task.notifyObservers("Big oof.");
+                    task.notifyObservers("Er ging iets mis met het ophalen van de richting van boeven.");
                 }
         );
         queue.add(stringRequest);

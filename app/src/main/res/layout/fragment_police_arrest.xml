@@ -8,7 +8,7 @@
     android:id="@+id/fragment_police_arrest">
 
     <TextView
-        android:id="@+id/fragment_arrest_textview1"
+        android:id="@+id/arrestTextview"
         android:layout_width="match_parent"
         android:layout_height="60sp"
         android:gravity="center"

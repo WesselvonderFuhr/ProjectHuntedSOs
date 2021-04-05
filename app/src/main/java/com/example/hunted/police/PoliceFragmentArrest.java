@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 
 public class PoliceFragmentArrest extends Fragment {
-    private TextView textView1;
+    private TextView arrestTextview;
     private Button arrestButton;
 
     @Override
@@ -30,14 +30,9 @@ public class PoliceFragmentArrest extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_police_arrest, container, false);
 
-        textView1 = (TextView) view.findViewById(R.id.fragment_arrest_textview1);
+        arrestTextview = (TextView) view.findViewById(R.id.arrestTextview);
         arrestButton = (Button) view.findViewById(R.id.arrestButton);
-        arrestButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                arrestButtonClicked();
-            }
-        });
+        arrestButton.setOnClickListener(v -> arrestButtonClicked());
         return view;
     }
 
@@ -52,17 +47,9 @@ public class PoliceFragmentArrest extends Fragment {
             if (list.size() == 1){
                 setTextBox("Er is 1 boef in de buurt!");
             } else {
-//                String text = "Er zijn boeven in de buurt!\nDit zijn de ID's van de boeven: ";
                 String text = "Er zijn " + list.size() + " boeven in de buurt!";
-//                for(int i = 0; i < list.size(); i++){
-//                    if (i > 0){
-//                        text = text + ", ";
-//                    }
-//                    text = text + list.get(i);
-//                }
                 setTextBox(text);
             }
-
         } else {
             setTextBox("Er zijn geen boeven in de buurt.");
         }
@@ -81,6 +68,6 @@ public class PoliceFragmentArrest extends Fragment {
     }
 
     public void setTextBox(String text){
-        textView1.setText(text);
+        arrestTextview.setText(text);
     }
 }
