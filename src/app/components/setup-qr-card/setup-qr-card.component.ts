@@ -1,6 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
+import { fromEventPattern } from 'rxjs';
 
 import { Loot } from 'src/app/models/loot.model';
+import { NgForm } from '@angular/forms'
 
 @Component({
   selector: 'app-setup-qr-card',
@@ -9,7 +11,7 @@ import { Loot } from 'src/app/models/loot.model';
 })
 export class SetupQrCardComponent implements OnInit {
 
-  @Input() loot: Loot;
+  @Input() loot: Loot = new Loot;
 
   constructor() { }
 

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { LootService } from 'src/app/services/loot/loot.service';
 import { Loot } from 'src/app/models/loot.model';
+import { NgForm } from '@angular/forms'
 
 @Component({
   selector: 'app-setup-qr',

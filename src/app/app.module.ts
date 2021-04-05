@@ -45,7 +45,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
   providers: [
     JailService,
     LootService,
-    HttpClientModule,
+    HttpClientModule
   ],
   bootstrap: [AppComponent]
 })
