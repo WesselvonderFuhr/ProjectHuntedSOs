@@ -20,7 +20,6 @@ export class SetupQrComponent implements OnInit {
   ngOnInit(): void {
     this.lootService.getLoot().subscribe((res) => {
       this.lootArray = res;
-      console.log(this.lootArray);
     });
   }
 

@@ -17,7 +17,6 @@ export class LootService {
   }
 
   postLoot(loot: Loot) {
-    console.log(JSON.stringify(loot));
     return this.http.post(`${this.lootURL}`, loot, {responseType: 'text'});
   }
 }

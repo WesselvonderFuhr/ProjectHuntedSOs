@@ -17,7 +17,6 @@ export class JailService {
   }
 
   updateJail(jail: Jail) {
-    console.log(JSON.stringify(jail));
     return this.http.put(`${this.jailURL}/60630751e2a3b624586ed575`, jail, {responseType: 'text'});
   }
 }
