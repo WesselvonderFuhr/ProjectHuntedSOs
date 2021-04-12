@@ -1,6 +1,9 @@
 var express = require('express');
 var app = express();
+var cors = require('cors');
 const connectDB = require('./MongoDB/Connection');
+
+app.use(cors());
 
 connectDB();
 var loot = require('./Routes/loot.js');
