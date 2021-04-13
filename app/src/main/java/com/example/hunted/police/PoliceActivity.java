@@ -1,24 +1,35 @@
 package com.example.hunted.police;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.Manifest;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.hunted.R;
@@ -33,28 +44,41 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
-
 public class PoliceActivity extends AppCompatActivity implements Observer {
-    final int PING_MS = 1000;
-    private final String URL = "http://192.168.1.87:3000";
+    private final int PING_MS = 1000;
+    private final int LOCATION_REQUEST_CODE = 1234;
+
+    public String URL;
+    private RequestQueue queue;
+
+    private LocationManager locationManager;
+    private LocationListener locationListener;
+
+    public String ID;
+
+    private boolean hasNotBound = true;
 
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
     private NavigationView navigationView;
     private JSONArray arrestableThieves;
 
-    private RequestQueue queue;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_police);
+
+        URL = getString(R.string.url);
         queue = Volley.newRequestQueue(this);
 
-        doBindService();
+        ID = getIntent().getStringExtra("ID");
+
+        initLocation();
 
         //Set toolbar
         toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -72,6 +96,69 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         setupDrawerContent(navigationView);
 
+    }
+
+    private void initLocation() {
+        locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        locationListener =  new LocationListener() {
+
+            @Override
+            public void onLocationChanged(Location location) {
+                double latitude = location.getLatitude();
+                double longitude = location.getLongitude();
+
+                String setlocURL = URL + "player/location/" + ID;
+                StringRequest stringRequest = new StringRequest(Request.Method.PUT, setlocURL,
+                        response -> {
+                            if(hasNotBound) {
+                                doBindService();
+                            }
+                        }, error -> {
+                }) {
+
+                    @Override
+                    public String getBodyContentType() {
+                        return "application/json; charset=utf-8";
+                    }
+
+                    @Override
+                    public byte[] getBody() {
+                        String body = "{\"location\": {\"latitude\":" + latitude + ", \"longitude\":" + longitude + "}}";
+                        return body.getBytes();
+                    }
+                };
+                queue.add(stringRequest);
+            }
+
+            @Override
+            public void onProviderEnabled(@NonNull String provider) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(@NonNull String provider) {
+
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+
+            }
+        };
+
+        if (ActivityCompat.checkSelfPermission(PoliceActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, locationListener);
+        } else {
+            ActivityCompat.requestPermissions(PoliceActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (ActivityCompat.checkSelfPermission(PoliceActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+        }
     }
 
     @Override
@@ -94,7 +181,6 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
 
             }
         }
-        Log.d("templist", tempList.toString());
         return tempList;
     }
 
@@ -104,7 +190,6 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
         Fragment fragment = getCurrentFragment();
         if(fragment instanceof PoliceFragmentArrest){
             PoliceFragmentArrest policeFragmentArrest = (PoliceFragmentArrest) fragment;
-            Log.d("checkClosestThief_error", object.toString());
             arrestableThieves = (JSONArray) object;
             policeFragmentArrest.giveArrestablePlayers(getArrestableThieves());
             policeFragmentArrest.setArrestButtonActive(shouldUpdateArrestButton());
@@ -112,7 +197,6 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
     }
 
     public void arrestThieves() {
-        Log.e("arrestThieves", "hij is gekomen bij arrestthieves gelukkig");
         ArrayList<String> tempList = getArrestableThieves();
         if(tempList != null) {
             if(tempList.size() > 0) {
@@ -124,22 +208,18 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
     }
 
     private void arrestThiefAPICall(String thiefId) {
-        final String getArrestedUrl = URL + "/player/arrest/" + thiefId;
+        final String getArrestedUrl = URL + "player/arrest/" + thiefId;
 
         StringRequest stringRequest = new StringRequest(Request.Method.PUT, getArrestedUrl,
                 response -> {
-            Log.d("arrestResponse", "Boef is gearresteerd! - Response: " + response);
+                    Toast.makeText(PoliceActivity.this, "De boef is gearresteerd!", Toast.LENGTH_SHORT).show();
                 }, error -> {
-            Log.e("Error", error.toString());
-        }
+                Toast.makeText(PoliceActivity.this, "De boef is weg gekomen!", Toast.LENGTH_SHORT).show();
+            }
         );
 
         queue.add(stringRequest);
     }
-
-    //if thief is close to police
-    //police can arrest the thief with the touch of a button
-
 
     //sets the arrest button to active or non-active based on
     private boolean shouldUpdateArrestButton() {
@@ -149,7 +229,6 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
                 return true;
             }
         }
-
         return false;
     }
 
@@ -173,12 +252,9 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
     // DRAWER LOADING
 
     private void setupDrawerContent(NavigationView navigationView){
-        navigationView.setNavigationItemSelectedListener(new NavigationView.OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(MenuItem menuItem) {
-                selectDrawerItem(menuItem);
-                return true;
-            }
+        navigationView.setNavigationItemSelectedListener(menuItem -> {
+            selectDrawerItem(menuItem);
+            return true;
         });
     }
     public void selectDrawerItem(MenuItem menuItem) {
@@ -232,8 +308,11 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
         RepeatingTask repeatingTask = (RepeatingTask) observable;
         switch (repeatingTask.getTask()){
             case CHECK_THIEF_NEARBY:
-                //for now a toast
-                runOnUiThread(() -> checkClosestThief(o));
+                if(o instanceof JSONArray){
+                    runOnUiThread(() -> checkClosestThief(o));
+                } else {
+                    runOnUiThread(() -> Toast.makeText(PoliceActivity.this, "Error: " + o.toString(), Toast.LENGTH_SHORT).show());
+                }
                 break;
         }
     }
@@ -245,6 +324,7 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
     private final ServiceConnection mConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className, IBinder service) {
             mBoundService = ((RepeatingTaskService.LocalBinder)service).getService();
+            mBoundService.setID(ID);
 
             //Add repeatingTask.
             RepeatingTask repeatingTask = new RepeatingTask(RepeatingTaskName.CHECK_THIEF_NEARBY, PING_MS);

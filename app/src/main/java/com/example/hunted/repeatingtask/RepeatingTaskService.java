@@ -4,15 +4,18 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
-import android.util.Log;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.ServerError;
+import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.hunted.R;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
+import org.json.JSONArray;
 
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -20,9 +23,10 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import static java.lang.Thread.sleep;
 
 public class RepeatingTaskService extends Service {
-    private final String URL = "http://192.168.31.1:3000";    //string ivo
-//    private final String URL = "http://192.168.1.87:3000";      //string ayman
-
+	
+    private String URL;
+    private String ID;
+	
     private final long DELAY = 200;
     final int CATCH_THIEVES_DISTANCE_METERS = 100;
 
@@ -77,23 +81,35 @@ public class RepeatingTaskService extends Service {
     // REPEATING TASK METHODS
 
     private void checkArrested(RepeatingTask task) {
-        /*TODO API Call doesn't exist yet.
-           - should be 'URL + "player/" + id' */
-        final String getArrestedUrl = URL + "player";
+        final String getArrestedUrl = URL + "player/" + ID;
         StringRequest stringRequest = new StringRequest(Request.Method.GET, getArrestedUrl,
                 response -> {
-                    //Observable
-                    task.notifyObservers(response.length()  + " (count)");
+                    try {
+                        response = response.replaceAll("[\\\\]{1}[\"]{1}","\"");
+                        response = response.substring(response.indexOf("{"),response.lastIndexOf("}")+1);
+
+                        JSONObject obj = new JSONObject(response);
+                        //Observable
+                        task.notifyObservers(obj.get("arrested"));
+                    } catch (Throwable t) {
+                        task.notifyObservers("Er ging iets mis met het ophalen van je status");
+                    }
                 }, error -> {
-            //Bad request :(
-            task.notifyObservers("Big oof.");
-        }
-        );
+                    NetworkResponse response = error.networkResponse;
+                    if (error instanceof ServerError && response != null) {
+                        try {
+                            String res = new String(response.data, HttpHeaderParser.parseCharset(response.headers, "utf-8"));
+                            task.notifyObservers(res);
+                        } catch (Exception e) {
+                            task.notifyObservers("Er ging iets mis met het communiceren met de server");
+                        }
+                    }
+        });
         queue.add(stringRequest);
     }
 
     private void checkThievesNearby(RepeatingTask task){
-        final String getArrestableThieves = URL + "/player/arrestableThieves/605db7aadecb3667c865c213/" + CATCH_THIEVES_DISTANCE_METERS;
+        final String getArrestableThieves = URL + "player/arrestableThieves/" + ID + "/" + CATCH_THIEVES_DISTANCE_METERS;
         StringRequest stringRequest = new StringRequest(Request.Method.GET, getArrestableThieves,
                 response -> {
                     try {
@@ -103,12 +119,18 @@ public class RepeatingTaskService extends Service {
                         task.notifyObservers(obj);
 
                     } catch (Throwable t) {
-                        Log.e("checkThieveNearby", t.toString());
+                        task.notifyObservers("Er ging iets mis met het ophalen van de richting van boeven.");
                     }
                 }, error -> {
-                Log.d("bla", error.toString());
-                //Bad request :frowning:
-                task.notifyObservers("Big oof.");
+                    NetworkResponse response = error.networkResponse;
+                    if (error instanceof ServerError && response != null) {
+                        try {
+                            String res = new String(response.data, HttpHeaderParser.parseCharset(response.headers, "utf-8"));
+                            task.notifyObservers(res);
+                        } catch (Exception e) {
+                            task.notifyObservers("Er ging iets mis met laden van de boeven");
+                        }
+                    }
                 }
         );
         queue.add(stringRequest);
@@ -117,8 +139,14 @@ public class RepeatingTaskService extends Service {
     @Override
     public void onCreate() {
         repeatingTasks = new ArrayList<>();
+        URL = getString(R.string.url);
+        ID = "";
         new Thread(runnable).start();
         queue = Volley.newRequestQueue(this);
+    }
+
+    public void setID(String ID){
+        this.ID = ID;
     }
 
     @Override
