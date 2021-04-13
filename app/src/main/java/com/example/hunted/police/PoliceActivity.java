@@ -96,7 +96,6 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         setupDrawerContent(navigationView);
-//        checkOutOfBounds();
     }
 
     private void initLocation() {
@@ -129,6 +128,7 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
                     }
                 };
                 queue.add(stringRequest);
+                checkOutOfBounds();
             }
 
             @Override
@@ -252,17 +252,21 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
 
     private void checkOutOfBounds(){
         String requestURL = URL + "player/outofbounds/" + ID;
-        Log.d("checkOutOfBounds requestURL: ", requestURL);
+//        Log.d("checkOutOfBounds requestURL: ", requestURL);
         StringRequest request = new StringRequest(Request.Method.GET, requestURL, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Toast.makeText(PoliceActivity.this, response.toString(), Toast.LENGTH_LONG).show();
-                Log.d("checkOutOfBounds response: ", response.toString());
+                if (response.equals("true")){
+                    Log.d("response: ", "player is out of bounds");
+                    vibrateOutOfPlayingField();
+                } else if (response.equals("false")){
+                    Log.d("response: ", "player is within bounds");
+                }
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("error", error.toString());
+                Log.d("checkOutOfBounds error", error.toString());
             }
         });
         queue.add(request);
