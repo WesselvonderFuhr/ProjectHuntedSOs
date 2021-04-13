@@ -1,5 +1,4 @@
 var express = require('express');
-var app = express();
 var Player = require('../MongoDB/player');
 var Loot = require('../MongoDB/loot');
 var router = express.Router();
@@ -43,7 +42,6 @@ router.get('/:id', function (req, res) {
 });
 
 router.get('/arrestableThieves/:id/:distance', function(req, res){
-
     if(req.params.id.length < 25){
         if(!parseInt(req.params.distance)){
             res.status(400).send("Could not parse int distance")
@@ -99,6 +97,33 @@ router.get('/arrestableThieves/:id/:distance', function(req, res){
         res.sendStatus(404);
     }
     
+});
+
+router.get('/outofbounds/:id', function(req, res){
+    var playerQuery = {_id: req.params.id}
+
+    Player.findOne(playerQuery, function(err, result){
+        if(result == null){
+            res.status(401).send('Player does not exist')
+        }else{
+            //5.5249804, 51.7701603
+            // 5.5228454, 51.7690881
+            // 5.5250716, 51.7674349
+            // 5.5266756, 51.7679229
+            // 5.5262786, 51.7701172
+            // 5.5249804, 51.7701603
+            var loc = result.location
+            var isPoint = geolib.isPointInPolygon(loc, [
+                {latitude: 5.5249804, longitude: 51.7701603 },
+                {latitude: 5.5228454, longitude: 51.7690881 },
+                {latitude: 5.5250716, longitude: 51.7674349 },
+                {latitude: 5.5266756, longitude: 51.7679229 },
+                {latitude: 5.5262786, longitude: 51.7701172 },
+                {latitude: 5.5249804, longitude: 51.7701603 }
+            ])
+            res.status(400).send(isPoint)
+        }
+    })
 });
 
 router.put('/arrest/:thiefId', async (req, res) => {
