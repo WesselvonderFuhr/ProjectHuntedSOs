@@ -20,6 +20,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -95,7 +96,7 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         setupDrawerContent(navigationView);
-
+//        checkOutOfBounds();
     }
 
     private void initLocation() {
@@ -248,6 +249,32 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.mainContentPolice, fragment).commit();
     }
+
+    private void checkOutOfBounds(){
+        String requestURL = URL + "player/outofbounds/" + ID;
+        Log.d("checkOutOfBounds requestURL: ", requestURL);
+        StringRequest request = new StringRequest(Request.Method.GET, requestURL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                Toast.makeText(PoliceActivity.this, response.toString(), Toast.LENGTH_LONG).show();
+                Log.d("checkOutOfBounds response: ", response.toString());
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("error", error.toString());
+            }
+        });
+        queue.add(request);
+    }
+
+    private void vibrateOutOfPlayingField(){
+        Vibrator v = (Vibrator) getSystemService(this.VIBRATOR_SERVICE);
+
+        Toast.makeText(this, "Keer terug naar het speelgebied!", Toast.LENGTH_LONG).show();
+        v.vibrate(3000);
+    }
+
 
     // DRAWER LOADING
 
