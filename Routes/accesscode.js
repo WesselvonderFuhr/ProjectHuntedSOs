@@ -22,7 +22,7 @@ router.post('/', function (req, res) {
             accesscodeModel.save();
         }
 
-        res.status(400).send(codes)
+        res.status(200).send(codes)
     }else{
         res.status(401).send("Not a valid amount input, choose a number bigger than 0")
     }
@@ -60,7 +60,7 @@ router.put('/assign/:id', async function (req, res) {
                             if(err){
                                 res.status(401).send('Accesscode does not exist')
                             }else{
-                                res.status(400).send('Accesscode is updated with the id of playername ' + pResult.name)
+                                res.status(200).send('Accesscode is updated with the id of playername ' + pResult.name)
                             }
                         })
                     }
