@@ -19,6 +19,9 @@ import { LootService } from './services/loot/loot.service';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { GameComponent } from './components/game/game.component';
+import { GameOutOfBoundsMessageComponent } from './components/game-out-of-bounds-message/game-out-of-bounds-message.component';
+
 
 @NgModule({
   declarations: [
@@ -26,7 +29,9 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     SetupComponent,
     SetupJailComponent,
     SetupQrComponent,
-    SetupQrCardComponent
+    SetupQrCardComponent,
+    GameComponent,
+    GameOutOfBoundsMessageComponent
   ],
   imports: [
     BrowserModule,
