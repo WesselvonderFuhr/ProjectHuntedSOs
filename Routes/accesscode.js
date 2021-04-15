@@ -44,28 +44,29 @@ router.put('/assign/:id', async function (req, res) {
 
         try{
             code = await Accesscode.findOne(accesscodeQuery).exec()
+            if (code.assignedTo != null){
+                res.status(401).send('Accesscode is already assigned')
+                }else{
+                    Player.findOne(playerQuery, function(err, pResult){
+                        if(err){
+                            res.status(401).send('Player does not exist')
+                        }else{
+                            Accesscode.updateOne(accesscodeQuery, {assignedTo: req.body.playerId} , function(err, aResult){
+                                if(err){
+                                    res.status(401).send('Accesscode does not exist')
+                                }else{
+                                    res.status(200).send('Accesscode is updated with the id of playername ' + pResult.name)
+                                }
+                            })
+                        }
+                    })
+                }
         }catch{
             res.status(401).send('Accesscode does not exist')
             return
         }
 
-        if (code.assignedTo != null){
-            res.status(401).send('Accesscode is already assigned')
-            }else{
-                Player.findOne(playerQuery, function(err, pResult){
-                    if(err){
-                        res.status(401).send('Player does not exist')
-                    }else{
-                        Accesscode.updateOne(accesscodeQuery, {assignedTo: req.body.playerId} , function(err, aResult){
-                            if(err){
-                                res.status(401).send('Accesscode does not exist')
-                            }else{
-                                res.status(200).send('Accesscode is updated with the id of playername ' + pResult.name)
-                            }
-                        })
-                    }
-                })
-            }
+        
         }
 });
 
