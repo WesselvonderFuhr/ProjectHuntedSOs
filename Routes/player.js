@@ -113,18 +113,19 @@ router.get('/outofbounds/:id', function(req, res){
             // 5.5262786, 51.7701172
             // 5.5249804, 51.7701603
             var loc = result.location
+            console.log(loc)
             if(loc.latitude != null){
                 var isPoint = geolib.isPointInPolygon(loc, [
-                    {latitude: 5.5249804, longitude: 51.7701603 },
-                    {latitude: 5.5228454, longitude: 51.7690881 },
-                    {latitude: 5.5250716, longitude: 51.7674349 },
-                    {latitude: 5.5266756, longitude: 51.7679229 },
-                    {latitude: 5.5262786, longitude: 51.7701172 },
-                    {latitude: 5.5249804, longitude: 51.7701603 }
+                    {longitude:-122.0813549, latitude: 37.4230457},
+                    {longitude:-122.0867568, latitude: 37.4233737},
+                    {longitude:-122.0867246, latitude: 37.4211669},
+                    {longitude:-122.0813870, latitude: 37.4208175},
+                    {longitude:-122.0813549, latitude: 37.4230457}
                 ])
+                console.log("Is out of bounds: " + !isPoint)
                 res.status(200).send(!isPoint)
             }else{
-                res.status(401).send("Player has no location")
+                res.send("Player has no location")
             }
         }
     })
