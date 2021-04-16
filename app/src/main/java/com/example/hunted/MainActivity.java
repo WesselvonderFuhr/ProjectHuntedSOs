@@ -8,17 +8,24 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.ServerError;
+import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.hunted.police.PoliceActivity;
 import com.example.hunted.thieves.ThievesActivity;
+
+import org.json.JSONObject;
 
 //First activity screen with police/thieves choice
 public class MainActivity extends AppCompatActivity {
@@ -27,24 +34,45 @@ public class MainActivity extends AppCompatActivity {
     public String URL;
     private RequestQueue queue;
 
-    Button buttonPolice;
-    Button buttonThieves;
+    Button login;
+
+    EditText username;
+    EditText code;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        URL = getString(R.string.url);
+        URL = "http://192.168.1.87:3000/";
         queue = Volley.newRequestQueue(this);
 
-        buttonPolice = findViewById(R.id.button_police);
-        buttonThieves = findViewById(R.id.button_thieves);
+        login = findViewById(R.id.login);
+        username = findViewById(R.id.username_input);
+        code = findViewById(R.id.code_input);
 
         getTrackPermission();
 
-        buttonPolice.setOnClickListener(v -> openPoliceActivity());
-        buttonThieves.setOnClickListener(v -> openThievesActivity());
+        login.setOnClickListener(v -> Login());
+    }
+
+    public void Login() {
+        final String checkNameAndCodeCombo = URL + "accesscode/check/" + username.getText() + "/" + code.getText();
+
+        StringRequest stringRequest = new StringRequest(Request.Method.POST, checkNameAndCodeCombo,
+                response -> {
+                    if(response.equals("Boef")) {
+                        openThievesActivity();
+                    } else {
+                        openPoliceActivity();
+                    }
+
+                }, error -> {
+            Toast.makeText(this, "Iets is niet goed gegaan bij het inloggen: " + error, Toast.LENGTH_SHORT).show();
+        }
+        );
+
+        queue.add(stringRequest);
     }
 
     public void openPoliceActivity(){
