@@ -24,10 +24,10 @@ router.put('/playfield', function (req, res) {
     Game.findOneAndUpdate({}, req.body,function (err, result) {
         if (!err) {
             return res.status(200).send("Update Gelukt!");
+        }else{
+            res.status(400).send(err);
         }
-        
     });
-    
 });
 
 module.exports = router;
