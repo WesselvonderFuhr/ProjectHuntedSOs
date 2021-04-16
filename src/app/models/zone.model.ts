@@ -1,8 +1,8 @@
-export class Point {
+export class Location {
   x: number;
   y: number;
 }
 
 export class Zone {
-  polygon: Point[];
+  polygon: Location[];
 }
