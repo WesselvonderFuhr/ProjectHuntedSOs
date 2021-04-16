@@ -74,5 +74,28 @@ describe('Testing accesscode route', function(){
 			});
 		});
 	});
+	describe('check code and player name combination', () => {
+		it('valid login', (done) => {
+			request(server)
+			.post('/accesscode/check/Djerrie/E7TrUfv')
+			.expect(200)
+			.end(function(err, res){
+				res.statusCode.should.equal(200);
+				done();
+			});
+		});
+	});
+	describe('check code and player name combination', () => {
+		it('invalid login', (done) => {
+			request(server)
+			.post('/accesscode/check/hallodaar/12345')
+			.expect(401)
+			.end(function(err, res){
+				res.statusCode.should.equal(401);
+				done();
+			});
+		});
+	});
+
 
 });
