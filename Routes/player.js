@@ -1,6 +1,7 @@
 var express = require('express');
 var Player = require('../MongoDB/player');
 var Loot = require('../MongoDB/loot');
+var Game = require('../MongoDB/game');
 var router = express.Router();
 var geolib = require('geolib');
 
@@ -99,36 +100,40 @@ router.get('/arrestableThieves/:id/:distance', function(req, res){
     
 });
 
-router.get('/outofbounds/:id', function(req, res){
+router.get('/outofbounds/:id', async function(req, res){
     var playerQuery = {_id: req.params.id}
+    var indexFound = null
+    try{
+        var game = await Game.find({}).exec()
+        var player = await Player.findOne(playerQuery).exec()
 
-    Player.findOne(playerQuery, function(err, result){
-        if(result == null){
-            res.status(401).send('Player does not exist')
-        }else{
-            //5.5249804, 51.7701603
-            // 5.5228454, 51.7690881
-            // 5.5250716, 51.7674349
-            // 5.5266756, 51.7679229
-            // 5.5262786, 51.7701172
-            // 5.5249804, 51.7701603
-            var loc = result.location
-            console.log(loc)
-            if(loc.latitude != null){
-                var isPoint = geolib.isPointInPolygon(loc, [
-                    {longitude:-122.0813549, latitude: 37.4230457},
-                    {longitude:-122.0867568, latitude: 37.4233737},
-                    {longitude:-122.0867246, latitude: 37.4211669},
-                    {longitude:-122.0813870, latitude: 37.4208175},
-                    {longitude:-122.0813549, latitude: 37.4230457}
-                ])
-                console.log("Is out of bounds: " + !isPoint)
-                res.status(200).send(!isPoint)
-            }else{
-                res.status(404).send("Player has no location")
+        for(var i = 0; i < game.length; i++){
+            for(var x = 0; x < game[i].players.length; x++){
+                if(game[i].players[x] == req.params.id){
+                    indexFound = i
+                    break;
+                }
             }
         }
-    })
+
+        var polyLocations = []
+        game[indexFound].playfield.forEach(loc =>
+            polyLocations.push({latitude: loc.location.latitude, longitude: loc.location.longitude})
+        )
+
+        if(indexFound != null){
+            if(player.location.latitude != null){
+                var isPoint = geolib.isPointInPolygon(player.location, polyLocations)
+                res.status(200).send(!isPoint)
+            }else{
+                res.status(400).send('Player does not have a location')
+            }
+        }else{
+            res.status(400).send('Player does not exist in any game')
+        }
+    }catch(e){
+        res.status(400).send(e)
+    }
 });
 
 router.put('/arrest/:thiefId', async (req, res) => {
