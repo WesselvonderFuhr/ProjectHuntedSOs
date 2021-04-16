@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        URL = "http://192.168.1.87:3000/";
+        URL = getString(R.string.url);
         queue = Volley.newRequestQueue(this);
 
         login = findViewById(R.id.login);
