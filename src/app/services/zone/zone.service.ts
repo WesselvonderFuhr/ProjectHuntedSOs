@@ -8,7 +8,7 @@ import {Zone} from '../../models/zone.model';
 })
 export class ZoneService {
 
-  private zoneURL = 'http://127.0.0.1:3000/zone';
+  private zoneURL = 'http://127.0.0.1:3000/game/playfield';
 
   constructor(private http: HttpClient) { }
 

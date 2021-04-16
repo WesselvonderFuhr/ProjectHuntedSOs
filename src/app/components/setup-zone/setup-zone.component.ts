@@ -1,5 +1,5 @@
 import {AfterViewInit, Component} from '@angular/core';
-import {Location, Zone} from '../../models/zone.model';
+import {Location, Point, Zone} from '../../models/zone.model';
 import {ZoneService} from '../../services/zone/zone.service';
 import * as L from 'leaflet';
 
@@ -68,11 +68,12 @@ export class SetupZoneComponent implements AfterViewInit  {
     const zone = new Zone();
     for (let i = 0; i < this.latlngs.length; i++){
       const location = new Location();
-      location.x = this.latlngs[i].lat;
-      location.y = this.latlngs[i].lng;
-      zone.polygon.push(location);
+      location.latitude = this.latlngs[i].lat;
+      location.longitude = this.latlngs[i].lng;
+      const point = new Point();
+      point.location = location;
+      zone.playfield.push(point);
     }
-    console.log(zone);
-    //this.zoneService.updateZone(zone).subscribe( () => console.log('Updated the zone'));
+    this.zoneService.updateZone(zone).subscribe( () => console.log('Updated the zone'));
   }
 }

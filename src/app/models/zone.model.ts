@@ -1,8 +1,12 @@
 export class Location {
-  x: number;
-  y: number;
+  latitude: number;
+  longitude: number;
+}
+
+export class Point {
+  location: Location;
 }
 
 export class Zone {
-  polygon: Location[] = [];
+  playfield: Point[] = [];
 }
