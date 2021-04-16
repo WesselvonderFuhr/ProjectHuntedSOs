@@ -10,7 +10,8 @@ router.post('/', function (req, res) {
 
     if(amount != null && !isNaN(amount) && amount > 0){
         for(var i = 0; i < amount; i++){
-            var code = randomstring.generate(7)
+            var code = randomstring.generate(7).toUpperCase()
+            console.log(code)
             codes.push(code)
             
             let accesscode = {};
@@ -24,7 +25,7 @@ router.post('/', function (req, res) {
 
         res.status(200).send(codes)
     }else{
-        res.status(401).send("Not a valid amount input, choose a number bigger than 0")
+        res.status(404).send("Not a valid amount input, choose a number bigger than 0")
     }
 });
 
@@ -49,11 +50,11 @@ router.put('/assign/:id', async function (req, res) {
                 }else{
                     Player.findOne(playerQuery, function(err, pResult){
                         if(err){
-                            res.status(401).send('Player does not exist')
+                            res.status(404).send('Player does not exist')
                         }else{
                             Accesscode.updateOne(accesscodeQuery, {assignedTo: req.body.playerId} , function(err, aResult){
                                 if(err){
-                                    res.status(401).send('Accesscode does not exist')
+                                    res.status(404).send('Accesscode does not exist')
                                 }else{
                                     res.status(200).send('Accesscode is updated with the id of playername ' + pResult.name)
                                 }
@@ -65,9 +66,17 @@ router.put('/assign/:id', async function (req, res) {
             res.status(401).send('Accesscode does not exist')
             return
         }
-
-        
-        }
+    }
 });
+
+router.delete('/:id', function(req, res){
+    Accesscode.deleteOne({_id: req.params.id}, function(err, result){
+        if(!err){
+            res.status(200).send('Delete completed')
+        }else{
+            res.status(400).send('Accesscode not found')
+        }
+    })
+})
 
 module.exports = router;

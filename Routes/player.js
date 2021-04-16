@@ -125,7 +125,7 @@ router.get('/outofbounds/:id', function(req, res){
                 console.log("Is out of bounds: " + !isPoint)
                 res.status(200).send(!isPoint)
             }else{
-                res.send("Player has no location")
+                res.status(404).send("Player has no location")
             }
         }
     })
@@ -182,8 +182,6 @@ router.get('/distances/:id', function (req, res) {
         }
     });
 });
-
-
 
 router.put('/location/:id', function (req, res) {
     var query = { _id: req.params.id };
