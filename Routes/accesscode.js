@@ -36,6 +36,43 @@ router.get('/', function (req, res) {
     });
 });
 
+router.post('/check/:playerName/:codeId', async function (req, res) {
+
+    var playerQuery = {name: req.params.playerName}
+    var accesscodeQuery = {code: req.params.codeId}
+    var player
+
+    try {
+        player = await Player.findOne({name: playerQuery.name}, function(err, pRes) {
+            if (err) res.status(401).send('Playername does not exist')
+            else if(pRes == null) res.status(401).send('Playername does not exist')
+            else {
+                player = pRes
+                var accessCode = Accesscode.findOne(accesscodeQuery, function(err, aRes) {
+                    if(err) res.status(401).send('Accesscode does not exist')
+                    else if(aRes == null) res.status(401).send('Accesscode does not exist')
+                    else {
+                        accessCode = aRes
+                        if(accessCode.assignedTo == player.id) {
+                            if(accessCode.role == "Boef") {
+                                res.status(200).send("Boef")
+                            } else {
+                                res.status(200).send("Politie")
+                            }
+
+                        } else {
+                            res.status(401).send('Accesscode does not match player name')
+                        }
+                    }
+                })
+            }
+        })
+    } catch(e) {
+        res.status(401).send("Error: " + e)
+        return
+    }
+})
+
 router.put('/assign/:id', async function (req, res) {
     if(req.body.playerId != null){
         var playerQuery = {_id: req.body.playerId}
