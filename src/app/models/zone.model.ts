@@ -4,5 +4,5 @@ export class Location {
 }
 
 export class Zone {
-  polygon: Location[];
+  polygon: Location[] = [];
 }

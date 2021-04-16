@@ -1,11 +1,9 @@
 <h2>Speelgebied</h2>
 <div>
-  <div class="map-container">
-    <div class="map-frame">
-      <div id="map"></div>
-    </div>
+  <div class="map-frame">
+    <div id="map"></div>
   </div>
-  <form class="example-form" (ngSubmit)="onClickSubmit()" >
-    <button mat-raised-button color="primary" type="submit" color="primary">Speelgebied opslaan</button>
-  </form>
+  <button (click)="onClickSubmit()" mat-raised-button color="primary" type="submit" color="primary">Speelgebied opslaan</button>
+  <button (click)="onClickUndo()" mat-raised-button color="secondary" color="secondary">Undo</button>
+  <button (click)="onClickReset()" mat-raised-button color="secondary" color="secondary">Reset</button>
 </div>
