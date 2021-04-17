@@ -15,10 +15,16 @@ import { SetupQrCardComponent } from './components/setup-qr-card/setup-qr-card.c
 
 import { JailService } from './services/jail/jail.service';
 import { LootService } from './services/loot/loot.service';
+import { AccessCodeService } from './services/access-code/accesscode.service'
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatTableModule } from '@angular/material/table'
+import { MatSelectModule } from '@angular/material/select'
+
+import { SetupAccesscodeComponent } from './components/setup-accesscode/setup-accesscode.component';
+import { SetupAccesscodeCardComponent } from './components/setup-accesscode-card/setup-accesscode-card.component';
 
 @NgModule({
   declarations: [
@@ -26,10 +32,12 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     SetupComponent,
     SetupJailComponent,
     SetupQrComponent,
-    SetupQrCardComponent
+    SetupQrCardComponent,
+    SetupAccesscodeComponent,
+    SetupAccesscodeCardComponent
   ],
   imports: [
-    BrowserModule,
+    BrowserModule, 
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,
@@ -40,11 +48,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatButtonModule,
     MatInputModule,
     MatFormFieldModule,
+    MatTableModule,
+    MatSelectModule
 
   ],
   providers: [
     JailService,
     LootService,
+    AccessCodeService,
     HttpClientModule
   ],
   bootstrap: [AppComponent]

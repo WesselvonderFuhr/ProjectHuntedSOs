@@ -1,0 +1,6 @@
+<h2>Toegangscodes</h2>
+<button mat-raised-button (click)="createNewCode('Politie')" color="primary" type="button">Politiecode genereren</button>
+<button mat-raised-button (click)="createNewCode('Boef')" color="warn" type="button">Boefcode genereren</button>
+<div class="container">
+  <app-setup-accesscode-card *ngFor="let accessCode of accessCodes" [accessCode]="accessCode"></app-setup-accesscode-card>
+</div>
