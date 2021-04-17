@@ -276,8 +276,8 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
     private void vibrateOutOfPlayingField(){
         Vibrator v = (Vibrator) getSystemService(this.VIBRATOR_SERVICE);
 
-        Toast.makeText(this, "Keer terug naar het speelgebied!", Toast.LENGTH_LONG).show();
-        v.vibrate(3000);
+        Toast.makeText(this, "Keer terug naar het speelgebied!", Toast.LENGTH_SHORT).show();
+        v.vibrate(500);
     }
 
     //region Scanner

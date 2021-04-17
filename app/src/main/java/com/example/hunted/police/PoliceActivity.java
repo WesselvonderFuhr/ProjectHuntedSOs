@@ -51,7 +51,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 public class PoliceActivity extends AppCompatActivity implements Observer {
-    private final int PING_MS = 1000;
+    private final int PING_MS = 3000;
     private final int LOCATION_REQUEST_CODE = 1234;
 
     public String URL;
@@ -275,8 +275,8 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
     private void vibrateOutOfPlayingField(){
         Vibrator v = (Vibrator) getSystemService(this.VIBRATOR_SERVICE);
 
-        Toast.makeText(this, "Keer terug naar het speelgebied!", Toast.LENGTH_LONG).show();
-        v.vibrate(3000);
+        Toast.makeText(this, "Keer terug naar het speelgebied!", Toast.LENGTH_SHORT).show();
+        v.vibrate(500);
     }
 
 
