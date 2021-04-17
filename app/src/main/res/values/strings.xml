@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">Hunted</string>
-    <string name="url">https://apihuntedsos.herokuapp.com/</string>
+    <string name="url">http://192.168.1.87:3000/</string>
 
 </resources>

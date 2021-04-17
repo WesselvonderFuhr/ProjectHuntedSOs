@@ -18,13 +18,17 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
 import com.android.volley.ServerError;
+import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.hunted.police.PoliceActivity;
 import com.example.hunted.thieves.ThievesActivity;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 //First activity screen with police/thieves choice
@@ -38,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
 
     EditText username;
     EditText code;
+
+    String player_id;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,76 +63,88 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void Login() {
-        final String checkNameAndCodeCombo = URL + "accesscode/check/" + username.getText() + "/" + code.getText();
+        final String checkCode = URL + "accesscode/check/" + code.getText() + "/" + username.getText().toString();
 
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, checkNameAndCodeCombo,
-                response -> {
-                    if(response.equals("Boef")) {
-                        openThievesActivity();
-                    } else {
-                        openPoliceActivity();
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.POST, checkCode, null, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            Log.d("res", "res: " + response.getString("assignedTo").length());
+                            if(response.getString("assignedTo") == "null") {
+                                CreateNewPlayer(code.getText().toString(), username.getText().toString());
+                                return;
+                            }
+
+                            Log.d("responsestring", "res: " + response);
+
+                            if(response.getString("role").equals("Boef")) {
+                                openThievesActivity(response.getString("assignedTo"));
+                            } else if(response.getString("role").equals("Politie")) {
+                                openPoliceActivity(response.getString("assignedTo"));
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
                     }
+                }, new Response.ErrorListener() {
 
-                }, error -> {
-            Toast.makeText(this, "Iets is niet goed gegaan bij het inloggen: " + error, Toast.LENGTH_SHORT).show();
-        }
-        );
-
-        queue.add(stringRequest);
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("Error", "Error: " + error);
+                    }
+                });
+        queue.add(jsonObjectRequest);
     }
 
-    public void openPoliceActivity(){
+    private void CheckNameAndCodeCombo(String code, String nameToCheck) {
+
+    }
+
+    private void CreateNewPlayer(String codeId, String name) {
+        final String makePlayer = URL + "player/" + code.getText() + "/" + username.getText();
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.POST, makePlayer, null, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            if(response.getString("role").equals("Boef")) {
+                                openThievesActivity(response.getString("assignedTo"));
+                            } else if(response.getString("role").equals("Politie")) {
+                                openPoliceActivity(response.getString("assignedTo"));
+                            }
+                            Log.d("response", "response: " + response.toString());
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("Error", "Error: " + error);
+                    }
+                });
+        queue.add(jsonObjectRequest);
+    }
+
+
+    public void openPoliceActivity(String id){
+        Log.d("aids", "ID: " + id);
         Intent intent = new Intent(this, PoliceActivity.class);
-
-        final String getArrestedUrl = URL + "player";
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getArrestedUrl,
-                response -> {
-                    String ID = response;
-                    intent.putExtra("ID", ID.replaceAll("\"",""));
-                    startActivity(intent);
-                }, error -> {
-            Toast.makeText(this, "De rol Agent is onbeschikbaar.", Toast.LENGTH_LONG).show();
-        }) {
-
-            @Override
-            public String getBodyContentType() {
-                return "application/json; charset=utf-8";
-            }
-
-            @Override
-            public byte[] getBody() {
-                String body = "{\"name\":\"Default\", \"role\":\"Agent\"}";
-                return body.getBytes();
-            }
-        };
-        queue.add(stringRequest);
+        intent.putExtra("ID", id.replaceAll("\"",""));
+        startActivity(intent);
     }
 
-    public void openThievesActivity(){
+    public void openThievesActivity(String id){
         Intent intent = new Intent(this, ThievesActivity.class);
-
-        final String getArrestedUrl = URL + "player";
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, getArrestedUrl,
-                response -> {
-                    String ID = response;
-                    intent.putExtra("ID", ID.replaceAll("\"",""));
-                    startActivity(intent);
-                }, error -> {
-            Toast.makeText(this, "De rol Boef is onbeschikbaar.", Toast.LENGTH_LONG).show();
-        }) {
-
-            @Override
-            public String getBodyContentType() {
-                return "application/json; charset=utf-8";
-            }
-
-            @Override
-            public byte[] getBody() {
-                String body = "{\"name\":\"Default\", \"role\":\"Boef\"}";
-                return body.getBytes();
-            }
-        };
-        queue.add(stringRequest);
+        intent.putExtra("ID", id.replaceAll("\"",""));
+        startActivity(intent);
     }
 
     private void getTrackPermission(){
