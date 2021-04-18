@@ -70,13 +70,25 @@ router.put('/assign/:id', async function (req, res) {
 });
 
 router.delete('/:id', function(req, res){
-    Accesscode.deleteOne({_id: req.params.id}, function(err, result){
-        if(!err){
-            res.status(200).send('Delete completed')
-        }else{
-            res.status(400).send('Accesscode not found')
-        }
-    })
+    var id = req.params.id
+    var role = req.body.role
+    if(id == 1 && check != null){
+        Accesscode.deleteMany({role: role}, function(err, result){
+            if(!err){
+                res.status(200).send('Delete completed')
+            }else{
+                res.status(400).send('Accesscodes not found')
+            }
+        })
+    }else{
+        Accesscode.deleteOne({_id: req.params.id}, function(err, result){
+            if(!err){
+                res.status(200).send('Delete completed')
+            }else{
+                res.status(400).send('Accesscodes not found')
+            }
+        })
+    }
 })
 
 module.exports = router;
