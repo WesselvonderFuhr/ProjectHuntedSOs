@@ -72,7 +72,7 @@ router.put('/assign/:id', async function (req, res) {
 router.delete('/:id', function(req, res){
     var id = req.params.id
     var role = req.body.role
-    if(id == 1 && check != null){
+    if(id == 1 && role != null){
         Accesscode.deleteMany({role: role}, function(err, result){
             if(!err){
                 res.status(200).send('Delete completed')
