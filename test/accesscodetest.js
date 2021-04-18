@@ -77,7 +77,7 @@ describe('Testing accesscode route', function(){
 	describe('check code and player name combination', () => {
 		it('valid login', (done) => {
 			request(server)
-			.post('/accesscode/check/Djerrie/E7TrUfv')
+			.post('/accesscode/check/ZtTV2BD/Djerrie')
 			.expect(200)
 			.end(function(err, res){
 				res.statusCode.should.equal(200);
@@ -88,10 +88,10 @@ describe('Testing accesscode route', function(){
 	describe('check code and player name combination', () => {
 		it('invalid login', (done) => {
 			request(server)
-			.post('/accesscode/check/hallodaar/12345')
+			.post('/accesscode/check/E7TrUfv/Boo')
 			.expect(401)
 			.end(function(err, res){
-				res.statusCode.should.equal(401);
+				res.statusCode.should.equal(404);
 				done();
 			});
 		});
