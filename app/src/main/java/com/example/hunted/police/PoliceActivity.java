@@ -20,6 +20,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
@@ -50,7 +51,7 @@ import java.util.Observable;
 import java.util.Observer;
 
 public class PoliceActivity extends AppCompatActivity implements Observer {
-    private final int PING_MS = 1000;
+    private final int PING_MS = 3000;
     private final int LOCATION_REQUEST_CODE = 1234;
 
     public String URL;
@@ -95,7 +96,6 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         setupDrawerContent(navigationView);
-
     }
 
     private void initLocation() {
@@ -128,6 +128,7 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
                     }
                 };
                 queue.add(stringRequest);
+                checkOutOfBounds();
             }
 
             @Override
@@ -248,6 +249,36 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.mainContentPolice, fragment).commit();
     }
+
+    private void checkOutOfBounds(){
+        String requestURL = URL + "player/outofbounds/" + ID;
+//        Log.d("checkOutOfBounds requestURL: ", requestURL);
+        StringRequest request = new StringRequest(Request.Method.GET, requestURL, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                if (response.equals("true")){
+                    Log.d("response: ", "player is out of bounds");
+                    vibrateOutOfPlayingField();
+                } else if (response.equals("false")){
+                    Log.d("response: ", "player is within bounds");
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("checkOutOfBounds error", error.toString());
+            }
+        });
+        queue.add(request);
+    }
+
+    private void vibrateOutOfPlayingField(){
+        Vibrator v = (Vibrator) getSystemService(this.VIBRATOR_SERVICE);
+
+        Toast.makeText(this, "Keer terug naar het speelgebied!", Toast.LENGTH_SHORT).show();
+        v.vibrate(500);
+    }
+
 
     // DRAWER LOADING
 
