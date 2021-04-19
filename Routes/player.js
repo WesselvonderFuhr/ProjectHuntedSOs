@@ -5,21 +5,28 @@ var Game = require('../MongoDB/game');
 var router = express.Router();
 var geolib = require('geolib');
 
-router.post('/', function (req, res) {
-    const emptyLoc = { latitude: null, longitude: null }
-    const name = req.body.name;
-    const role = req.body.role;
+router.post('/:codeId/:username', async function (req, res) {
+    var emptyLoc = { latitude: null, longitude: null }
+    var name = req.params.username;
+    var codeId = req.params.codeId
+    var accessCode = await Accesscode.findOne({code: codeId})
 
     let player = {};
     player.name = name;
-    player.role = role;
+    player.role = accessCode.role;
     player.arrested = false;
     player.location = emptyLoc;
 
     let playerModel = new Player(player);
-    playerModel.save();
+    await playerModel.save();
 
-    res.json(playerModel.id);
+    console.log(playerModel)
+
+    accessCode.assignedTo = playerModel._id
+
+    await accessCode.save()
+
+    res.status(200).send(accessCode);
 });
 
 router.get('/', function (req, res) {
@@ -39,6 +46,22 @@ router.get('/:id', function (req, res) {
         }else{
             res.status(404).send("User does not exist")
 		    }
+    });
+});
+
+router.get('check/:name', async function (req, res) {
+    var query = { _id: req.params.name };
+    var player = await Player.find(query, function (err, result) {
+        if (!err && player != null) {
+            for(var i = 0; i < player.length; i++) {
+                if(player[i].name == query) {
+                    res.status(200).send(player[i].role);
+                    return;
+                }
+            }
+        }
+
+        res.status(200).send('Not found');
     });
 });
 

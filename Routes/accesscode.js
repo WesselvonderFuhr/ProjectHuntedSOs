@@ -36,6 +36,62 @@ router.get('/', function (req, res) {
     });
 });
 
+
+//check of code bestaat
+//check de naam van de assigned speler
+//als die niet bestaat, maak deze aan
+//login
+
+router.post('/check/:codeId', async function (req, res) {
+    var playerQuery = {name: req.params.username }
+    var accesscodeQuery = {code: req.params.codeId}
+
+    var accessCode = await Accesscode.findOne(accesscodeQuery, function(err, aRes) {
+        if(err || aRes == null) res.status(404).send('Accesscode does not exist')
+        else {
+            accessCode = aRes
+            if(accessCode.assignedTo != null) {
+                res.status(401).send('Accesscode already assigned')
+                return;
+            } else {
+                res.status(200).send('Correct')
+            }
+        }
+    })
+})
+
+router.post('/check/:codeId/:username', async function (req, res) {
+    var playerQuery = req.params.username 
+    var accesscodeQuery = {code: req.params.codeId}
+    var accessCode
+    accessCode = await Accesscode.findOne(accesscodeQuery, async function(err, aRes) {
+        if(err || aRes == null) res.status(404).send('Accesscode does not exist')
+        else {
+            accessCode = aRes
+            if(accessCode.assignedTo != null) {
+                var player = await Player.findOne({ _id: accessCode.assignedTo }, function(err, pRes) {
+                    if(err || pRes == null) {
+                        res.status(404).send('Player does not exist')
+                        return
+                    } 
+                    else {
+                        player = pRes
+                        if(playerQuery == player.name) {
+                            res.status(200).send(accessCode)
+                        } else {
+                            res.status(401).send('Wrong player and code combination')
+                        }
+                        return
+                    }
+                })
+            } else {
+                console.log("Code: " + accessCode)
+                res.status(200).send(accessCode)
+            }
+        }
+    })
+})
+
 router.put('/assign/:id', async function (req, res) {
     if(req.body.playerId != null){
         var playerQuery = {_id: req.body.playerId}
@@ -45,7 +101,7 @@ router.put('/assign/:id', async function (req, res) {
         try{
             code = await Accesscode.findOne(accesscodeQuery).exec()
             if (code.assignedTo != null){
-                res.status(401).send('Accesscode is already assigned')
+                res.status(401).send('Accesscode is already assigned') 
                 }else{
                     Player.findOne(playerQuery, function(err, pResult){
                         if(err){
