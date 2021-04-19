@@ -8,7 +8,7 @@ import {Zone} from '../../models/zone.model';
 })
 export class ZoneService {
 
-  private zoneURL = 'http://127.0.0.1:3000/game/playfield';
+  private zoneURL = 'http://127.0.0.1:3000/game';
 
   constructor(private http: HttpClient) { }
 
@@ -17,6 +17,7 @@ export class ZoneService {
   }
 
   updateZone(zone: Zone) {
-    return this.http.put(`${this.zoneURL}`, zone, {responseType: 'text'});
+    console.log(JSON.stringify(zone));
+    return this.http.put(`${this.zoneURL + '/playfield'}`, zone, {responseType: 'text'});
   }
 }
