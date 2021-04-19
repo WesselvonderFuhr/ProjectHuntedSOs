@@ -112,6 +112,7 @@ public class MainActivity extends AppCompatActivity {
                     @Override
                     public void onResponse(JSONObject response) {
                         try {
+                            AddPlayerToGame(response.getString("assignedTo"));
                             if(response.getString("role").equals("Boef")) {
                                 openThievesActivity(response.getString("assignedTo"));
                             } else if(response.getString("role").equals("Politie")) {
@@ -122,6 +123,27 @@ public class MainActivity extends AppCompatActivity {
                         } catch (JSONException e) {
                             e.printStackTrace();
                         }
+                    }
+                }, new Response.ErrorListener() {
+
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        Log.d("Error", "Error: " + error);
+                    }
+                });
+        queue.add(jsonObjectRequest);
+    }
+
+    public void AddPlayerToGame(String id){
+        String hardcodedgameId = "607858e32a1c234e5886e14e";
+        final String addPlayer = URL + "game/" + hardcodedgameId + "/player/" + id;
+
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.PUT, addPlayer, null, new Response.Listener<JSONObject>() {
+
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        Log.d("response", "response: " + response.toString());
                     }
                 }, new Response.ErrorListener() {
 
