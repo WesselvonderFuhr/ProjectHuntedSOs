@@ -11,7 +11,6 @@ router.post('/', function (req, res) {
     if(amount != null && !isNaN(amount) && amount > 0){
         for(var i = 0; i < amount; i++){
             var code = randomstring.generate(7).toUpperCase()
-            console.log(code)
             codes.push(code)
             
             let accesscode = {};
