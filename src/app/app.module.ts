@@ -12,7 +12,9 @@ import { SetupComponent } from './components/setup/setup.component';
 import { SetupJailComponent } from './components/setup-jail/setup-jail.component';
 import { SetupQrComponent } from './components/setup-qr/setup-qr.component';
 import { SetupQrCardComponent } from './components/setup-qr-card/setup-qr-card.component';
+import { SetupZoneComponent } from './components/setup-zone/setup-zone.component';
 
+import { ZoneService } from './services/zone/zone.service';
 import { JailService } from './services/jail/jail.service';
 import { LootService } from './services/loot/loot.service';
 import { AccessCodeService } from './services/access-code/accesscode.service'
@@ -37,12 +39,11 @@ import { GameOutOfBoundsMessageComponent } from './components/game-out-of-bounds
     SetupJailComponent,
     SetupQrComponent,
     SetupQrCardComponent,
-
     SetupAccesscodeComponent,
     SetupAccesscodeCardComponent,
     GameComponent,
-    GameOutOfBoundsMessageComponent
-
+    GameOutOfBoundsMessageComponent,
+    SetupZoneComponent
   ],
   imports: [
     BrowserModule, 
@@ -61,6 +62,7 @@ import { GameOutOfBoundsMessageComponent } from './components/game-out-of-bounds
 
   ],
   providers: [
+    ZoneService,
     JailService,
     LootService,
     AccessCodeService,
