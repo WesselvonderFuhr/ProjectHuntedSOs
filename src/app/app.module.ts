@@ -26,6 +26,10 @@ import { MatSelectModule } from '@angular/material/select'
 import { SetupAccesscodeComponent } from './components/setup-accesscode/setup-accesscode.component';
 import { SetupAccesscodeCardComponent } from './components/setup-accesscode-card/setup-accesscode-card.component';
 
+import { GameComponent } from './components/game/game.component';
+import { GameOutOfBoundsMessageComponent } from './components/game-out-of-bounds-message/game-out-of-bounds-message.component';
+
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -33,8 +37,12 @@ import { SetupAccesscodeCardComponent } from './components/setup-accesscode-card
     SetupJailComponent,
     SetupQrComponent,
     SetupQrCardComponent,
+
     SetupAccesscodeComponent,
-    SetupAccesscodeCardComponent
+    SetupAccesscodeCardComponent,
+    GameComponent,
+    GameOutOfBoundsMessageComponent
+
   ],
   imports: [
     BrowserModule, 
