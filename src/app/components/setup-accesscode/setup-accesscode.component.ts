@@ -20,6 +20,7 @@ export class SetupAccesscodeComponent implements OnInit {
   ngOnInit(): void {
     this.accessCodeService.getAllCodes().subscribe((res) => {
       this.accessCodes = res;
+      this.accessCodes.sort(this.compare)
     });
   }
 
@@ -32,4 +33,15 @@ export class SetupAccesscodeComponent implements OnInit {
       this.ngOnInit();
     });
   }
+
+  compare(a: AccessCode, b: AccessCode ) {
+    if ( a.role < b.role ){
+      return 1;
+    }
+    if ( a.role > b.role ){
+      return -1;
+    }
+    return 0;
+  }
+  
 }
