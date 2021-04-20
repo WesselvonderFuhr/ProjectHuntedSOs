@@ -1,9 +1,9 @@
-var express = require('express');
-var Player = require('../MongoDB/player');
-var Loot = require('../MongoDB/loot');
-var Game = require('../MongoDB/game');
-var router = express.Router();
-var geolib = require('geolib');
+const express = require('express');
+const Player = require('../MongoDB/player');
+const Loot = require('../MongoDB/loot');
+const Game = require('../MongoDB/game');
+const router = express.Router();
+const geolib = require('geolib');
 
 router.post('/:codeId/:username', async function (req, res) {
     var emptyLoc = { latitude: null, longitude: null }
@@ -45,7 +45,7 @@ router.get('/:id', function (req, res) {
             res.status(200).send(result);
         }else{
             res.status(404).send("User does not exist")
-		    }
+        }
     });
 });
 

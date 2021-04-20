@@ -1,8 +1,8 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
 console.log('Initializing player schema');
 
-var playerSchema = new mongoose.Schema({
+const playerSchema = new mongoose.Schema({
     name: { type: String, required: true },
     role: { type: String, required: true },
 	arrested: { type: Boolean },
@@ -14,10 +14,6 @@ var playerSchema = new mongoose.Schema({
 }, {
     toJSON: { virtuals: true },
     toObject: { virtuals: true }
-});
-
-playerSchema.virtual('numberOfLoot').get(function () {
-    return this.loot.length;
 });
 
 module.exports = Player = mongoose.model('Player', playerSchema);

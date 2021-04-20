@@ -1,8 +1,8 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
 console.log('Initializing jail schema');
 
-var jailSchema = new mongoose.Schema({
+const jailSchema = new mongoose.Schema({
     location: {
 		latitude: { type: Number },
 		longitude: { type: Number }
