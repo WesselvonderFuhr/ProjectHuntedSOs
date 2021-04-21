@@ -4,6 +4,7 @@ console.log('Initializing game schema');
 
 const gameSchema = new mongoose.Schema({
 	jail: { type: mongoose.Schema.Types.ObjectId, ref: 'Jail' },
+    administrator: { type: mongoose.Schema.ObjectId, ref: 'Administrator'},
     loot: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Loot' }],
     accesscodes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Accesscode'}],
     players: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Player' }],

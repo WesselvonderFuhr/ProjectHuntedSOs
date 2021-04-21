@@ -8,16 +8,30 @@ jwtOptions.jwtFromRequest = ExtractJwt.fromAuthHeaderAsBearerToken();
 jwtOptions.secretOrKey = secret;
 
 const mongoose = require('mongoose');
-const User = mongoose.model('User');
+const Administrator = mongoose.model('Administrator');
+const Accesscode = mongoose.model('Accesscode');
 
-let strategy = new JwtStrategy(jwtOptions, async function(jwt_payload, next) {
-    let query = {name: jwt_payload.name};
-    let user = await User.findOne(query);
-    if (user) {
-        next(null, user);
+let admin_strategy = new JwtStrategy(jwtOptions, async function(jwt_payload, next) {
+    let query = {code: jwt_payload.code};
+    let admin = await Administrator.findOne(query);
+    if (admin) {
+        next(null, admin);
     } else {
         next(null, false);
     }
 });
 
-passport.use('jwt', strategy);
+let accesscode_strategy = new JwtStrategy(jwtOptions, async function(jwt_payload, next) {
+    let query = {code: jwt_payload.code};
+    let accesscode = await Accesscode.findOne(query);
+    if (accesscode) {
+        next(null, accesscode);
+    } else {
+        next(null, false);
+    }
+});
+
+//https://stackoverflow.com/questions/20052617/use-multiple-local-strategies-in-passportjs
+
+passport.use('jwt-admin', admin_strategy);
+passport.use('jwt-player', accesscode_strategy);
