@@ -8,7 +8,11 @@ const gameSchema = new mongoose.Schema({
     loot: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Loot' }],
     accesscodes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Accesscode'}],
     players: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Player' }],
-    playfield: { type: mongoose.Schema.Types.ObjectId, ref: 'Playfield'}
+    playfield: [{   location: {
+            latitude: { type: Number },
+            longitude: { type: Number }
+        }
+    }]
 }, {
     toJSON: { virtuals: true },
     toObject: { virtuals: true }

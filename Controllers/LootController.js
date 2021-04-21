@@ -1,11 +1,12 @@
-let mongoose = require('mongoose');
 const Result = require("../Helper/Result");
 
-let Loot = mongoose.model('Loot');
+let Loot = require('../MongoDB/loot');
+let Game = require('../MongoDB/game');
 
 class LootController{
-    async getAllLoot(){
-        return await Loot.find();
+    async getAllLoot(game_id){
+        let query = { _id: game_id };
+        return await Game.findOne(query).populate('loot').loot;
     }
 
     async getLootByID(id){
@@ -13,10 +14,17 @@ class LootController{
         return await Loot.findOne(query);
     }
 
-    async addLoot(body){
+    async addLoot(game_id, body){
         let loot = new Loot(body);
         try {
+            let query = { _id: game_id };
+            let game = await Game.findOne(query);
+            if(game == null){
+                return new Result(404, "Game does not exist");
+            }
+            game.loot.push(loot._id);
             await loot.save();
+            await game.save();
             return new Result(200, loot.name + " has been added");
         }
         catch (e){
@@ -41,11 +49,21 @@ class LootController{
         
     }
 
-    async deleteLoot(id){
-        let query = { _id: id };
+    async deleteLoot(game_id, id){
         try{
             let loot = await this.getLootByID(id);
             if(loot != null){
+                let query = { _id: game_id };
+                let game = await Game.findOne(query);
+                if(game == null){
+                    return new Result(404, "Game does not exist");
+                }
+
+                let index = game.loot.indexOf(id);
+                game.loot.splice(index, 1);
+                await game.save();
+
+                query = { _id: id };
                 await Loot.deleteOne(query);
                 return new Result(200, loot.name + " has been deleted");
             } else {

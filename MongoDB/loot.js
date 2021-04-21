@@ -6,4 +6,4 @@ const lootSchema = new mongoose.Schema({
     name: { type: String, required: true }
 });
 
-module.exports = Loot = mongoose.model('loot', lootSchema);
+module.exports = Loot = mongoose.model('Loot', lootSchema);

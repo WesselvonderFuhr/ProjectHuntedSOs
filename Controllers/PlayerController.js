@@ -1,7 +1,7 @@
 let mongoose = require('mongoose');
 const Result = require("../Helper/Result");
 
-let Player = mongoose.model('Player');
+let Player = require('../MongoDB/player');
 
 class PlayerController{
     async getAllPlayers(){

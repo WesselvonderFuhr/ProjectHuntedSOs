@@ -1,7 +1,7 @@
 let mongoose = require('mongoose');
 const Result = require("../Helper/Result");
 
-let Jail = mongoose.model('Jail');
+let Jail = require('../MongoDB/jail');
 
 class JailController{
     async getJailByID(id){
