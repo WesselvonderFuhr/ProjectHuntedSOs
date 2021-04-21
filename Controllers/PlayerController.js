@@ -2,6 +2,7 @@ let mongoose = require('mongoose');
 const Result = require("../Helper/Result");
 
 let Player = require('../MongoDB/player');
+const Accesscode = require('../MongoDB/accesscode');
 
 
 class PlayerController{
@@ -106,22 +107,62 @@ class PlayerController{
         }
     }
 
-    async addPlayer(game_id,body){
-        let player = new Player(body);
-        try {
-            let query = { _id: game_id };
-            let game = await Game.findOne(query);
-            if(game == null){
-                return new Result(404, "Game does not exist");
-            }
-            game.players.push(player._id);
-            await player.save();
-            await game.save();
-            return new Result(200, player.name + " has been added");
-        }
-        catch (e){
-            return new Result(400, e.message);
-        }
+    async addPlayer(codeID,username){
+        var emptyLoc = { latitude: null, longitude: null }
+        var name = username;
+        var codeId = codeID;
+        var accessCode = await Accesscode.findOne({code: codeId})
+    
+        let player = {};
+        player.name = name;
+        player.role = accessCode.role;
+        player.arrested = false;
+        player.location = emptyLoc;
+    
+        let playerModel = new Player(player);
+        await playerModel.save();
+    
+        console.log(playerModel)
+    
+        accessCode.assignedTo = playerModel._id
+    
+        await accessCode.save()
+    
+    
+        return new Result(200, accessCode);
+    }
+
+    async StealLoot(playerID,lootID){
+        var playerquery = { _id: playerID };
+        var lootquery =  { _id: lootID };
+        Player.findOne(playerquery,function(err,result){
+            if(result == null){
+                return new Result(404, "Player does not exist");
+            }else{
+                let player = result
+                Loot.findOne(lootquery, function(err, result) {
+                    if(result == null){
+                        return new Result(404, "Loot does not exist");
+                    }else{
+                        let hasLoot = false;
+                        let loot=result;
+                       
+                        for(let i =0; i < player.loot.length; i++){
+                            if(player.loot[i].equals(loot._id)){
+                                hasLoot = true;
+                            }
+                        }
+                        if(!hasLoot){
+                            player.loot.push(loot)
+                            player.save();
+                            return new Result(200, loot.name);
+                        }else{
+                            return new Result(400, "Player already has this loot");
+                        }
+                    }  
+                });
+            }      
+        });
     }
 
     async editPlayer(id, body){

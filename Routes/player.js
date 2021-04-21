@@ -7,17 +7,18 @@ const geolib = require('geolib');
 let PlayerController = require('../Controllers/PlayerController');
 const {DefaultResponse} = require("../Helper/DefaultResponse");
 //get
-router.get('/', function (req, res) {
+router.get('/', async function (req, res) {
     let result = await PlayerController.getAllPlayers(req.query.game_id);
     return res.status(result.responseCode).json(result.message);
 });
 
 
-router.get('/:id', function (req, res) {
+router.get('/:id', async function (req, res) {
     let result =  await PlayerController.getPlayerByID(req.params.id);
     return res.status(result.responseCode).json(result.message);
 });
 
+//geen idee wat dit is
 router.get('check/:name', async function (req, res) {
     var query = { _id: req.params.name };
     var player = await Player.find(query, function (err, result) {
@@ -33,7 +34,7 @@ router.get('check/:name', async function (req, res) {
     });
 });
 
-router.get('/arrestableThieves/:id/:distance', function(req, res){
+router.get('/arrestableThieves/:id/:distance', async function(req, res){
     let result =  await PlayerController.getArrestablePlayers(req.params.id,req.params.distance); 
     return res.status(result.responseCode).json(result.message);
 });
@@ -43,7 +44,8 @@ router.get('/outofbounds/:id', async function(req, res){
     return res.status(result.responseCode).json(result.message);
 });
 
-router.get('/distances/:id', function (req, res) {
+//geen idee wat dit is
+router.get('/distances/:id', async function (req, res) {
     var playerLoc
     var players = Player.find({}, function (err, result) {
         if (!err) {
@@ -83,77 +85,24 @@ router.get('/distances/:id', function (req, res) {
 
 //post
 router.post('/:codeId/:username', async function (req, res) {
-    var emptyLoc = { latitude: null, longitude: null }
-    var name = req.params.username;
-    var codeId = req.params.codeId
-    var accessCode = await Accesscode.findOne({code: codeId})
-
-    let player = {};
-    player.name = name;
-    player.role = accessCode.role;
-    player.arrested = false;
-    player.location = emptyLoc;
-
-    let playerModel = new Player(player);
-    await playerModel.save();
-
-    console.log(playerModel)
-
-    accessCode.assignedTo = playerModel._id
-
-    await accessCode.save()
-
-    res.status(200).send(accessCode);
+    let result = await PlayerController.addPlayer(req.params.codeId, req.params.username); 
+    return res.status(result.responseCode).json(result.message);
 });
 
-router.post('/:playerid/stolen/:lootid', function (req, res) {
-    var playerquery = { _id: req.params.playerid };
-    var lootquery =  { _id: req.params.lootid };
-    Player.findOne(playerquery,function(err,result){
-        if(result == null){
-            res.status(404).send("Deze speler bestaat niet")
-        }else{
-            let player = result
-            Loot.findOne(lootquery, function(err, result) {
-                if(result == null){
-                    res.status(404).send("Deze loot bestaat niet")
-                }else{
-                    let hasLoot = false;
-                    let loot=result;
-                   
-                    for(let i =0; i < player.loot.length; i++){
-                        if(player.loot[i].equals(loot._id)){
-                            hasLoot = true;
-                        }
-                    }
-                    if(!hasLoot){
-                        player.loot.push(loot)
-                        player.save();
-                        res.send(loot.name)
-                    }else{
-                        res.status(400).send("U heeft deze loot al")
-                    }
-                }  
-            });
-        }      
-    });
+router.post('/:playerid/stolen/:lootid',async function (req, res) {
+    let result = await PlayerController.StealLoot(req.params.playerid, req.params.lootid); 
+    return res.status(result.responseCode).json(result.message);
 });
+
 //put
 router.put('/arrest/:thiefId', async (req, res) => {
-    var query = { _id: req.params.thiefId };
     var arrestQuery = {arrested: true,
     loot: []}
-
-    Player.updateOne(query, arrestQuery, function (err, result) {
-        function finished(err) {
-            console.log(err)
-        }
-        res.send("Boef gevangen!");
-    })
-
+    let result = await PlayerController.editPlayer(req.params.thiefId, arrestQuery); 
+    return res.status(result.responseCode).json(result.message);
 });
-router.put('/location/:id', function (req, res) {
-    var query = { _id: req.params.id };
+
+router.put('/location/:id',async  function (req, res) {
     var newLoc = {
         location:
         {
@@ -161,20 +110,8 @@ router.put('/location/:id', function (req, res) {
             longitude: req.body.location.longitude
         }
     }
-    Player.updateOne(query, newLoc, function (err, result) {
-        function finished(err) {
-            console.log(err)
-        }
-        res.send("Update gelukt");
-    })
+    let result = await PlayerController.editPlayer(req.params.id, newLoc); 
+    return res.status(result.responseCode).json(result.message);
 });
-
-
-
-
-
-
-
-
 
 module.exports = router;
