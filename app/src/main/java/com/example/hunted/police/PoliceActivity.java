@@ -256,15 +256,12 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
     private void checkOutOfBounds(){
         String requestURL = URL + "player/outofbounds/" + ID;
 //        Log.d("checkOutOfBounds requestURL: ", requestURL);
-        StringRequest request = new StringRequest(Request.Method.GET, requestURL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                if (response.equals("true")){
-                    Log.d("response: ", "player is out of bounds");
-                    vibrateOutOfPlayingField();
-                } else if (response.equals("false")){
-                    Log.d("response: ", "player is within bounds");
-                }
+        StringRequest request = new StringRequest(Request.Method.GET, requestURL, response -> {
+            if (response.equals("true")){
+                Log.d("response: ", "player is out of bounds");
+                vibrateOutOfPlayingField();
+            } else if (response.equals("false")){
+                Log.d("response: ", "player is within bounds");
             }
         }, error -> {
             NetworkResponse response = error.networkResponse;

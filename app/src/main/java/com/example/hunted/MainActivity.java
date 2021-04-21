@@ -43,8 +43,6 @@ public class MainActivity extends AppCompatActivity {
     EditText username;
     EditText code;
 
-    String player_id;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -66,98 +64,58 @@ public class MainActivity extends AppCompatActivity {
         final String checkCode = URL + "accesscode/check/" + code.getText() + "/" + username.getText().toString();
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.POST, checkCode, null, new Response.Listener<JSONObject>() {
-
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            Log.d("res", "res: " + response.getString("assignedTo").length());
-                            if(response.getString("assignedTo") == "null") {
-                                CreateNewPlayer(code.getText().toString(), username.getText().toString());
-                                return;
-                            }
-
-                            Log.d("responsestring", "res: " + response);
-
-                            if(response.getString("role").equals("Boef")) {
-                                openThievesActivity(response.getString("assignedTo"));
-                            } else if(response.getString("role").equals("Politie")) {
-                                openPoliceActivity(response.getString("assignedTo"));
-                            }
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                (Request.Method.POST, checkCode, null, response -> {
+                    try {
+                        if(response.getString("assignedTo") == "null") {
+                            CreateNewPlayer(code.getText().toString(), username.getText().toString());
+                            return;
                         }
-                    }
-                }, new Response.ErrorListener() {
+                        Log.d("Response", "response: " + response.toString());
+                        if(response.getString("role").equals("Boef")) {
+                            openThievesActivity(response.getString("assignedTo"));
+                        } else if(response.getString("role").equals("Politie")) {
+                            openPoliceActivity(response.getString("assignedTo"));
+                        }
 
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d("Error", "Error: " + error);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                });
+                }, error -> Toast.makeText(getApplicationContext(), "Combinatie code en spelernaam onjuist", Toast.LENGTH_SHORT).show());
         queue.add(jsonObjectRequest);
     }
 
-    private void CheckNameAndCodeCombo(String code, String nameToCheck) {
-
-    }
-
     private void CreateNewPlayer(String codeId, String name) {
-        final String makePlayer = URL + "player/" + code.getText() + "/" + username.getText();
+        final String makePlayer = URL + "player/" + codeId + "/" + name;
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.POST, makePlayer, null, new Response.Listener<JSONObject>() {
-
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            AddPlayerToGame(response.getString("assignedTo"));
-                            if(response.getString("role").equals("Boef")) {
-                                openThievesActivity(response.getString("assignedTo"));
-                            } else if(response.getString("role").equals("Politie")) {
-                                openPoliceActivity(response.getString("assignedTo"));
-                            }
-                            Log.d("response", "response: " + response.toString());
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+                (Request.Method.POST, makePlayer, null, response -> {
+                    try {
+                        AddPlayerToGame(response.getString("assignedTo"));
+                        if(response.getString("role").equals("Boef")) {
+                            openThievesActivity(response.getString("assignedTo"));
+                        } else if(response.getString("role").equals("Politie")) {
+                            openPoliceActivity(response.getString("assignedTo"));
                         }
-                    }
-                }, new Response.ErrorListener() {
 
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d("Error", "Error: " + error);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                });
+                }, error -> Log.d("Error", "Error: " + error));
         queue.add(jsonObjectRequest);
     }
 
     public void AddPlayerToGame(String id){
-        String hardcodedgameId = "607858e32a1c234e5886e14e";
-        final String addPlayer = URL + "game/" + hardcodedgameId + "/player/" + id;
+        String gameId = getString(R.string.gameId);
+        final String addPlayer = URL + "game/" + gameId + "/player/" + id;
 
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.PUT, addPlayer, null, new Response.Listener<JSONObject>() {
+                (Request.Method.PUT, addPlayer, null, response -> Log.d("response", "response: " + response.toString()), error -> Log.d("Error", "Error: " + error));
 
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        Log.d("response", "response: " + response.toString());
-                    }
-                }, new Response.ErrorListener() {
-
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        Log.d("Error", "Error: " + error);
-                    }
-                });
         queue.add(jsonObjectRequest);
     }
 
 
     public void openPoliceActivity(String id){
-        Log.d("aids", "ID: " + id);
         Intent intent = new Intent(this, PoliceActivity.class);
         intent.putExtra("ID", id.replaceAll("\"",""));
         startActivity(intent);
