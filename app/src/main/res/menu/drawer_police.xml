@@ -9,6 +9,6 @@
         <item
             android:id="@+id/nav_arrest"
             android:icon="@drawable/ic_judge_hammer"
-            android:title="Inrekenen" />
+            android:title="Arresteren" />
     </group>
 </menu>
