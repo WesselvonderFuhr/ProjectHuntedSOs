@@ -3,59 +3,27 @@ var Game = require('../MongoDB/game');
 var Player = require('../MongoDB/player');
 var router = express.Router();
 
+let GameController = require('../Controllers/GameController');
 
-router.get('/', function (req, res) {
-    Game.find({}, function (err, result) {
-        if (!err) {
-            res.send(result);
-        }
-    });
+
+router.get('/', async function (req, res) {
+    var result = await GameController.getAllGames()
+    return res.status(200).json(result)
 });
 
-router.post('/', function (req, res) {
-    let gameModel = new Game();
-    gameModel.save();
-
-    res.status(200).json(gameModel);
+router.post('/', async function (req, res) {
+    var result = await GameController.addGame()
+    return res.status(200).json(result)
 });
 
-router.put('/playfield', function (req, res) {
-    Game.findOneAndUpdate({}, req.body,function (err, result) {
-        if (!err) {
-            return res.status(200).send("Update Gelukt!");
-        }else{
-            res.status(400).send(err);
-        }
-    });
+router.put('/playfield', async function (req, res) {
+    var result = await GameController.editPlayfield(req.body)
+    return res.status(200).json(result)
 });
 
 router.put('/:gameId/player/:playerId', async function(req, res){
-    var isDuplicate = false
-    try{
-        var player = await Player.findOne({_id: req.params.playerId}).exec()
-        var game = await Game.findOne({_id: req.params.gameId}).exec()
-
-        for(var i = 0; i < game.players.length; i++){
-            if(req.params.playerId == game.players[i]){
-                isDuplicate = true
-                break;
-            }
-        }
-        if(!isDuplicate){
-            Game.updateOne({_id: req.params.gameId}, {$push: {players: player}}, function(err, result){
-                if(err){
-                    res.status(400).send(err)
-                }else{
-                    res.status(200).send(result)
-                }
-            })
-
-        }else{
-            res.status(400).send('Player already exists in game')
-        }
-    }catch(e){
-        res.status(400).send(e)
-    }
+    var result = await GameController.addPlayerToGame(req.params.gameId, req.params.playerId)
+    return res.status(200).json(result)
 });
 
 module.exports = router;
