@@ -2,32 +2,58 @@ let mongoose = require('mongoose');
 const Result = require("../Helper/Result");
 
 let Player = require('../MongoDB/player');
+let Game = require('../MongoDB/game');
 const Accesscode = require('../MongoDB/accesscode');
+const geolib = require('geolib');
 
 
 class PlayerController{
     async getAllPlayers(game_id){
         let query = { _id: game_id };
-        return await Game.findOne(query).populate('player').players;
+        let result = await Game.findOne(query).populate('player');
+        result = result.players;
+        if(result == null || result.length == 0){
+            return new Result(404, "There are no players found");
+        }else{
+            return new Result(200, result);
+        }
     }
 
     async getPlayerByID(id){
+        
         let query = { _id: id };
         let result = await Player.findOne(query).populate('loot');
         if(result == null){
             return new Result(404, "Player does not exist");
         }
-        return result;
+        return new Result(200,result);
+    }
+    async CheckPlayerRole(id){
+        let role;
+        var query = { _id: id};
+        var player = await Player.findOne(query, function (err, result) {
+            if(result != null){
+                role = result.role;
+            }else{
+                role = null;
+            }
+        });
+        if(role == null){
+            return new Result(404, "Player not found");
+        }else{
+            return new Result(200,role);
+        }
     }
 
     async getArrestablePlayers(id,distance){
+        let responce;
         if(id.length < 25){
             if(!parseInt(distance)){
-                return new Result(400).send("Could not parse int distance");
+                return new Result(400,"Could not parse int distance");
             }
             //return list of id's that are close within distance
             var playerLoc
-            Player.find({}, function (err, result) {
+            await Player.find({}, function (err, result) {
                 if (!err) {
                     var distances = [];
                     result.map(function (player) {
@@ -36,10 +62,12 @@ class PlayerController{
                         }
                     })
                     if (playerLoc == null){
-                        return new Result(404, "Player does not exist");
+                        responce = new Result(404, "Player does not exist");
+                        return;
                     } else{
                         if (playerLoc.latitude == null) {
-                            return new Result(400, "Player has no valid distance");
+                            responce = new Result(400, "Player has no valid distance");
+                            return;
                         }
                         result.forEach(item => {
                             if (item.id != id) {
@@ -59,15 +87,17 @@ class PlayerController{
                             }
                         })
                     }
-                    return new Result(200, JSON.stringify(distances, null, 2));
+                    responce = new Result(200, JSON.stringify(distances, null, 2));
+                    return;
                 }
                 else{
-                    return null;
+                    return new Result(500, "Something went wrong");
                 }
             });
         }else{
-            return new Result(404, "Id does not exist");
+            responce = new Result(404, "Id does not exist");
         }
+        return responce;
     }
 
     async CheckPlayerOutOfBounds(playerID){
@@ -95,17 +125,59 @@ class PlayerController{
                 if(player.location.latitude != null){
                     var isPoint = geolib.isPointInPolygon(player.location, polyLocations)
                     
-                    res.status(200).send(!isPoint)
+                    return new Result(200, !isPoint);
                 }else{
-                    return new Result(400, "Player does not have a location");
+                    return new Result(404, "Player does not have a location");
                 }
             }else{
-                return new Result(400, "Player does not exist in any game");
+                return new Result(404, "Player does not exist in any game");
             }
         }catch(e){
             return new Result(400, e);
         }
     }
+
+    async GetPlayerDistances(id){
+        let responce;
+        var playerLoc
+        await Player.find({}, function (err, result) {
+            if (!err) {
+                var distances = [];
+                result.map(function (player) {
+                    if (id == player.id) {
+                        playerLoc = player.location
+                    }
+                })
+
+                if (playerLoc.latitude == null) {
+                    responce = new Result(404,"Deze speler heeft geen location");
+                    return;
+                    
+                }
+    
+                result.forEach(item => {
+                    if (item.id != id) {
+                        if (item.location.latitude != null) {
+                            var s = geolib.getPreciseDistance(
+                                { latitude: playerLoc.latitude, longitude: playerLoc.longitude },
+                                { latitude: item.location.latitude, longitude: item.location.longitude }
+                            );
+                            distances.push({
+                                'id': item.id,
+                                'distance': s
+                            });
+                        }
+                    }
+                })
+                
+                responce = new Result(200,JSON.stringify(distances, null, 2));
+                return;
+            }
+        });
+        return responce;
+    }
+
+
 
     async addPlayer(codeID,username){
         var emptyLoc = { latitude: null, longitude: null }
