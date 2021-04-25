@@ -37,7 +37,6 @@ router.get('/', function (req, res) {
     });
 });
 
-
 router.get('/:id', function (req, res) {
     var query = { _id: req.params.id };
     Player.findOne(query, function (err, result) {

@@ -22,8 +22,8 @@ router.get('/', async function (req, res) {
 //als die niet bestaat, maak deze aan
 //login
 
-router.post('/check/:codeId', async function (req, res) {
-    var result = await AccesscodeController.checkAssigned(codeId)
+router.post('/check/:code', async function (req, res) {
+    var result = await AccesscodeController.checkAssigned(req.params.code)
     return res.status(200).json(result);
 })
 

@@ -44,6 +44,10 @@ class AccesscodeController{
         var accesscodeQuery = {code: code}
 
         var accessCode = await Accesscode.findOne(accesscodeQuery)
+        if(accessCode == null){
+            return new Result(404, "Accesscode does not exist");
+        }
+        
         if(accessCode.assignedTo != null) {
             return new Result(401, "Accesscode already assigned");
         } else {
