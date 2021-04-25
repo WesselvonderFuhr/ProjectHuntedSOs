@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">Hunted</string>
-    <string name="url">http://192.168.0.160:3000/</string>
+    <string name="url">http://192.168.0.166:3000/</string>
 
 </resources>

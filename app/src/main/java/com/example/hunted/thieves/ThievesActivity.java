@@ -264,10 +264,15 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
                     Log.d("response: ", "player is within bounds");
                 }
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d("checkOutOfBounds error", error.toString());
+        }, error -> {
+            NetworkResponse response = error.networkResponse;
+            if (error instanceof ServerError && response != null) {
+                try {
+                    String res = new String(response.data, HttpHeaderParser.parseCharset(response.headers, "utf-8"));
+                    Log.d("checkOutOfBounds error: ", res);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
         });
         queue.add(request);
