@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/drawer_police"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/primary">
 
     <!-- This LinearLayout represents the contents of the screen  -->
     <LinearLayout
@@ -31,7 +32,7 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="@color/white"
+        android:background="@color/primary"
         app:menu="@menu/drawer_police"
         android:defaultFocusHighlightEnabled="true"
         app:headerLayout="@layout/header_police"/>
