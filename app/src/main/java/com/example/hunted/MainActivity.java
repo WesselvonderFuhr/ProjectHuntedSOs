@@ -80,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                }, error -> Toast.makeText(getApplicationContext(), "Combinatie code en spelernaam onjuist", Toast.LENGTH_SHORT).show());
+                }, error -> Toast.makeText(getApplicationContext(), R.string.label_wrong_login, Toast.LENGTH_SHORT).show());
         queue.add(jsonObjectRequest);
     }
 

@@ -101,7 +101,7 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
 
         //Set initial fragment
         setFragment(new ThievesFragmentLocations());
-        setTitle("Locaties");
+        setTitle(R.string.label_thieves_locations);
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_thieves);
 
@@ -278,7 +278,7 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
     private void vibrateOutOfPlayingField(){
         Vibrator v = (Vibrator) getSystemService(this.VIBRATOR_SERVICE);
 
-        Toast.makeText(this, "Keer terug naar het speelgebied!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.label_return_playingfield, Toast.LENGTH_SHORT).show();
         v.vibrate(500);
     }
 
@@ -323,7 +323,7 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
                                 String res = new String(response.data, HttpHeaderParser.parseCharset(response.headers, "utf-8"));
                                 sendDataToFragmentScanner(false, res);
                             } catch (Exception e) {
-                                sendDataToFragmentScanner(false, "Er ging iets mis.");
+                                sendDataToFragmentScanner(false, R.string.label_thieves_steal_error + "");
                             }
                         }
                     });

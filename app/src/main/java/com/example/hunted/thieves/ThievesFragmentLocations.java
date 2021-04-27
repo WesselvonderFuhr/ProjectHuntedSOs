@@ -34,6 +34,6 @@ public class ThievesFragmentLocations extends Fragment {
     }
 
     public void isArrested(){
-        tvIsArrested.setText("Je bent gearresteerd!");
+        tvIsArrested.setText(R.string.label_thieves_arrested);
     }
 }

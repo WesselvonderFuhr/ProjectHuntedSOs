@@ -45,13 +45,13 @@ public class PoliceFragmentArrest extends Fragment {
     public void giveArrestablePlayers(ArrayList<String> list){
         if (list.size() > 0){
             if (list.size() == 1){
-                setTextBox("Er is 1 boef in de buurt!");
+                setTextBox(R.string.label_police_one_thief_nearby + "");
             } else {
                 String text = "Er zijn " + list.size() + " boeven in de buurt!";
                 setTextBox(text);
             }
         } else {
-            setTextBox("Er zijn geen boeven in de buurt.");
+            setTextBox(R.string.label_police_no_thieves_nearby + "");
         }
     }
 

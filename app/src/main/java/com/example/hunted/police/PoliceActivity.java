@@ -92,7 +92,7 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
 
         //Set initial fragment
         setFragment(new PoliceFragmentLocations());
-        setTitle("Locaties");
+        setTitle(R.string.label_police_locations);
 
         arrestableThieves = new JSONArray();
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_police);
@@ -216,9 +216,9 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
 
         StringRequest stringRequest = new StringRequest(Request.Method.PUT, getArrestedUrl,
                 response -> {
-                    Toast.makeText(PoliceActivity.this, "De boef is gearresteerd!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(PoliceActivity.this, R.string.label_arrest_succes, Toast.LENGTH_SHORT).show();
                 }, error -> {
-                Toast.makeText(PoliceActivity.this, "De boef is weg gekomen!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(PoliceActivity.this, R.string.label_arrest_fail, Toast.LENGTH_SHORT).show();
             }
         );
 
@@ -280,7 +280,7 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
     private void vibrateOutOfPlayingField(){
         Vibrator v = (Vibrator) getSystemService(this.VIBRATOR_SERVICE);
 
-        Toast.makeText(this, "Keer terug naar het speelgebied!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.label_return_playingfield, Toast.LENGTH_SHORT).show();
         v.vibrate(500);
     }
 

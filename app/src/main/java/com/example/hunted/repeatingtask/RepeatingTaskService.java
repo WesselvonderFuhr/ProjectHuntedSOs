@@ -92,7 +92,7 @@ public class RepeatingTaskService extends Service {
                         //Observable
                         task.notifyObservers(obj.get("arrested"));
                     } catch (Throwable t) {
-                        task.notifyObservers("Er ging iets mis met het ophalen van je status");
+                        task.notifyObservers(R.string.label_service_status_fail);
                     }
                 }, error -> {
                     NetworkResponse response = error.networkResponse;
@@ -101,7 +101,7 @@ public class RepeatingTaskService extends Service {
                             String res = new String(response.data, HttpHeaderParser.parseCharset(response.headers, "utf-8"));
                             task.notifyObservers(res);
                         } catch (Exception e) {
-                            task.notifyObservers("Er ging iets mis met het communiceren met de server");
+                            task.notifyObservers(R.string.label_service_server_fail);
                         }
                     }
         });
@@ -119,7 +119,7 @@ public class RepeatingTaskService extends Service {
                         task.notifyObservers(obj);
 
                     } catch (Throwable t) {
-                        task.notifyObservers("Er ging iets mis met het ophalen van de richting van boeven.");
+                        task.notifyObservers(R.string.label_service_thief_direction_fail);
                     }
                 }, error -> {
                     NetworkResponse response = error.networkResponse;
@@ -128,7 +128,7 @@ public class RepeatingTaskService extends Service {
                             String res = new String(response.data, HttpHeaderParser.parseCharset(response.headers, "utf-8"));
                             task.notifyObservers(res);
                         } catch (Exception e) {
-                            task.notifyObservers("Er ging iets mis met laden van de boeven");
+                            task.notifyObservers(R.string.label_service_thief_loading_fail);
                         }
                     }
                 }
