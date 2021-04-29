@@ -105,7 +105,7 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
 
         //Set initial fragment
         setFragment(new ThievesFragmentLocations());
-        setTitle("Locaties");
+        setTitle(R.string.label_thieves_locations);
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_thieves);
 

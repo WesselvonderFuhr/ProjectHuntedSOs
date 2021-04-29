@@ -97,7 +97,7 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
 
         //Set initial fragment
         setFragment(new PoliceFragmentLocations());
-        setTitle("Locaties");
+        setTitle(R.string.label_police_locations);
 
         arrestableThieves = new JSONArray();
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_police);

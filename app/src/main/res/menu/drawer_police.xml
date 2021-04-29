@@ -4,11 +4,11 @@
         <item
             android:id="@+id/nav_locations"
             android:icon="@drawable/ic_map"
-            android:title="Locaties"
+            android:title="@string/label_police_locations"
             android:checked="true"/>
         <item
             android:id="@+id/nav_arrest"
             android:icon="@drawable/ic_judge_hammer"
-            android:title="Arresteren" />
+            android:title="@string/label_police_arrest" />
     </group>
 </menu>

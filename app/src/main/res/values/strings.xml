@@ -1,6 +1,41 @@
 <resources>
     <string name="app_name">Hunted</string>
-    <string name="url">http://192.168.0.166:3000/</string>
+    <string name="url">http://192.168.0.172:3000/</string>
     <string name="gameId">607858e32a1c234e5886e14e</string>
 
+    <string name="label_return_playingfield">Keer terug naar het speelgebied!</string>
+
+    <!--  LOGIN  -->
+    <string name="label_username">Gebruikersnaam:</string>
+    <string name="label_code_login">Code:</string>
+    <string name="button_login">Log in</string>
+    <string name="label_wrong_login">Combinatie gebruikersnaam en code onjuist!</string>
+    <string name="label_arrest_succes">De boef is gearresteerd!</string>
+    <string name="label_arrest_fail">De boef is ontsnapt!</string>
+
+    <!--  POLICE  -->
+    <string name="label_police_header">Politie</string>
+    <string name="label_police_locations">Locaties</string>
+    <string name="label_police_arrest">Arresteren</string>
+    <string name="button_police_arrest">Arresteer!</string>
+    <string name="label_police_one_thief_nearby">Er is 1 boef in de buurt!</string>
+    <string name="label_police_no_thieves_nearby">Er zijn geen boeven in de buurt.</string>
+
+    <!--  THIEVES  -->
+    <string name="label_thieves_header">Boeven</string>
+    <string name="label_thieves_locations">Locaties</string>
+    <string name="label_thieves_scan">Buit scannen</string>
+    <string name="label_thieves_arrested">Je bent gearresteerd!</string>
+    <string name="label_thieves_stolen_loot">Gestolen buit:</string>
+    <string name="label_thieves_steal_succes">Succesvol gestolen!</string>
+    <string name="label_thieves_steal_failure">Gefaald in stelen.</string>
+    <string name="label_thieves_steal_stopped">Gestopt met stelen!</string>
+    <string name="label_thieves_steal_retry">Stelen is mislukt, probeer opnieuw.</string>
+    <string name="label_thieves_steal_error">Er ging iets mis.</string>
+
+    <!--  RepeatingTaskService  -->
+    <string name="label_service_status_fail">Er ging iets mis met het ophalen van je status.</string>
+    <string name="label_service_server_fail">Er ging iets mis met het communiceren met de server.</string>
+    <string name="label_service_thief_direction_fail">Er ging iets mis met het ophalen van de richting van boeven.</string>
+    <string name="label_service_thief_loading_fail">Er ging iets mis met laden van de boeven.</string>
 </resources>
