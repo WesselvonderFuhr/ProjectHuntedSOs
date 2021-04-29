@@ -43,6 +43,7 @@ router.get('/distances/:id', async function (req, res) {
 //post
 router.post('/:codeId/:username', async function (req, res) {
     let result = await PlayerController.addPlayer(req.params.codeId, req.params.username); 
+    
     return res.status(result.responseCode).json(result.message);
 });
 

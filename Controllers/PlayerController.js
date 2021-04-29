@@ -46,6 +46,7 @@ class PlayerController{
     }
 
     async getArrestablePlayers(id,distance){
+        //getplayers by gameid and pupulate
         let responce;
         if(id.length < 25){
             if(!parseInt(distance)){
@@ -138,6 +139,7 @@ class PlayerController{
     }
 
     async GetPlayerDistances(id){
+        //getplayers by gameid and pupulate
         let responce;
         var playerLoc
         await Player.find({}, function (err, result) {
@@ -147,12 +149,11 @@ class PlayerController{
                     if (id == player.id) {
                         playerLoc = player.location
                     }
-                })
+                });
 
                 if (playerLoc.latitude == null) {
                     responce = new Result(404,"Deze speler heeft geen location");
                     return;
-                    
                 }
     
                 result.forEach(item => {
@@ -180,6 +181,7 @@ class PlayerController{
 
 
     async addPlayer(codeID,username){
+        //getplayers by gameid and pupulate
         var emptyLoc = { latitude: null, longitude: null }
         var name = username;
         var codeId = codeID;
@@ -203,47 +205,33 @@ class PlayerController{
     }
 
     async StealLoot(playerID,lootID){
-        let responce;
-        let player;
         var playerquery = { _id: playerID };
         var lootquery =  { _id: lootID };
+        //get player
+        let player = await Player.findOne(playerquery)
+        if(player == null){
+            return new Result(404, "Player does not exist");
+        }    
+        //get loot
+        let loot = await Loot.findOne(lootquery);
+        if(loot == null){
+            return new Result(404, "Loot does not exist");
+        }   
+        //check player has loot
+        let hasLoot = false;
 
-        await Player.findOne(playerquery, async function(err,result){
-            if(result == null){
-                responce =  new Result(404, "Player does not exist");
-                return;
-            }else{
-                player = result
-            }   
-        });
-        await Loot.findOne(lootquery, async function(err, result) {
-            if(result == null){
-                responce =  new Result(404, "Loot does not exist");
-                return
-            }else{
-                let hasLoot = false;
-                let loot=result;
-               
-                for(let i =0; i < player.loot.length; i++){
-                    if(player.loot[i].equals(loot._id)){
-                        hasLoot = true;
-                    }
-                }
-                if(!hasLoot){
-                    player.loot.push(loot)
-                    await player.save();
-                    responce = new Result(200, loot.name);
-                    return;
-                }else{
-                    responce = new Result(400, "Player already has this loot");
-                    return;
-                }
-            }  
-        });
-        if(responce == null){
-            responce = new Result(500, "Something went wrong");
+        for(let i =0; i < player.loot.length; i++){
+            if(player.loot[i].equals(loot._id)){
+                hasLoot = true;
+            }
         }
-        return responce;
+        if(!hasLoot){
+            player.loot.push(loot)
+            await player.save();
+            return  new Result(200, loot.name);
+        }else{
+            return new Result(400, "Player already has this loot");
+        }
     }
 
     async editPlayer(id, body){
