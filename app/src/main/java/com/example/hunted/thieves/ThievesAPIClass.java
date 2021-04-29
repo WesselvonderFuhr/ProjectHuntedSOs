@@ -23,7 +23,7 @@ public class ThievesAPIClass extends APIClass {
         super(c, url);
     }
 
-    public void Steal(boolean success, String id, String result, Fragment fragment) {
+    public void steal(boolean success, String id, String result, Fragment fragment) {
         if(success){
             final String postStolenLoot = URL + "player/" + id + "/stolen/" + result;
             StringRequest stringRequest = new StringRequest(Request.Method.POST, postStolenLoot,

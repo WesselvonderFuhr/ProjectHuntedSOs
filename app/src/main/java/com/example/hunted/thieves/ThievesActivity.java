@@ -141,7 +141,7 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
                     }
                 };
                 queue.add(stringRequest);
-                thievesAPIClass.CheckOutOfBounds(id);
+                thievesAPIClass.checkOutOfBounds(id);
             }
 
             @Override
@@ -285,7 +285,7 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
             super.onActivityResult(requestCode, resultCode, data);
         }
 
-        thievesAPIClass.Steal(success, id, result, getCurrentFragment());
+        thievesAPIClass.steal(success, id, result, getCurrentFragment());
     }
     //endregion
 

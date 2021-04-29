@@ -65,7 +65,7 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
     private LocationManager locationManager;
     private LocationListener locationListener;
 
-    public String ID;
+    public String id;
 
     private boolean hasNotBound = true;
 
@@ -85,7 +85,7 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
 
         policeAPIClass = new PoliceAPIClass(this, URL);
 
-        ID = getIntent().getStringExtra("ID");
+        id = getIntent().getStringExtra("ID");
 
         initLocation();
 
@@ -115,7 +115,7 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
                 double latitude = location.getLatitude();
                 double longitude = location.getLongitude();
 
-                String setlocURL = URL + "player/location/" + ID;
+                String setlocURL = URL + "player/location/" + id;
                 StringRequest stringRequest = new StringRequest(Request.Method.PUT, setlocURL,
                         response -> {
                             if(hasNotBound) {
@@ -136,7 +136,7 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
                     }
                 };
                 queue.add(stringRequest);
-                policeAPIClass.CheckOutOfBounds(ID);
+                policeAPIClass.checkOutOfBounds(id);
             }
 
             @Override
@@ -319,7 +319,7 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
     private final ServiceConnection mConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className, IBinder service) {
             mBoundService = ((RepeatingTaskService.LocalBinder)service).getService();
-            mBoundService.setID(ID);
+            mBoundService.setID(id);
 
             //Add repeatingTask.
             RepeatingTask repeatingTask = new RepeatingTask(RepeatingTaskName.CHECK_THIEF_NEARBY, PING_MS);

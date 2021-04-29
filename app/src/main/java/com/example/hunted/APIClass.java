@@ -26,7 +26,7 @@ public abstract class APIClass {
         queue = Volley.newRequestQueue(context);
     }
 
-    public void CheckOutOfBounds(String id) {
+    public void checkOutOfBounds(String id) {
         String requestURL = URL + "player/outofbounds/" + id;
         StringRequest request = new StringRequest(Request.Method.GET, requestURL, response -> {
             if (response.equals("true")){
