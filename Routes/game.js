@@ -68,18 +68,14 @@ router.put('/:gameId/player/:playerId', async function(req, res){
 });
 
 
-router.post('/administrator', async function (req, res) {
+router.post('/authenticate', async function (req, res) {
     if(!req.query.name || !req.query.code){
         let message = { message: "Login with name and code"};
         return res.status(400).json(message);
     }
 
     let result = await AdministratorController.authenticate(req.query.name, req.query.code);
-    if(result.responseCode === 200){
-        return res.status(200).json(result.message);
-    } else {
-        DefaultResponse(result, req, res);
-    }
+    DefaultResponse(result, req, res);
 });
 
 module.exports = router;

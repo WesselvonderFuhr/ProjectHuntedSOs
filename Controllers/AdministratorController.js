@@ -15,13 +15,13 @@ class AdministratorController{
             let query = { administrator: administrator._id };
             let game = await Game.findOne(query);
             if(game == null){
-                return new Result(404, 'Game doesn\'t exist (anymore).');
+                return new Result(404, 'Game does not exist (anymore).');
             }
             let payload = {game_id: game._id, role: 'Administrator'};
             let token = { token: jwt.sign(payload, secret)};
             return new Result(200, token);
         } else {
-            return new Result(404, 'Combination name and code does not exist.');
+            return new Result(401, 'Combination name and code is invalid.');
         }
     }
 

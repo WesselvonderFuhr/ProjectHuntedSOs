@@ -7,3 +7,11 @@ exports.Administrator = async (user) => {
     }
     return new Result(403, "You need to be Administrator to do this.");
 }
+
+exports.Player = async (user) => {
+    // Authorized if Player
+    if (user.role === "Player") {
+        return null;
+    }
+    return new Result(403, "You need to be Player to do this.");
+}
