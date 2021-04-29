@@ -57,6 +57,8 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
     private final int PING_MS = 3000;
     private final int LOCATION_REQUEST_CODE = 1234;
 
+    private PoliceAPIClass policeAPIClass;
+
     public String URL;
     private RequestQueue queue;
 
@@ -77,8 +79,11 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_police);
 
+
         URL = getString(R.string.url);
         queue = Volley.newRequestQueue(this);
+
+        policeAPIClass = new PoliceAPIClass(this, URL);
 
         ID = getIntent().getStringExtra("ID");
 
@@ -131,7 +136,7 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
                     }
                 };
                 queue.add(stringRequest);
-                checkOutOfBounds();
+                policeAPIClass.CheckOutOfBounds(ID);
             }
 
             @Override
@@ -205,24 +210,10 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
         if(tempList != null) {
             if(tempList.size() > 0) {
                 for(int i = 0; i < tempList.size(); i++) {
-                    arrestThiefAPICall(tempList.get(i));
+                    policeAPIClass.ArrestThief(tempList.get(i));
                 }
             }
         }
-    }
-
-    private void arrestThiefAPICall(String thiefId) {
-        final String getArrestedUrl = URL + "player/arrest/" + thiefId;
-
-        StringRequest stringRequest = new StringRequest(Request.Method.PUT, getArrestedUrl,
-                response -> {
-                    Toast.makeText(PoliceActivity.this, "De boef is gearresteerd!", Toast.LENGTH_SHORT).show();
-                }, error -> {
-                Toast.makeText(PoliceActivity.this, "De boef is weg gekomen!", Toast.LENGTH_SHORT).show();
-            }
-        );
-
-        queue.add(stringRequest);
     }
 
     //sets the arrest button to active or non-active based on
@@ -252,38 +243,6 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction().replace(R.id.mainContentPolice, fragment).commit();
     }
-
-    private void checkOutOfBounds(){
-        String requestURL = URL + "player/outofbounds/" + ID;
-//        Log.d("checkOutOfBounds requestURL: ", requestURL);
-        StringRequest request = new StringRequest(Request.Method.GET, requestURL, response -> {
-            if (response.equals("true")){
-                Log.d("response: ", "player is out of bounds");
-                vibrateOutOfPlayingField();
-            } else if (response.equals("false")){
-                Log.d("response: ", "player is within bounds");
-            }
-        }, error -> {
-            NetworkResponse response = error.networkResponse;
-            if (error instanceof ServerError && response != null) {
-                try {
-                    String res = new String(response.data, HttpHeaderParser.parseCharset(response.headers, "utf-8"));
-                    Log.d("checkOutOfBounds error: ", res);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        queue.add(request);
-    }
-
-    private void vibrateOutOfPlayingField(){
-        Vibrator v = (Vibrator) getSystemService(this.VIBRATOR_SERVICE);
-
-        Toast.makeText(this, "Keer terug naar het speelgebied!", Toast.LENGTH_SHORT).show();
-        v.vibrate(500);
-    }
-
 
     // DRAWER LOADING
 

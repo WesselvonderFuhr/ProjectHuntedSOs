@@ -61,27 +61,27 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void Login() {
-        final String checkCode = URL + "accesscode/check/" + code.getText() + "/" + username.getText().toString();
-
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.POST, checkCode, null, response -> {
-                    try {
-                        if(response.getString("assignedTo") == "null") {
-                            CreateNewPlayer(code.getText().toString(), username.getText().toString());
-                            return;
-                        }
-                        Log.d("Response", "response: " + response.toString());
-                        if(response.getString("role").equals("Boef")) {
-                            openThievesActivity(response.getString("assignedTo"));
-                        } else if(response.getString("role").equals("Politie")) {
-                            openPoliceActivity(response.getString("assignedTo"));
-                        }
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }, error -> Toast.makeText(getApplicationContext(), "Combinatie code en spelernaam onjuist", Toast.LENGTH_SHORT).show());
-        queue.add(jsonObjectRequest);
+//        final String checkCode = URL + "accesscode/check/" + code.getText() + "/" + username.getText().toString();
+//        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+//                (Request.Method.POST, checkCode, null, response -> {
+//                    try {
+//                        if(response.getString("assignedTo") == "null") {
+//                            CreateNewPlayer(code.getText().toString(), username.getText().toString());
+//                            return;
+//                        }
+//                        Log.d("Response", "response: " + response.toString());
+//                        if(response.getString("role").equals("Boef")) {
+//                            openThievesActivity(response.getString("assignedTo"));
+//                        } else if(response.getString("role").equals("Politie")) {
+//                            openPoliceActivity(response.getString("assignedTo"));
+//                        }
+//
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    }
+//                }, error -> Toast.makeText(getApplicationContext(), "Combinatie code en spelernaam onjuist", Toast.LENGTH_SHORT).show());
+//        queue.add(jsonObjectRequest);
+        openPoliceActivity("6085941b6ce69e07d47839b0");
     }
 
     private void CreateNewPlayer(String codeId, String name) {
