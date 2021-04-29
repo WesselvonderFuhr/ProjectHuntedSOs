@@ -70,7 +70,6 @@ public class MainActivity extends AppCompatActivity {
                             CreateNewPlayer(code.getText().toString(), username.getText().toString());
                             return;
                         }
-                        Log.d("Response", "response: " + response.toString());
                         if(response.getString("role").equals("Boef")) {
                             openThievesActivity(response.getString("assignedTo"));
                         } else if(response.getString("role").equals("Politie")) {

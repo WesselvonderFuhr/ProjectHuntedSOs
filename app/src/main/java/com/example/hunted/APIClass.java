@@ -30,17 +30,14 @@ public abstract class APIClass {
         String requestURL = URL + "player/outofbounds/" + id;
         StringRequest request = new StringRequest(Request.Method.GET, requestURL, response -> {
             if (response.equals("true")){
-                Log.d("response: ", "player is out of bounds");
                 vibrateOutOfPlayingField();
             } else if (response.equals("false")){
-                Log.d("response: ", "player is within bounds");
             }
         }, error -> {
             NetworkResponse response = error.networkResponse;
             if (error instanceof ServerError && response != null) {
                 try {
                     String res = new String(response.data, HttpHeaderParser.parseCharset(response.headers, "utf-8"));
-                    Log.d("checkOutOfBounds error: ", res);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
