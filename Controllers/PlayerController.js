@@ -140,6 +140,11 @@ class PlayerController{
 
     async GetPlayerDistances(id){
         //getplayers by gameid and pupulate
+        //needs test
+        let query = { _id: gameID };
+        let game = await Game.findOne(query);
+        let players = game.players;
+
         let responce;
         var playerLoc
         await Player.find({}, function (err, result) {
@@ -180,8 +185,11 @@ class PlayerController{
 
 
 
-    async addPlayer(codeID,username){
-        //getplayers by gameid and pupulate
+    async addPlayer(codeID,username,gameID){
+        //needs test
+        let query = { _id: gameID };
+        let game = await Game.findOne(query).populate('player');
+
         var emptyLoc = { latitude: null, longitude: null }
         var name = username;
         var codeId = codeID;
@@ -197,8 +205,9 @@ class PlayerController{
         await playerModel.save();
     
         accessCode.assignedTo = playerModel._id
-    
         await accessCode.save()
+
+        game.players.push(playerModel);
     
     
         return new Result(200, accessCode);
