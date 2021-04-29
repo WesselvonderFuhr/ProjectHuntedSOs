@@ -4,6 +4,9 @@ const Loot = require('../MongoDB/loot');
 const Game = require('../MongoDB/game');
 const router = express.Router();
 const geolib = require('geolib');
+const passport = require("passport");
+const authorize = require("../Authorization/authorize");
+const {DefaultResponse} = require("../Helper/DefaultResponse");
 
 router.post('/:codeId/:username', async function (req, res) {
     var emptyLoc = { latitude: null, longitude: null }
@@ -29,12 +32,15 @@ router.post('/:codeId/:username', async function (req, res) {
     res.status(200).send(accessCode);
 });
 
-router.get('/', function (req, res) {
-    var players = Player.find({}, function (err, result) {
-        if (!err) {
-            res.send(result);
-        }
-    });
+router.get('/', passport.authenticate('jwt', { session: false }), async function (req, res) {
+    let unauthorized = await authorize.Administrator(req.user);
+    if(unauthorized){
+        return DefaultResponse(unauthorized, req, res);
+    }
+
+    let query = { _id: req.user.game_id };
+    let result = await Game.findOne(query).populate('player');
+    res.send(result.players);
 });
 
 
@@ -44,7 +50,7 @@ router.get('/:id', function (req, res) {
         if (!err) {
             res.status(200).send(result);
         }else{
-            res.status(404).send("User does not exist")
+            res.status(404).send("User does not exist");
         }
     });
 });
