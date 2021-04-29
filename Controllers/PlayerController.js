@@ -47,58 +47,50 @@ class PlayerController{
 
     async getArrestablePlayers(id,distance){
         //getplayers by gameid and pupulate
-        let responce;
+        let query = { _id: gameID };
+        let game = await Game.findOne(query).populate('player');
+        let players = game.players;
+    
         if(id.length < 25){
             if(!parseInt(distance)){
                 return new Result(400,"Could not parse int distance");
             }
             //return list of id's that are close within distance
             var playerLoc
-            await Player.find({}, function (err, result) {
-                if (!err) {
-                    var distances = [];
-                    result.map(function (player) {
-                        if (id == player.id) {
-                            playerLoc = player.location
-                        }
-                    })
-                    if (playerLoc == null){
-                        responce = new Result(404, "Player does not exist");
-                        return;
-                    } else{
-                        if (playerLoc.latitude == null) {
-                            responce = new Result(400, "Player has no valid distance");
-                            return;
-                        }
-                        result.forEach(item => {
-                            if (item.id != id) {
-                                if (item.location.latitude != null) {
-                                    if (item.arrested == false && item.role == "Boef"){
-                                        var s = geolib.getPreciseDistance(
-                                            { latitude: playerLoc.latitude, longitude: playerLoc.longitude },
-                                            { latitude: item.location.latitude, longitude: item.location.longitude }
-                                        );
-                                        if (s <= distance){
-                                            distances.push({
-                                                'id': item.id
-                                            });
-                                        }
-                                    }
-                                }
-                            }
-                        })
-                    }
-                    responce = new Result(200, JSON.stringify(distances, null, 2));
-                    return;
-                }
-                else{
-                    return new Result(500, "Something went wrong");
+            var distances = [];
+            players.map(function (player) {
+                if (id == player.id) {
+                    playerLoc = player.location
                 }
             });
+            if (playerLoc == null){
+                return new Result(404, "Player does not exist");
+            } else{
+                if (playerLoc.latitude == null) {
+                    return new Result(400, "Player has no valid distance");
+                }
+                players.forEach(item => {
+                    if (item.id != id) {
+                        if (item.location.latitude != null) {
+                            if (item.arrested == false && item.role == "Boef"){
+                                var s = geolib.getPreciseDistance(
+                                    { latitude: playerLoc.latitude, longitude: playerLoc.longitude },
+                                    { latitude: item.location.latitude, longitude: item.location.longitude }
+                                );
+                                if (s <= distance){
+                                    distances.push({
+                                        'id': item.id
+                                    });
+                                }
+                            }
+                        }
+                    }
+                })
+            }
+            return new Result(200, JSON.stringify(distances, null, 2));
         }else{
-            responce = new Result(404, "Id does not exist");
+            return new Result(404, "Id does not exist");
         }
-        return responce;
     }
 
     async CheckPlayerOutOfBounds(playerID){
@@ -138,49 +130,40 @@ class PlayerController{
         }
     }
 
-    async GetPlayerDistances(id){
-        //getplayers by gameid and pupulate
+    async GetPlayerDistances(id, gameID){
         //needs test
         let query = { _id: gameID };
-        let game = await Game.findOne(query);
+        let game = await Game.findOne(query).populate('player');
         let players = game.players;
 
-        let responce;
         var playerLoc
-        await Player.find({}, function (err, result) {
-            if (!err) {
-                var distances = [];
-                result.map(function (player) {
-                    if (id == player.id) {
-                        playerLoc = player.location
-                    }
-                });
-
-                if (playerLoc.latitude == null) {
-                    responce = new Result(404,"Deze speler heeft geen location");
-                    return;
-                }
-    
-                result.forEach(item => {
-                    if (item.id != id) {
-                        if (item.location.latitude != null) {
-                            var s = geolib.getPreciseDistance(
-                                { latitude: playerLoc.latitude, longitude: playerLoc.longitude },
-                                { latitude: item.location.latitude, longitude: item.location.longitude }
-                            );
-                            distances.push({
-                                'id': item.id,
-                                'distance': s
-                            });
-                        }
-                    }
-                })
-                
-                responce = new Result(200,JSON.stringify(distances, null, 2));
-                return;
+        var distances = [];
+        players.map(function (player) {
+            if (id == player.id) {
+                playerLoc = player.location
             }
         });
-        return responce;
+
+        if (playerLoc.latitude == null) {
+            return new Result(404,"Deze speler heeft geen location");
+        }
+
+        players.forEach(item => {
+            if (item.id != id) {
+                if (item.location.latitude != null) {
+                    var s = geolib.getPreciseDistance(
+                        { latitude: playerLoc.latitude, longitude: playerLoc.longitude },
+                        { latitude: item.location.latitude, longitude: item.location.longitude }
+                    );
+                    distances.push({
+                        'id': item.id,
+                        'distance': s
+                    });
+                }
+            }
+        });
+                
+        return new Result(200,JSON.stringify(distances, null, 2));
     }
 
 
@@ -188,7 +171,7 @@ class PlayerController{
     async addPlayer(codeID,username,gameID){
         //needs test
         let query = { _id: gameID };
-        let game = await Game.findOne(query).populate('player');
+        let game = await Game.findOne(query);
 
         var emptyLoc = { latitude: null, longitude: null }
         var name = username;
