@@ -1,15 +1,17 @@
-let mongoose = require('mongoose');
 const Result = require("../Helper/Result");
 
 let Jail = require('../MongoDB/jail');
+let Game = require('../MongoDB/game');
 
 class JailController{
-    async getJailByID(id){
-        let query = { _id: id };
-        return await Jail.findOne(query);
+    async getJailByGameId(game_id){
+        let query = { _id: game_id };
+        let game = await Game.findOne(query);
+        let jail = await Jail.findOne({_id: game.jail})
+        return jail
     }
 
-    async editLoot(id, body){
+    async editJail(id, body){
         let query = { _id: id };
         let new_body = {
             location:
@@ -19,7 +21,7 @@ class JailController{
                 }
         }
         try{
-            let jail = await this.getJailByID(id);
+            let jail = await Jail.findOne(query);
             if(jail != null){
                 await Jail.updateOne(query, new_body);
                 return new Result(200, "Jail has been updated");

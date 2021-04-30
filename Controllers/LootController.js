@@ -6,7 +6,8 @@ let Game = require('../MongoDB/game');
 class LootController{
     async getAllLoot(game_id){
         let query = { _id: game_id };
-        return await Game.findOne(query).populate('loot').loot;
+        var s = await Game.findOne(query).populate('loot');
+        return s.loot
     }
 
     async getLootByID(id){
