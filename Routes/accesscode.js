@@ -3,6 +3,9 @@ var Accesscode = require('../MongoDB/accesscode');
 var Player = require('../MongoDB/player');
 var router = express.Router();
 var randomstring = require("randomstring");
+let AccesscodeController = require('../Controllers/AccesscodeController');
+const authorize = require("../Authorization/authorize");
+const {DefaultResponse} = require("../Helper/DefaultResponse");
 
 let AccesscodeController = require('../Controllers/AccesscodeController');
 
@@ -16,7 +19,15 @@ router.get('/', async function (req, res) {
     return res.status(200).json(result);
 });
 
+router.post('/authenticate', async function (req, res){
+    if(!req.query.name || !req.query.code){
+        let message = { message: "Login with name and code"};
+        return res.status(400).json(message);
+    }
 
+    let result = await AccesscodeController.authenticate(req.query.name, req.query.code);
+    DefaultResponse(result, req, res);
+});
 //check of code bestaat
 //check de naam van de assigned speler
 //als die niet bestaat, maak deze aan

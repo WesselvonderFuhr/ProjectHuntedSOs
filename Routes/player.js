@@ -4,9 +4,13 @@ const Loot = require('../MongoDB/loot');
 const Game = require('../MongoDB/game');
 const router = express.Router();
 const geolib = require('geolib');
+
 let PlayerController = require('../Controllers/PlayerController');
 const {DefaultResponse} = require("../Helper/DefaultResponse");
 const Result = require("../Helper/Result");
+const passport = require("passport");
+const authorize = require("../Authorization/authorize");
+
 //get
 router.get('/', async function (req, res) {
     let result = await PlayerController.getAllPlayers(req.query.game_id);
@@ -24,7 +28,7 @@ router.get('/check/:id', async function (req, res) {
     return res.status(result.responseCode).json(result.message);
 });
 
-router.get('/ararestableThieves/:id/:distance', async function(req, res){
+router.get('/arrestableThieves/:id/:distance', async function(req, res){
     let result =  await PlayerController.getArrestablePlayers(req.params.id,req.params.distance);
     console.log(result)
     return res.status(result.responseCode).json(result.message);
