@@ -3,6 +3,7 @@ var randomstring = require("randomstring");
 const jwt = require("jsonwebtoken");
 const secret = require("../Authorization/secret");
 
+let PlayerController = require('./PlayerController');
 let Accesscode = require('../MongoDB/accesscode');
 let Player = require('../MongoDB/player');
 let Game = require('../MongoDB/game');
@@ -143,7 +144,7 @@ class AccesscodeController{
             if(game == null) {
                 return new Result(404, 'Game does not exist (anymore).');
             }
-            let payload = {game_id: game._id, player_id: player._id, role: 'Player'};
+            let payload = {game_id: game._id, player_id: player._id, role: player.role};
             let token = { token: jwt.sign(payload, secret) };
             return new Result(200, token);
         } else {

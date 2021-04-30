@@ -1,7 +1,9 @@
 const Result = require("../Helper/Result");
+const randomstring = require("randomstring");
 
 let Jail = require('../MongoDB/jail');
 let Game = require('../MongoDB/game');
+let Administrator = require('../MongoDB/administrator');
 
 class GameController{
     async getAllGames(){
@@ -13,12 +15,17 @@ class GameController{
         return await Game.findOne(query);
     }
 
-    async addGame(){
+    async addGame(body){
         let game = new Game();
         game.jail = null
+        let code = randomstring.generate(7).toUpperCase();
+        let administrator = { name: body.name, code: code };
+        let administratorModel = new Administrator(administrator);
+        await administratorModel.save();
+        game.administrator = administratorModel;
         await game.save()
 
-        return new Result(200, "Game has been added");
+        return new Result(200, code);
     }
 
     async editPlayfield(body){

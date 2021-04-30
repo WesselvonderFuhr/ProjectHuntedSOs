@@ -1,4 +1,4 @@
-exports.DefaultResponse = (result, req, res) => {
+exports.ResponseHandler = (result, req, res) => {
     let responseCode = 500;
     let message = { message: "Something went wrong" }
     if(result != null){

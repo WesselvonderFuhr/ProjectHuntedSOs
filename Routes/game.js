@@ -7,7 +7,7 @@ const passport = require("passport");
 let GameController = require('../Controllers/GameController');
 let AdministratorController = require('../Controllers/AdministratorController');
 const authorize = require("../Authorization/authorize");
-const {DefaultResponse} = require("../Helper/DefaultResponse");
+const {ResponseHandler} = require("../Helper/ResponseHandler");
 
 
 router.get('/', async function (req, res) {
@@ -16,14 +16,14 @@ router.get('/', async function (req, res) {
 });
 
 router.post('/', async function (req, res) {
-    var result = await GameController.addGame()
-    return res.status(200).json(result)
+    var result = await GameController.addGame(req.body);
+    ResponseHandler(result, req, res);
 });
 
 router.put('/playfield', passport.authenticate('jwt', { session: false }), async function (req, res) {
     let unauthorized = await authorize.Administrator(req.user);
     if(unauthorized){
-        return DefaultResponse(unauthorized, req, res);
+        return ResponseHandler(unauthorized, req, res);
     }
 
     let result = await GameController.editPlayfield(req.body);
@@ -43,7 +43,7 @@ router.post('/authenticate', async function (req, res) {
     }
 
     let result = await AdministratorController.authenticate(req.query.name, req.query.code);
-    DefaultResponse(result, req, res);
+    ResponseHandler(result, req, res);
 });
 
 module.exports = router;

@@ -8,10 +8,18 @@ exports.Administrator = async (user) => {
     return new Result(403, "You need to be Administrator to do this.");
 }
 
-exports.Player = async (user) => {
+exports.Boef = async (user) => {
     // Authorized if Player
-    if (user.role === "Player") {
+    if (user.role === "Boef") {
         return null;
     }
-    return new Result(403, "You need to be Player to do this.");
+    return new Result(403, "You need to be Boef to do this.");
+}
+
+exports.Agent = async (user) => {
+    // Authorized if Player
+    if (user.role === "Agent") {
+        return null;
+    }
+    return new Result(403, "You need to be Agent to do this.");
 }

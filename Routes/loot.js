@@ -3,7 +3,7 @@ const router = express.Router();
 const passport = require("passport");
 
 let LootController = require('../Controllers/LootController');
-const {DefaultResponse} = require("../Helper/DefaultResponse");
+const {DefaultResponse} = require("../Helper/ResponseHandler");
 
 router.post('/', async function (req, res) {
   let result = await LootController.addLoot(req.query.game_id, req.body);

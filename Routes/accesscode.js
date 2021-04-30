@@ -5,7 +5,7 @@ var router = express.Router();
 var randomstring = require("randomstring");
 let AccesscodeController = require('../Controllers/AccesscodeController');
 const authorize = require("../Authorization/authorize");
-const {DefaultResponse} = require("../Helper/DefaultResponse");
+const {DefaultResponse} = require("../Helper/ResponseHandler");
 
 
 router.post('/', async function (req, res) {

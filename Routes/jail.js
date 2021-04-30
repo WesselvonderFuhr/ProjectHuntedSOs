@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 let JailController = require('../Controllers/JailController');
-const {DefaultResponse} = require("../Helper/DefaultResponse");
+const {ResponseHandler} = require("../Helper/ResponseHandler");
 
 router.get('/', async function (req, res) {
     let result = await JailController.getJailByGameId(req.query.game_id);
@@ -11,7 +11,7 @@ router.get('/', async function (req, res) {
 
 router.put('/', async function (req, res) {
     let result = await JailController.editJail(req.query.jail_id, req.body);
-    DefaultResponse(result, req, res);
+    ResponseHandler(result, req, res);
 });
 
 module.exports = router;

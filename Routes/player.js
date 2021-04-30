@@ -6,7 +6,7 @@ const router = express.Router();
 const geolib = require('geolib');
 
 let PlayerController = require('../Controllers/PlayerController');
-const {DefaultResponse} = require("../Helper/DefaultResponse");
+const {DefaultResponse} = require("../Helper/ResponseHandler");
 const Result = require("../Helper/Result");
 const passport = require("passport");
 const authorize = require("../Authorization/authorize");
