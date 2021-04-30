@@ -7,7 +7,6 @@ let AccesscodeController = require('../Controllers/AccesscodeController');
 const authorize = require("../Authorization/authorize");
 const {DefaultResponse} = require("../Helper/DefaultResponse");
 
-let AccesscodeController = require('../Controllers/AccesscodeController');
 
 router.post('/', async function (req, res) {
     var result = await AccesscodeController.addAccesscodes(req.body)

@@ -125,7 +125,6 @@ class AccesscodeController{
 
         let player = null;
         if(accesscode.assignedTo != null) {
-            //TODO PlayerController?
             player = await Player.findOne({ _id: accesscode.assignedTo });
             if(player == null){
                 return new Result(404, 'Player does not exist');
@@ -135,21 +134,7 @@ class AccesscodeController{
                 }
             }
         } else {
-            //TODO PlayerController.addPlayer(codeID,username);
-
-            /*let player_body = {};
-            player_body.name = name;
-            player_body.role = accesscode.role;
-            player_body.arrested = false;
-            player_body.location = { latitude: null, longitude: null };
-
-            player = new Player(player_body);
-            await player.save();
-
-            ERROR query = { accesscodes: accesscode._id };
-            ERROR let game = await Game.findOne(query);
-            ERROR await Game.updateOne(query, {})
-            await Accesscode.updateOne(query, {assignedTo: player._id});*/
+			player = PlayerController.addPlayer(code, name);
         }
 
         if(player != null) {

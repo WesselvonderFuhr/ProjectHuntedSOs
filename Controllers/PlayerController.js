@@ -166,23 +166,18 @@ class PlayerController{
         return new Result(200,JSON.stringify(distances, null, 2));
     }
 
-
-
-    async addPlayer(codeID,username,gameID){
-        //needs test
-        let query = { _id: gameID };
+    async addPlayer(code,name){
+        let emptyLocation = { latitude: null, longitude: null }
+        let accessCode = await Accesscode.findOne({ code: code })
+		
+        let query = { accesscodes: accessCode._id };
         let game = await Game.findOne(query);
-
-        var emptyLoc = { latitude: null, longitude: null }
-        var name = username;
-        var codeId = codeID;
-        var accessCode = await Accesscode.findOne({code: codeId})
     
         let player = {};
         player.name = name;
         player.role = accessCode.role;
         player.arrested = false;
-        player.location = emptyLoc;
+        player.location = emptyLocation;
     
         let playerModel = new Player(player);
         await playerModel.save();
@@ -191,9 +186,8 @@ class PlayerController{
         await accessCode.save()
 
         game.players.push(playerModel);
-    
-    
-        return new Result(200, accessCode);
+		
+        return playerModel;
     }
 
     async StealLoot(playerID,lootID){
