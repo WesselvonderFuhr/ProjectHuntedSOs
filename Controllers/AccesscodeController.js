@@ -11,7 +11,8 @@ let Game = require('../MongoDB/game');
 class AccesscodeController{
     async getAllAccesscodes(game_id){
         let query = { _id: game_id };
-        return await Game.findOne(query).populate('accesscodes').accesscodes;
+        let code = await Game.findOne(query).populate('accesscodes')
+        return code.accesscodes
     }
 
     async getAccesscodeByID(id){
@@ -20,6 +21,7 @@ class AccesscodeController{
     }
 
     async addAccesscodes(body, game_id){
+        let game = await Game.findOne({_id: game_id});
         var amount = body.amount
         var codes = []
     
@@ -34,8 +36,12 @@ class AccesscodeController{
                 accesscode.assignedTo = null;
         
                 let accesscodeModel = new Accesscode(accesscode);
-                accesscodeModel.save();
+                await accesscodeModel.save();               
+                game.accesscodes.push(accesscodeModel);
+                
+
             }
+            game.save();
 
             return new Result(200, codes)
         }else{

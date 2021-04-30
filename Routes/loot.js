@@ -3,11 +3,11 @@ const router = express.Router();
 const passport = require("passport");
 
 let LootController = require('../Controllers/LootController');
-const {DefaultResponse} = require("../Helper/ResponseHandler");
+const {ResponseHandler} = require("../Helper/ResponseHandler");
 
 router.post('/', passport.authenticate('jwt', { session: false }), async function (req, res) {
   let result = await LootController.addLoot(req.user.game_id, req.body);
-  DefaultResponse(result, req, res);
+  ResponseHandler(result, req, res);
 });
 
 router.get('/', passport.authenticate('jwt', { session: false }), async function (req, res) {
@@ -17,7 +17,7 @@ router.get('/', passport.authenticate('jwt', { session: false }), async function
 
 router.delete('/:id', passport.authenticate('jwt', { session: false }), async function (req, res) {
   let result = await LootController.deleteLoot(req.user.game_id, req.params.id);
-  DefaultResponse(result, req, res);
+  ResponseHandler(result, req, res);
 });
 
 module.exports = router;

@@ -11,8 +11,9 @@ class JailController{
         return jail
     }
 
-    async editJail(id, body){
-        let query = { _id: id };
+    async editJail(game_id, body){
+        let game = await Game.findOne({_id: game_id}).populate('jail');
+        let jail = game.jail
         let new_body = {
             location:
                 {
@@ -20,26 +21,8 @@ class JailController{
                     longitude: body.location.longitude
                 }
         }
-        try{
-            let jail = await Jail.findOne(query);
-            if(jail != null){
-                await Jail.updateOne(query, new_body);
-                return new Result(200, "Jail has been updated");
-            } else {
-                try {
-                    jail = new Jail(new_body);
-                    await jail.save();
-                    return new Result(200, "Jail has been added");
-                }
-                catch (e){
-                    return new Result(400, e.message);
-                }
-            }
-        }
-        catch{
-            return null;
-        }
-        
+        await jail.updateOne(new_body);
+        return new Result(200, "Jail has been updated");
     }
 
 }

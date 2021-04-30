@@ -11,7 +11,7 @@ router.get('/', passport.authenticate('jwt', { session: false }), async function
 });
 
 router.put('/', passport.authenticate('jwt', { session: false }), async function (req, res) {
-    let result = await JailController.editJail(req.query.jail_id, req.body);
+    let result = await JailController.editJail(req.user.game_id, req.body);
     ResponseHandler(result, req, res);
 });
 

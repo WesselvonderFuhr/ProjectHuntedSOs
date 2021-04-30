@@ -3,7 +3,10 @@ const randomstring = require("randomstring");
 
 let Jail = require('../MongoDB/jail');
 let Game = require('../MongoDB/game');
+let Playfield = require('../MongoDB/playfield');
 let Administrator = require('../MongoDB/administrator');
+const PlayfieldController = require("./PlayfieldController");
+const playfield = require("../MongoDB/playfield");
 
 class GameController{
     async getAllGames(){
@@ -17,21 +20,40 @@ class GameController{
 
     async addGame(body){
         let game = new Game();
-        game.jail = null
+        //jail
+        let jail = {
+            "location" : {
+                "latitude" : 0,
+                "longitude" : 0
+            }
+        };
+        let jailModel = new Jail(jail);
+        await jailModel.save();
+        game.jail = jailModel;
+        //admin
         let code = randomstring.generate(7).toUpperCase();
         let administrator = { name: body.name, code: code };
         let administratorModel = new Administrator(administrator);
         await administratorModel.save();
         game.administrator = administratorModel;
-        await game.save()
+        //playfield
+        let playfield = {
+            "playfield" :  [   {
+                                "location" : {
+                                    "latitude" : 0,
+                                    "longitude" : 0
+                                }
+                            }  
+                     ]
+        };
+        let playfieldModel = new Playfield(playfield);
+        await playfieldModel.save();
+        game.playfield = playfieldModel;
 
+        await game.save()
         return new Result(200, code);
     }
 
-    async editPlayfield(body){
-        var game = Game.findOneAndUpdate({}, body)
-        return new Result(200, "Playfield has been updated")
-    }
 
     async addPlayerToGame(gameId, playerId){
         var isDuplicate = false

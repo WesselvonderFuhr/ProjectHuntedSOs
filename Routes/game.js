@@ -5,6 +5,7 @@ var router = express.Router();
 const passport = require("passport");
 
 let GameController = require('../Controllers/GameController');
+let PlayfieldController = require('../Controllers/PlayfieldController');
 let AdministratorController = require('../Controllers/AdministratorController');
 const authorize = require("../Authorization/authorize");
 const {ResponseHandler} = require("../Helper/ResponseHandler");
@@ -25,12 +26,12 @@ router.put('/playfield', passport.authenticate('jwt', { session: false }), async
     if(unauthorized){
         return ResponseHandler(unauthorized, req, res);
     }
-
-    let result = await GameController.editPlayfield(req.body);
+    
+    let result = await PlayfieldController.editPlayfield(req.body);
     return res.status(200).json(result);
 });
 
-router.post('/authenticate', passport.authenticate('jwt', { session: false }), async function (req, res) {
+router.post('/authenticate', async function (req, res) {
     if(!req.query.name || !req.query.code){
         let message = { message: "Login with name and code"};
         return res.status(400).json(message);
