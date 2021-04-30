@@ -10,7 +10,7 @@ const geolib = require('geolib');
 class PlayerController{
     async getAllPlayers(game_id){
         let query = { _id: game_id };
-        let result = await Game.findOne(query).populate('player');
+        let result = await Game.findOne(query).populate('players');
         result = result.players;
         if(result == null || result.length == 0){
             return new Result(404, "There are no players found");
@@ -48,7 +48,7 @@ class PlayerController{
     async getArrestablePlayers(id,distance){
         //getplayers by gameid and pupulate
         let query = { _id: gameID };
-        let game = await Game.findOne(query).populate('player');
+        let game = await Game.findOne(query).populate('players');
         let players = game.players;
     
         if(id.length < 25){
@@ -133,7 +133,7 @@ class PlayerController{
     async GetPlayerDistances(id, gameID){
         //needs test
         let query = { _id: gameID };
-        let game = await Game.findOne(query).populate('player');
+        let game = await Game.findOne(query).populate('players');
         let players = game.players;
 
         var playerLoc
