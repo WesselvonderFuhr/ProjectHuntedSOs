@@ -13,7 +13,7 @@ class JailController{
 
     async editJail(game_id, body){
         let game = await Game.findOne({_id: game_id}).populate('jail');
-        let jail = game.jail
+        let jail = game.jail;
         let new_body = {
             location:
                 {

@@ -27,7 +27,7 @@ router.put('/playfield', passport.authenticate('jwt', { session: false }), async
         return ResponseHandler(unauthorized, req, res);
     }
     
-    let result = await PlayfieldController.editPlayfield(req.body);
+    let result = await PlayfieldController.editPlayfield(req.user.game_id, req.body);
     return res.status(200).json(result);
 });
 

@@ -143,7 +143,7 @@ class AccesscodeController{
                 }
             }
         } else {
-			player = PlayerController.addPlayer(code, name);
+			player = await PlayerController.addPlayer(code, name);
         }
 
         if(player != null) {

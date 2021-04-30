@@ -45,86 +45,76 @@ class PlayerController{
         }
     }
 
-    async getArrestablePlayers(id,distance){
+    async getArrestablePlayers(playerID,gameID,distance){
         //getplayers by gameid and pupulate
         let query = { _id: gameID };
         let game = await Game.findOne(query).populate('players');
         let players = game.players;
     
-        if(id.length < 25){
-            if(!parseInt(distance)){
-                return new Result(400,"Could not parse int distance");
+        if(!parseInt(distance)){
+            return new Result(400,"Could not parse int distance");
+        }
+        //return list of id's that are close within distance
+        var playerLoc
+        var distances = [];
+        players.map(function (player) {
+            if (playerID == player.id) {
+                playerLoc = player.location
             }
-            //return list of id's that are close within distance
-            var playerLoc
-            var distances = [];
-            players.map(function (player) {
-                if (id == player.id) {
-                    playerLoc = player.location
-                }
-            });
-            if (playerLoc == null){
-                return new Result(404, "Player does not exist");
-            } else{
-                if (playerLoc.latitude == null) {
-                    return new Result(400, "Player has no valid distance");
-                }
-                players.forEach(item => {
-                    if (item.id != id) {
-                        if (item.location.latitude != null) {
-                            if (item.arrested == false && item.role == "Boef"){
-                                var s = geolib.getPreciseDistance(
-                                    { latitude: playerLoc.latitude, longitude: playerLoc.longitude },
-                                    { latitude: item.location.latitude, longitude: item.location.longitude }
-                                );
-                                if (s <= distance){
-                                    distances.push({
-                                        'id': item.id
-                                    });
-                                }
+        });
+        if (playerLoc == null){
+            return new Result(404, "Player does not exist");
+        } else{
+            if (playerLoc.latitude == null) {
+                return new Result(400, "Player has no valid location");
+            }
+            players.forEach(item => {
+                if (item.id != playerID) {
+                    if (item.location.latitude != null) {
+                        if (item.arrested == false && item.role == "Boef"){
+                            var s = geolib.getPreciseDistance(
+                                { latitude: playerLoc.latitude, longitude: playerLoc.longitude },
+                                { latitude: item.location.latitude, longitude: item.location.longitude }
+                            );
+                            if (s <= distance){
+                                distances.push({
+                                    'id': item.id
+                                });
                             }
                         }
                     }
-                })
-            }
-            return new Result(200, JSON.stringify(distances, null, 2));
-        }else{
-            return new Result(404, "Id does not exist");
+                }
+            })
         }
+        return new Result(200, distances);
+       
     }
 
-    async CheckPlayerOutOfBounds(playerID){
-        var playerQuery = {_id: playerID}
-        var indexFound = null
+    async CheckPlayerOutOfBounds(playerID,gameID){
+        console.log("here")
+        var playerQuery = {_id: playerID};
+        console.log("here")
+        var gameQuery = {_id: gameID};
         try{
-            var game = await Game.find({}).exec()
-            var player = await Player.findOne(playerQuery).exec()
-    
-            for(var i = 0; i < game.length; i++){
-                for(var x = 0; x < game[i].players.length; x++){
-                    if(game[i].players[x] == playerID){
-                        indexFound = i
-                        break;
-                    }
-                }
-            }
-    
+            
+            var game = await Game.findOne(gameQuery).populate('player');
+            await game.populate('playfield');
+            
+            var player = await Player.findOne(playerQuery);
+            
             var polyLocations = []
-            game[indexFound].playfield.forEach(loc =>
+            game.playfield.forEach(loc =>
                 polyLocations.push({latitude: loc.location.latitude, longitude: loc.location.longitude})
             )
-    
-            if(indexFound != null){
-                if(player.location.latitude != null){
-                    var isPoint = geolib.isPointInPolygon(player.location, polyLocations)
-                    
-                    return new Result(200, !isPoint);
-                }else{
-                    return new Result(404, "Player does not have a location");
-                }
+
+            if(player.location.latitude != null){
+                var isPoint = geolib.isPointInPolygon(player.location, polyLocations)
+                
+                return new Result(200, !isPoint);
             }else{
-                return new Result(404, "Player does not exist in any game");
+                return new Result(404, "Player does not have a location");
             }
+
         }catch(e){
             return new Result(400, e);
         }
@@ -186,6 +176,7 @@ class PlayerController{
         await accessCode.save()
 
         game.players.push(playerModel);
+        await game.save();
 		
         return playerModel;
     }
