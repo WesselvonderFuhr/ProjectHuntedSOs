@@ -19,7 +19,7 @@ class AccesscodeController{
         return await Accesscode.findOne(query);
     }
 
-    async addAccesscodes(body){
+    async addAccesscodes(body, game_id){
         var amount = body.amount
         var codes = []
     
@@ -101,7 +101,9 @@ class AccesscodeController{
         }
     }
 
-    async deleteCode(id, role){
+    async deleteCode(id, role, game_id){
+        //TODO IMPLEMENT GAME_ID
+
         if(role == null){
             var code = await this.getAccesscodeByID(id)
             if(code != null){
@@ -112,7 +114,7 @@ class AccesscodeController{
             }
         }else{
             await Accesscode.deleteMany({role: role})
-            return new Result(200, 'all ' + role + ' codes deleted')
+            return new Result(200, 'All ' + role + ' codes deleted')
         }
     }
 	

@@ -12,67 +12,61 @@ const passport = require("passport");
 const authorize = require("../Authorization/authorize");
 
 //get
-router.get('/', async function (req, res) {
-    let result = await PlayerController.getAllPlayers(req.query.game_id);
+router.get('/', passport.authenticate('jwt', { session: false }), async function (req, res) {
+    let result = await PlayerController.getAllPlayers(req.user.game_id);
     return res.status(result.responseCode).json(result.message);
 });
 
 
-router.get('/:id', async function (req, res) {
+router.get('/:id', passport.authenticate('jwt', { session: false }), async function (req, res) {
     let result =  await PlayerController.getPlayerByID(req.params.id);
     return res.status(result.responseCode).json(result.message);
 });
 
-router.get('/check/:id', async function (req, res) {
+//TODO Usage?
+router.get('/check/:id', passport.authenticate('jwt', { session: false }), async function (req, res) {
     let result = await PlayerController.CheckPlayerRole(req.params.id);
     return res.status(result.responseCode).json(result.message);
 });
 
-router.get('/arrestableThieves/:id/:distance', async function(req, res){
-    let result =  await PlayerController.getArrestablePlayers(req.params.id,req.params.distance);
+router.get('/arrestableThieves/:distance', passport.authenticate('jwt', { session: false }), async function(req, res){
+    //TODO Only agent
+    let result =  await PlayerController.getArrestablePlayers(req.user.player_id,req.params.distance);
     console.log(result)
     return res.status(result.responseCode).json(result.message);
 });
 
-router.get('/outofbounds/:id', async function(req, res){
-    let result = await PlayerController.CheckPlayerOutOfBounds(req.params.id); 
+router.get('/outofbounds', passport.authenticate('jwt', { session: false }), async function(req, res){
+    let result = await PlayerController.CheckPlayerOutOfBounds(req.user.player_id);
     return res.status(result.responseCode).json(result.message);
 });
 
-router.get('/distances/:id', async function (req, res) {
-    let result = await PlayerController.GetPlayerDistances(req.params.id); 
+router.get('/distances', passport.authenticate('jwt', { session: false }), async function (req, res) {
+    let result = await PlayerController.GetPlayerDistances(req.user.player_id);
     return res.status(result.responseCode).json(result.message);
 });
 
-//post
-router.post('/:codeId/:username', async function (req, res) {
-    let result = await PlayerController.addPlayer(req.params.codeId, req.params.username,req.query.game_id); 
-    
-    return res.status(result.responseCode).json(result.message);
-});
-
-router.post('/:playerid/stolen/:lootid',async function (req, res) {
-    let result = await PlayerController.StealLoot(req.params.playerid, req.params.lootid); 
+router.post('/stolen/:lootid', passport.authenticate('jwt', { session: false }), async function (req, res) {
+    let result = await PlayerController.StealLoot(req.user.player_id, req.params.lootid);
     return res.status(result.responseCode).json(result.message);
 });
 
 //put
-router.put('/arrest/:thiefId', async (req, res) => {
-    var arrestQuery = {arrested: true,
-    loot: []}
+router.put('/arrest/:thiefId', passport.authenticate('jwt', { session: false }), async (req, res) => {
+    var arrestQuery = { arrested: true, loot: [] }
     let result = await PlayerController.editPlayer(req.params.thiefId, arrestQuery); 
     return res.status(result.responseCode).json(result.message);
 });
 
-router.put('/location/:id',async  function (req, res) {
-    var newLoc = {
+router.put('/location', passport.authenticate('jwt', { session: false }),async  function (req, res) {
+    var newLocation = {
         location:
         {
             latitude: req.body.location.latitude,
             longitude: req.body.location.longitude
         }
     }
-    let result = await PlayerController.editPlayer(req.params.id, newLoc); 
+    let result = await PlayerController.editPlayer(req.user.player_id, newLocation);
     return res.status(result.responseCode).json(result.message);
 });
 

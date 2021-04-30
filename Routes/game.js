@@ -30,13 +30,7 @@ router.put('/playfield', passport.authenticate('jwt', { session: false }), async
     return res.status(200).json(result);
 });
 
-router.put('/:gameId/player/:playerId', async function(req, res){
-    var result = await GameController.addPlayerToGame(req.params.gameId, req.params.playerId)
-    return res.status(200).json(result)
-});
-
-
-router.post('/authenticate', async function (req, res) {
+router.post('/authenticate', passport.authenticate('jwt', { session: false }), async function (req, res) {
     if(!req.query.name || !req.query.code){
         let message = { message: "Login with name and code"};
         return res.status(400).json(message);
