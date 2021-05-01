@@ -7,7 +7,7 @@ const {ResponseHandler} = require("../Helper/ResponseHandler");
 
 router.get('/', passport.authenticate('jwt', { session: false }), async function (req, res) {
     let result = await JailController.getJailByGameId(req.user.game_id);
-    return res.status(200).json(result);
+    ResponseHandler(result, req, res);
 });
 
 router.put('/', passport.authenticate('jwt', { session: false }), async function (req, res) {

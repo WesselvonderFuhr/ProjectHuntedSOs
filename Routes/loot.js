@@ -12,7 +12,7 @@ router.post('/', passport.authenticate('jwt', { session: false }), async functio
 
 router.get('/', passport.authenticate('jwt', { session: false }), async function (req, res) {
   let result = await LootController.getAllLoot(req.user.game_id);
-  return res.status(200).json(result);
+  ResponseHandler(result, req, res);
 });
 
 router.delete('/:id', passport.authenticate('jwt', { session: false }), async function (req, res) {

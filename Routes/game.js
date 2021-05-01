@@ -13,7 +13,7 @@ const {ResponseHandler} = require("../Helper/ResponseHandler");
 
 router.get('/', async function (req, res) {
     var result = await GameController.getAllGames()
-    return res.status(200).json(result)
+    ResponseHandler(result, req, res);
 });
 
 router.post('/', async function (req, res) {
@@ -28,7 +28,7 @@ router.put('/playfield', passport.authenticate('jwt', { session: false }), async
     }
     
     let result = await PlayfieldController.editPlayfield(req.user.game_id, req.body);
-    return res.status(200).json(result);
+    ResponseHandler(result, req, res);
 });
 
 router.post('/authenticate', async function (req, res) {
