@@ -9,7 +9,6 @@ import { AccessCodeService } from 'src/app/services/access-code/accesscode.servi
   styleUrls: ['./setup-accesscode.component.scss']
 })
 export class SetupAccesscodeComponent implements OnInit {
-
   public accessCodePost: AccessCodePost;
   public accessCodes: AccessCode[];
 
@@ -20,13 +19,14 @@ export class SetupAccesscodeComponent implements OnInit {
   ngOnInit(): void {
     this.accessCodeService.getAllCodes().subscribe((res) => {
       this.accessCodes = res;
-      this.accessCodes.sort(this.compare)
+      if(this.accessCodes)
+        this.accessCodes.sort(this.compare)
     });
   }
 
-  createNewCode(role: string) {
-    this.accessCodePost.amount = 1;
-    this.accessCodePost.role = role;
+  createNewCodes(): void {
+    let accessCodePost = new AccessCodePost();
+    accessCodePost = this.accessCodePost;
 
     this.accessCodeService.generateCodes(this.accessCodePost).subscribe((res) => {
       console.log('Added ' + this.accessCodePost.amount + ' new ' + this.accessCodePost.role + ' access codes!');

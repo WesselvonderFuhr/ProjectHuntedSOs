@@ -1,6 +1,19 @@
 <h2>Toegangscodes</h2>
-<button mat-raised-button (click)="createNewCode('Politie')" color="primary" type="button">Politiecode genereren</button>
-<button mat-raised-button (click)="createNewCode('Boef')" color="warn" type="button">Boefcode genereren</button>
+<div>
+  <form class="example-form" #accessCodeData="ngForm" (ngSubmit)="createNewCodes()" >
+    <mat-form-field class="example-full-width" appearance="standard">
+      <mat-label>Role</mat-label>
+      <input matInput [(ngModel)]="accessCodePost.role" name="role" placeholder="e.g. Politie">
+    </mat-form-field>
+    <br/>
+    <mat-form-field class="example-full-width" appearance="standard">
+      <mat-label>Amount</mat-label>
+      <input matInput [(ngModel)]="accessCodePost.amount" name="amount" placeholder="e.g. 5">
+    </mat-form-field>
+    <br/>
+    <button mat-raised-button color="primary" type="submit" color="primary">Save</button>
+ </form>
+</div>
 <div class="container">
   <app-setup-accesscode-card *ngFor="let accessCode of accessCodes" [accessCode]="accessCode"></app-setup-accesscode-card>
 </div>
