@@ -8,18 +8,18 @@ const {ResponseHandler} = require("../Helper/ResponseHandler");
 
 //get
 router.get('/', passport.authenticate('jwt', { session: false }), async function (req, res) {
-    let unauthorized = await authorize.Administrator(req.user);
-    if(unauthorized){
-        return ResponseHandler(unauthorized, req, res);
+    if(req.user.role === "Administrator"){
+        let result = await PlayerController.getAllPlayers(req.user.game_id);
+        ResponseHandler(result, req, res);
+    } else {
+        let result =  await PlayerController.getPlayerByID(req.user.player_id);
+        ResponseHandler(result, req, res);
     }
-
-    let result = await PlayerController.getAllPlayers(req.user.game_id);
-    ResponseHandler(result, req, res);
 });
 
 
 router.get('/:player_id', passport.authenticate('jwt', { session: false }), async function (req, res) {
-    let unauthorized = await authorize.AdministratorOrOwner(req.user, req.params.player_id);
+    let unauthorized = await authorize.Administrator(req.user);
     if(unauthorized){
         return ResponseHandler(unauthorized, req, res);
     }
