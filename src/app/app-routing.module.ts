@@ -3,10 +3,14 @@ import { RouterModule, Routes } from '@angular/router';
 import { SetupComponent } from './components/setup/setup.component';
 import { GameComponent } from './components/game/game.component';
 
+import { AuthGuard } from './helpers/auth-guard/auth.guard'
+import { LoginComponent } from './components/login/login.component';
+
 const routes: Routes = [
-  { path : 'setup', component: SetupComponent },
-  { path : 'game', component: GameComponent },
-  { path: '',   redirectTo: '/setup', pathMatch: 'full' }
+  { path : 'setup', component: SetupComponent, canActivate: [AuthGuard] },
+  { path : 'game', component: GameComponent, canActivate: [AuthGuard] },
+  { path : 'login', component: LoginComponent },
+  { path: '',   redirectTo: '/login', pathMatch: 'full' }
 ];
 
 @NgModule({

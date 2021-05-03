@@ -10,6 +10,11 @@ import { LayoutModule } from '@angular/cdk/layout';
 
 //Shared Components
 import { SidenavComponent } from './components/sidenav/sidenav.component';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from './helpers/authconfig.interceptor';
+
+import { LoginComponent } from './components/login/login.component';
+
 
 //Setup Components
 import { SetupComponent } from './components/setup/setup.component';
@@ -54,7 +59,8 @@ import { MatSidenavModule } from '@angular/material/sidenav';
     GameComponent,
     GameOutOfBoundsMessageComponent,
     SetupZoneComponent,
-    SidenavComponent
+    SidenavComponent,
+    LoginComponent
   ],
   imports: [
     BrowserModule, 
@@ -80,7 +86,12 @@ import { MatSidenavModule } from '@angular/material/sidenav';
     JailService,
     LootService,
     AccessCodeService,
-    HttpClientModule
+    HttpClientModule,
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
+    },
   ],
   bootstrap: [AppComponent]
 })
