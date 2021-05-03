@@ -199,6 +199,9 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
             case R.id.nav_scanner:
                 fragmentClass = ThievesFragmentScanner.class;
                 break;
+            case R.id.nav_stolen:
+                fragmentClass = ThievesFragmentLootScore.class;
+                break;
             default:
                 fragmentClass = ThievesFragmentLocations.class;
         }

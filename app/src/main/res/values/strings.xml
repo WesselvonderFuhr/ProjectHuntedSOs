@@ -17,15 +17,15 @@
     <string name="label_police_header">Politie</string>
     <string name="label_police_locations">Locaties</string>
     <string name="label_police_arrest">Arresteren</string>
+    <string name="label_police_score">Beschermde buit</string>
     <string name="button_police_arrest">Arresteer!</string>
-    <string name="label_police_one_thief_nearby">Er is 1 boef in de buurt!</string>
-    <string name="label_police_no_thieves_nearby">Er zijn geen boeven in de buurt.</string>
 
     <!--  THIEVES  -->
     <string name="label_thieves_header">Boeven</string>
     <string name="label_thieves_locations">Locaties</string>
     <string name="label_thieves_scan">Buit scannen</string>
     <string name="label_thieves_arrested">Je bent gearresteerd!</string>
+    <string name="label_thieves_loot">Gestolen buit</string>
     <string name="label_thieves_stolen_loot">Gestolen buit:</string>
     <string name="label_thieves_steal_succes">Succesvol gestolen!</string>
     <string name="label_thieves_steal_failure">Gefaald in stelen.</string>

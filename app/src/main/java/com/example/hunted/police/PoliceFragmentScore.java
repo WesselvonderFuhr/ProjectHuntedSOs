@@ -11,7 +11,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.hunted.R;
 
-public class PoliceFragmentLocations extends Fragment {
+public class PoliceFragmentScore extends Fragment {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -20,7 +20,7 @@ public class PoliceFragmentLocations extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_police_location, container, false);
+        View view = inflater.inflate(R.layout.fragment_police_score, container, false);
 
         return view;
     }

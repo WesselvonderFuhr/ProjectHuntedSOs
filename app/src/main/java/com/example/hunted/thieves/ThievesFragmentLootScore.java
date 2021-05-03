@@ -1,4 +1,4 @@
-package com.example.hunted.police;
+package com.example.hunted.thieves;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -11,8 +11,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.hunted.R;
 
-public class PoliceFragmentLocations extends Fragment {
-
+public class ThievesFragmentLootScore extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -20,7 +19,7 @@ public class PoliceFragmentLocations extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_police_location, container, false);
+        View view = inflater.inflate(R.layout.fragment_thieves_loot_score, container, false);
 
         return view;
     }

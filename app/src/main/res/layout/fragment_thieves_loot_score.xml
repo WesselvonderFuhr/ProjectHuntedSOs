@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center_horizontal"
+    android:id="@+id/fragment_thieves_loot_score"
+    android:background="@color/primary">
+
+    <TextView
+        android:id="@+id/arrestTextview"
+        android:layout_width="match_parent"
+        android:layout_height="60sp"
+        android:gravity="center"
+        android:textColor="@color/onPrimary"
+        android:textSize="15sp"
+        android:text="fragment_thieves_loot_score"/>
+
+
+</LinearLayout>
