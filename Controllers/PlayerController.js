@@ -12,7 +12,7 @@ class PlayerController{
         let query = { _id: game_id };
         let result = await Game.findOne(query).populate('players');
         result = result.players;
-        if(result == null || result.length == 0){
+        if(result == null || result.length === 0){
             return new Result(404, "There are no players found");
         }else{
             return new Result(200, result);
@@ -58,7 +58,7 @@ class PlayerController{
         var playerLoc
         var distances = [];
         players.map(function (player) {
-            if (playerID == player.id) {
+            if (playerID === player.id) {
                 playerLoc = player.location
             }
         });
@@ -69,9 +69,9 @@ class PlayerController{
                 return new Result(400, "Player has no valid location");
             }
             players.forEach(item => {
-                if (item.id != playerID) {
+                if (item.id !== playerID) {
                     if (item.location.latitude != null) {
-                        if (item.arrested == false && item.role == "Boef"){
+                        if (item.arrested === false && item.role === "Boef"){
                             var s = geolib.getPreciseDistance(
                                 { latitude: playerLoc.latitude, longitude: playerLoc.longitude },
                                 { latitude: item.location.latitude, longitude: item.location.longitude }
