@@ -213,11 +213,19 @@ class PlayerController{
 
     async editPlayer(id, body){
         let query = { _id: id };
+
+        let location = {
+            location:
+                {
+                    latitude: body.location.latitude,
+                    longitude: body.location.longitude
+                }
+        }
         try{
             let player = await this.getPlayerByID(id);
             player = player.message;
             if(player != null){
-                await Player.updateOne(query, body);
+                await Player.updateOne(query, location);
                 return new Result(200, player.name + " has been updated");
             } else {
                 return new Result(404, "Player not found");

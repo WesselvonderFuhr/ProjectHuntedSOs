@@ -58,11 +58,10 @@ router.get('/arrestableThieves/:distance', passport.authenticate('jwt', { sessio
     }
 
     let result =  await PlayerController.getArrestablePlayers(req.user.player_id, req.user.game_id, req.params.distance);
-    console.log(result)
     ResponseHandler(result, req, res);
 });
 
-router.post('/stolen/:loot_id', passport.authenticate('jwt', { session: false }), async function (req, res) {
+router.put('/stolen/:loot_id', passport.authenticate('jwt', { session: false }), async function (req, res) {
     let unauthorized = await authorize.Boef(req.user);
     if(unauthorized){
         return ResponseHandler(unauthorized, req, res);
@@ -90,14 +89,7 @@ router.put('/location', passport.authenticate('jwt', { session: false }),async  
         return ResponseHandler(unauthorized, req, res);
     }
 
-    let newLocation = {
-        location:
-        {
-            latitude: req.body.location.latitude,
-            longitude: req.body.location.longitude
-        }
-    }
-    let result = await PlayerController.editPlayer(req.user.player_id, newLocation);
+    let result = await PlayerController.editPlayer(req.user.player_id, req.body);
     ResponseHandler(result, req, res);
 });
 
