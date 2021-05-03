@@ -1,12 +1,10 @@
-var express = require('express');
-var Game = require('../MongoDB/game');
-var Player = require('../MongoDB/player');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 const passport = require("passport");
 
-let GameController = require('../Controllers/GameController');
-let PlayfieldController = require('../Controllers/PlayfieldController');
-let AdministratorController = require('../Controllers/AdministratorController');
+const GameController = require('../Controllers/GameController');
+const PlayfieldController = require('../Controllers/PlayfieldController');
+const AdministratorController = require('../Controllers/AdministratorController');
 const authorize = require("../Authorization/authorize");
 const {ResponseHandler} = require("../Helper/ResponseHandler");
 
