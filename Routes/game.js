@@ -10,12 +10,12 @@ const {ResponseHandler} = require("../Helper/ResponseHandler");
 
 
 router.get('/', async function (req, res) {
-    var result = await GameController.getAllGames()
+    let result = await GameController.getAllGames()
     ResponseHandler(result, req, res);
 });
 
 router.post('/', async function (req, res) {
-    var result = await GameController.addGame(req.body);
+    let result = await GameController.addGame(req.body);
     ResponseHandler(result, req, res);
 });
 
