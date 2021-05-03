@@ -30,6 +30,11 @@ router.get('/:player_id', passport.authenticate('jwt', { session: false }), asyn
 
 
 router.get('/outofbounds', passport.authenticate('jwt', { session: false }), async function(req, res){
+    let unauthorized = await authorize.Player(req.user);
+    if(unauthorized){
+        return ResponseHandler(unauthorized, req, res);
+    }
+
     let result = await PlayerController.CheckPlayerOutOfBounds(req.user.player_id, req.user.game_id);
     ResponseHandler(result, req, res);
 });
@@ -80,6 +85,11 @@ router.put('/arrest/:thief_id', passport.authenticate('jwt', { session: false })
 });
 
 router.put('/location', passport.authenticate('jwt', { session: false }),async  function (req, res) {
+    let unauthorized = await authorize.Player(req.user);
+    if(unauthorized){
+        return ResponseHandler(unauthorized, req, res);
+    }
+
     let newLocation = {
         location:
         {

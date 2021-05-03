@@ -24,6 +24,14 @@ exports.Boef = async (user) => {
     return new Result(403, "You need to be Boef to do this.");
 }
 
+exports.Player = async (user) => {
+    // Authorized if Player
+    if (user.role === "Boef" || user.role === "Agent") {
+        return null;
+    }
+    return new Result(403, "You need to be a Player to do this.");
+}
+
 exports.Agent = async (user) => {
     // Authorized if Player
     if (user.role === "Agent") {
