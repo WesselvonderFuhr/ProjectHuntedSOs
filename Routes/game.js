@@ -9,9 +9,14 @@ const authorize = require("../Authorization/authorize");
 const {ResponseHandler} = require("../Helper/ResponseHandler");
 
 
-router.get('/', async function (req, res) {
-    let result = await GameController.getAllGames()
-    ResponseHandler(result, req, res);
+router.get('/', passport.authenticate('jwt', { session: false }), async function (req, res) {
+    if(req.user.game_id != null){
+        let result = await GameController.getGameById(req.user.game_id);
+        ResponseHandler(result, req, res);
+    } else {
+        let result = await GameController.getAllGames()
+        ResponseHandler(result, req, res);
+    }
 });
 
 router.post('/', async function (req, res) {
