@@ -10,13 +10,13 @@ const {ResponseHandler} = require("../Helper/ResponseHandler");
 
 
 router.get('/', passport.authenticate('jwt', { session: false }), async function (req, res) {
+    let result;
     if(req.user.game_id != null){
-        let result = await GameController.getGameById(req.user.game_id);
-        ResponseHandler(result, req, res);
+        result = await GameController.getGameById(req.user.game_id);
     } else {
-        let result = await GameController.getAllGames()
-        ResponseHandler(result, req, res);
+        result = await GameController.getAllGames()
     }
+    ResponseHandler(result, req, res);
 });
 
 router.post('/', async function (req, res) {
