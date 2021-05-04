@@ -1,18 +1,34 @@
 <h2>Toegangscodes</h2>
 <div>
   <form class="example-form" #accessCodeData="ngForm" (ngSubmit)="createNewCodes()" >
-    <mat-form-field class="example-full-width" appearance="standard">
-      <mat-label>Role</mat-label>
-      <input matInput [(ngModel)]="accessCodePost.role" name="role" placeholder="e.g. Politie">
+    <mat-form-field appearance="fill">
+      <mat-label>Rol</mat-label>
+      <mat-select [(value)]="accessCodePost.role">
+        <mat-option value="Agent">Agent</mat-option>
+        <mat-option value="Boef">Boef</mat-option>
+      </mat-select>
     </mat-form-field>
     <br/>
-    <mat-form-field class="example-full-width" appearance="standard">
-      <mat-label>Amount</mat-label>
-      <input matInput [(ngModel)]="accessCodePost.amount" name="amount" placeholder="e.g. 5">
+    <mat-form-field appearance="fill">
+      <mat-label>Aantal</mat-label>
+      <mat-select [(value)]="accessCodePost.amount">
+        <mat-option value="1">1</mat-option>
+        <mat-option value="2">2</mat-option>
+        <mat-option value="3">3</mat-option>
+        <mat-option value="4">4</mat-option>
+        <mat-option value="5">5</mat-option>
+        <mat-option value="6">6</mat-option>
+        <mat-option value="7">7</mat-option>
+        <mat-option value="8">8</mat-option>
+        <mat-option value="9">9</mat-option>
+        <mat-option value="10">10</mat-option>
+      </mat-select>
     </mat-form-field>
     <br/>
     <button mat-raised-button color="primary" type="submit" color="primary">Save</button>
  </form>
+
+
 </div>
 <div class="container">
   <app-setup-accesscode-card *ngFor="let accessCode of accessCodes" [accessCode]="accessCode"></app-setup-accesscode-card>
