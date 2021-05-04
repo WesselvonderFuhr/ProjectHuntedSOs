@@ -91,9 +91,7 @@ class PlayerController{
     }
 
     async CheckPlayerOutOfBounds(playerID,gameID){
-        console.log("here")
         var playerQuery = {_id: playerID};
-        console.log("here")
         var gameQuery = {_id: gameID};
         try{
             
@@ -109,7 +107,6 @@ class PlayerController{
 
             if(player.location.latitude != null){
                 var isPoint = geolib.isPointInPolygon(player.location, polyLocations)
-                
                 return new Result(200, !isPoint);
             }else{
                 return new Result(404, "Player does not have a location");
@@ -118,42 +115,6 @@ class PlayerController{
         }catch(e){
             return new Result(400, e);
         }
-    }
-
-    async GetPlayerDistances(id, gameID){
-        //needs test
-        let query = { _id: gameID };
-        let game = await Game.findOne(query).populate('players');
-        let players = game.players;
-
-        var playerLoc
-        var distances = [];
-        players.map(function (player) {
-            if (id == player.id) {
-                playerLoc = player.location
-            }
-        });
-
-        if (playerLoc.latitude == null) {
-            return new Result(404,"Deze speler heeft geen location");
-        }
-
-        players.forEach(item => {
-            if (item.id != id) {
-                if (item.location.latitude != null) {
-                    var s = geolib.getPreciseDistance(
-                        { latitude: playerLoc.latitude, longitude: playerLoc.longitude },
-                        { latitude: item.location.latitude, longitude: item.location.longitude }
-                    );
-                    distances.push({
-                        'id': item.id,
-                        'distance': s
-                    });
-                }
-            }
-        });
-                
-        return new Result(200,JSON.stringify(distances, null, 2));
     }
 
     async addPlayer(code,name){
@@ -214,18 +175,11 @@ class PlayerController{
     async editPlayer(id, body){
         let query = { _id: id };
 
-        let location = {
-            location:
-                {
-                    latitude: body.location.latitude,
-                    longitude: body.location.longitude
-                }
-        }
         try{
             let player = await this.getPlayerByID(id);
             player = player.message;
             if(player != null){
-                await Player.updateOne(query, location);
+                await Player.updateOne(query, body);
                 return new Result(200, player.name + " has been updated");
             } else {
                 return new Result(404, "Player not found");

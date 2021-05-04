@@ -158,8 +158,9 @@ class AccesscodeController{
                 return new Result(404, 'Game does not exist (anymore).');
             }
             let payload = {game_id: game._id, player_id: player._id, role: player.role};
-            let token = { token: jwt.sign(payload, secret) };
-            return new Result(200, token);
+
+            let response = { token: jwt.sign(payload, secret), role: player.role };
+            return new Result(200, response);
         } else {
             return new Result(404, 'Player does not exist.');
         }

@@ -18,13 +18,13 @@ router.get('/', passport.authenticate('jwt', { session: false }), async function
 });
 
 router.get('/outofbounds', passport.authenticate('jwt', { session: false }), async function(req, res){
-        let result = await PlayerController.CheckPlayerOutOfBounds(req.user.player_id);
-        return res.status(result.responseCode).json(result.message);
-});
+    let unauthorized = await authorize.Player(req.user);
+    if(unauthorized){
+        return ResponseHandler(unauthorized, req, res);
+    }
 
-router.get('/distances', passport.authenticate('jwt', { session: false }), async function (req, res) {
-    let result = await PlayerController.GetPlayerDistances(req.user.player_id, req.user.game_id);
-    return res.status(result.responseCode).json(result.message);
+    let result = await PlayerController.CheckPlayerOutOfBounds(req.user.player_id, req.user.game_id);
+    ResponseHandler(result, req, res);
 });
 
 router.get('/:player_id', passport.authenticate('jwt', { session: false }), async function (req, res) {
@@ -34,17 +34,6 @@ router.get('/:player_id', passport.authenticate('jwt', { session: false }), asyn
     }
 
     let result =  await PlayerController.getPlayerByID(req.params.player_id);
-    ResponseHandler(result, req, res);
-});
-
-
-router.get('/outofbounds', passport.authenticate('jwt', { session: false }), async function(req, res){
-    let unauthorized = await authorize.Player(req.user);
-    if(unauthorized){
-        return ResponseHandler(unauthorized, req, res);
-    }
-
-    let result = await PlayerController.CheckPlayerOutOfBounds(req.user.player_id, req.user.game_id);
     ResponseHandler(result, req, res);
 });
 
@@ -86,7 +75,15 @@ router.put('/location', passport.authenticate('jwt', { session: false }),async  
         return ResponseHandler(unauthorized, req, res);
     }
 
-    let result = await PlayerController.editPlayer(req.user.player_id, req.body);
+    let location = {
+        location:
+            {
+                latitude: req.body.location.latitude,
+                longitude: req.body.location.longitude
+            }
+    }
+
+    let result = await PlayerController.editPlayer(req.user.player_id, location);
     ResponseHandler(result, req, res);
 });
 
