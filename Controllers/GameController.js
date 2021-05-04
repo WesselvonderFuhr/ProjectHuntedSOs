@@ -10,12 +10,12 @@ const playfield = require("../MongoDB/playfield");
 
 class GameController{
     async getAllGames(){
-        return await Game.find()
+        return new Result(200, await Game.find());
     }
 
     async getGameById(game_id){
         let query = { _id: game_id };
-        return await Game.findOne(query);
+        return new Result(200, await Game.findOne(query));
     }
 
     async addGame(body){
