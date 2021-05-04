@@ -34,6 +34,6 @@ public class ThievesFragmentLocations extends Fragment {
     }
 
     public void isArrested(){
-        tvIsArrested.setText(R.string.label_thieves_arrested);
+        tvIsArrested.setText(getResources().getString(R.string.label_thieves_arrested));
     }
 }

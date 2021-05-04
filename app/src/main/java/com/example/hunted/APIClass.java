@@ -62,7 +62,7 @@ public abstract class APIClass {
 
     private void vibrateOutOfPlayingField(){
         Vibrator v = (Vibrator) context.getSystemService(context.VIBRATOR_SERVICE);
-        Toast.makeText(context, "Keer terug naar het speelgebied!", Toast.LENGTH_SHORT).show();
+        Toast.makeText(context, context.getString(R.string.label_return_playingfield), Toast.LENGTH_SHORT).show();
         v.vibrate(500);
     }
 }

@@ -9,6 +9,10 @@
     <string name="label_code_login">Code:</string>
     <string name="button_login">Log in</string>
     <string name="label_wrong_login">Combinatie gebruikersnaam en code onjuist!</string>
+    <string name="label_thief_nearby">Er is 1 boef in de buurt!</string>
+    <string name="label_thieves_nearby_front">Er zijn </string>
+    <string name="label_thieves_nearby_end"> boeven in de buurt!</string>
+    <string name="label_no_thieves_nearby">Er zijn geen boeven in de buurt.</string>
     <string name="label_arrest_succes">De boef is gearresteerd!</string>
     <string name="label_arrest_fail">De boef is ontsnapt!</string>
 

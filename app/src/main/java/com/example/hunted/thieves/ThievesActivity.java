@@ -105,7 +105,7 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
 
         //Set initial fragment
         setFragment(new ThievesFragmentLocations());
-        setTitle(R.string.label_thieves_locations);
+        setTitle(getString(R.string.label_thieves_locations));
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_thieves);
 
@@ -284,13 +284,13 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
 
         if(intentResult != null) {
             if(intentResult.getContents() == null) {
-                result = "Gestopt met stelen!";
+                result = getString(R.string.label_thieves_steal_stopped);
             } else {
                 success = true;
                 result = intentResult.getContents();
             }
         } else {
-            result = "Stelen is mislukt, probeer opnieuw.";
+            result = getString(R.string.label_thieves_steal_retry);
             super.onActivityResult(requestCode, resultCode, data);
         }
 
