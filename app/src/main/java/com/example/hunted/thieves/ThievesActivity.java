@@ -30,6 +30,7 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.ClientError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -72,7 +73,7 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
 
     private RepeatingTask arrestedRepeatingTask;
 
-    private String id;
+    public String token;
 
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
@@ -88,9 +89,8 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
         URL = getString(R.string.url);
         queue = Volley.newRequestQueue(this);
 
-        thievesAPIClass = new ThievesAPIClass(this, URL);
-
-        id = getIntent().getStringExtra("ID");
+        token = getIntent().getStringExtra("token");
+        thievesAPIClass = new ThievesAPIClass(this, token, URL);
 
         initLocation();
 
@@ -122,12 +122,18 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
                 double latitude = location.getLatitude();
                 double longitude = location.getLongitude();
 
-                String setlocURL = URL + "player/location/" + id;
+                String setlocURL = URL + "player/location/";
                 StringRequest stringRequest = new StringRequest(Request.Method.PUT, setlocURL,
                         response -> {
                     //leeg?
                         }, error -> {
                 }) {
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        Map<String, String> headers = new HashMap<>();
+                        headers.put("Authorization", "Bearer " + token);
+                        return headers;
+                    }
 
                     @Override
                     public String getBodyContentType() {
@@ -141,7 +147,7 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
                     }
                 };
                 queue.add(stringRequest);
-                thievesAPIClass.checkOutOfBounds(id);
+                thievesAPIClass.checkOutOfBounds();
             }
 
             @Override
@@ -288,7 +294,7 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
             super.onActivityResult(requestCode, resultCode, data);
         }
 
-        thievesAPIClass.steal(success, id, result, getCurrentFragment());
+        thievesAPIClass.steal(success, result, getCurrentFragment());
     }
     //endregion
 
@@ -342,7 +348,7 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
     private final ServiceConnection mConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className, IBinder service) {
             mBoundService = ((RepeatingTaskService.LocalBinder)service).getService();
-            mBoundService.setID(id);
+            mBoundService.setToken(token);
 
             // Add task to the service.
             arrestedRepeatingTask = new RepeatingTask(RepeatingTaskName.CHECK_ARRESTED, 3000);

@@ -65,7 +65,7 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
     private LocationManager locationManager;
     private LocationListener locationListener;
 
-    public String id;
+    public String token;
 
     private boolean hasNotBound = true;
 
@@ -83,9 +83,9 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
         URL = getString(R.string.url);
         queue = Volley.newRequestQueue(this);
 
-        policeAPIClass = new PoliceAPIClass(this, URL);
+        token = getIntent().getStringExtra("token");
+        policeAPIClass = new PoliceAPIClass(this, token, URL);
 
-        id = getIntent().getStringExtra("ID");
 
         initLocation();
 
@@ -115,7 +115,8 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
                 double latitude = location.getLatitude();
                 double longitude = location.getLongitude();
 
-                String setlocURL = URL + "player/location/" + id;
+                String setlocURL = URL + "player/location/";
+                //TODO token
                 StringRequest stringRequest = new StringRequest(Request.Method.PUT, setlocURL,
                         response -> {
                             if(hasNotBound) {
@@ -123,6 +124,13 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
                             }
                         }, error -> {
                 }) {
+
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        Map<String, String> headers = new HashMap<>();
+                        headers.put("Authorization", "Bearer " + token);
+                        return headers;
+                    }
 
                     @Override
                     public String getBodyContentType() {
@@ -136,7 +144,7 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
                     }
                 };
                 queue.add(stringRequest);
-                policeAPIClass.checkOutOfBounds(id);
+                policeAPIClass.checkOutOfBounds();
             }
 
             @Override
@@ -322,7 +330,7 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
     private final ServiceConnection mConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className, IBinder service) {
             mBoundService = ((RepeatingTaskService.LocalBinder)service).getService();
-            mBoundService.setID(id);
+            mBoundService.setToken(token);
 
             //Add repeatingTask.
             RepeatingTask repeatingTask = new RepeatingTask(RepeatingTaskName.CHECK_THIEF_NEARBY, PING_MS);

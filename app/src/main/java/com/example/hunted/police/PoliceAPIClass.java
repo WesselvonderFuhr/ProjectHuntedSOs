@@ -17,8 +17,8 @@ import com.example.hunted.R;
 
 public class PoliceAPIClass extends APIClass {
 
-    public PoliceAPIClass(Context c, String url) {
-        super(c, url);
+    public PoliceAPIClass(Context c, String token, String url) {
+        super(c, token, url);
     }
 
     public void ArrestThief(String thiefId) {

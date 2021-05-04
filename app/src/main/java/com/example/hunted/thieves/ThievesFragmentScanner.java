@@ -32,7 +32,7 @@ public class ThievesFragmentScanner extends Fragment {
         if(success){
             successTextView.setTextColor(getResources().getColor(R.color.success));
             successTextView.setText(R.string.label_thieves_steal_succes);
-            result = R.string.label_thieves_stolen_loot + "\n" + result.substring(0, 1).toUpperCase() + result.substring(1).toLowerCase();
+            result = getResources().getString(R.string.label_thieves_stolen_loot) + "\n" + result.substring(0, 1).toUpperCase() + result.substring(1).toLowerCase();
         } else {
             successTextView.setTextColor(getResources().getColor(R.color.error));
             successTextView.setText(R.string.label_thieves_steal_failure);

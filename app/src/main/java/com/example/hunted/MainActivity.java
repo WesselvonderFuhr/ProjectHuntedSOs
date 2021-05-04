@@ -61,21 +61,17 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void Login() {
-        final String checkCode = URL + "accesscode/check/" + code.getText() + "/" + username.getText().toString();
-
+        final String checkCode = URL + "accesscode/authenticate/?code=" + code.getText().toString() + "&name=" + username.getText().toString();
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.POST, checkCode, null, response -> {
                     try {
-                        if(response.getString("assignedTo") == "null") {
-                            CreateNewPlayer(code.getText().toString(), username.getText().toString());
-                            return;
+                        String token = response.getString("token");
+                        String role = response.getString("role");
+                        if(role.equals("Boef")) {
+                            openThievesActivity(token);
+                        } else if(role.equals("Agent")) {
+                            openPoliceActivity(token);
                         }
-                        if(response.getString("role").equals("Boef")) {
-                            openThievesActivity(response.getString("assignedTo"));
-                        } else if(response.getString("role").equals("Politie")) {
-                            openPoliceActivity(response.getString("assignedTo"));
-                        }
-
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -83,46 +79,15 @@ public class MainActivity extends AppCompatActivity {
         queue.add(jsonObjectRequest);
     }
 
-    private void CreateNewPlayer(String codeId, String name) {
-        final String makePlayer = URL + "player/" + codeId + "/" + name;
-
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.POST, makePlayer, null, response -> {
-                    try {
-                        AddPlayerToGame(response.getString("assignedTo"));
-                        if(response.getString("role").equals("Boef")) {
-                            openThievesActivity(response.getString("assignedTo"));
-                        } else if(response.getString("role").equals("Politie")) {
-                            openPoliceActivity(response.getString("assignedTo"));
-                        }
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }, error -> Log.d("Error", "Error: " + error));
-        queue.add(jsonObjectRequest);
-    }
-
-    public void AddPlayerToGame(String id){
-        String gameId = getString(R.string.gameId);
-        final String addPlayer = URL + "game/" + gameId + "/player/" + id;
-
-        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
-                (Request.Method.PUT, addPlayer, null, response -> Log.d("response", "response: " + response.toString()), error -> Log.d("Error", "Error: " + error));
-
-        queue.add(jsonObjectRequest);
-    }
-
-
-    public void openPoliceActivity(String id){
+    public void openPoliceActivity(String token){
         Intent intent = new Intent(this, PoliceActivity.class);
-        intent.putExtra("ID", id.replaceAll("\"",""));
+        intent.putExtra("token", token.replaceAll("\"",""));
         startActivity(intent);
     }
 
-    public void openThievesActivity(String id){
+    public void openThievesActivity(String token){
         Intent intent = new Intent(this, ThievesActivity.class);
-        intent.putExtra("ID", id.replaceAll("\"",""));
+        intent.putExtra("token", token.replaceAll("\"",""));
         startActivity(intent);
     }
 

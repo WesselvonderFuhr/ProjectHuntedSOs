@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -15,31 +16,41 @@ import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.hunted.APIClass;
+import com.example.hunted.R;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class ThievesAPIClass extends APIClass {
 
 
-    public ThievesAPIClass(Context c, String url) {
-        super(c, url);
+    public ThievesAPIClass(Context c, String token, String url) {
+        super(c, token, url);
     }
 
-    public void steal(boolean success, String id, String result, Fragment fragment) {
+    public void steal(boolean success, String result, Fragment fragment) {
         if(success){
-            final String postStolenLoot = URL + "player/" + id + "/stolen/" + result;
-            StringRequest stringRequest = new StringRequest(Request.Method.POST, postStolenLoot,
-                    response -> sendDataToFragmentScanner(true, response, fragment),
+            final String postStolenLoot = URL + "player/stolen/" + result;
+            StringRequest stringRequest = new StringRequest(Request.Method.PUT, postStolenLoot,
+                response -> sendDataToFragmentScanner(true, response.substring(1, response.length() -1), fragment),
 
-                    error -> {
-                        NetworkResponse response = error.networkResponse;
-                        if (error instanceof ServerError && response != null) {
-                            try {
-                                String res = new String(response.data, HttpHeaderParser.parseCharset(response.headers, "utf-8"));
-                                sendDataToFragmentScanner(false, res, fragment);
-                            } catch (Exception e) {
-                                sendDataToFragmentScanner(false, "Er ging iets mis.", fragment);
-                            }
+                error -> {
+                    NetworkResponse response = error.networkResponse;
+                    if (error instanceof ServerError && response != null) {
+                        try {
+                            sendDataToFragmentScanner(false, context.getResources().getString(R.string.label_thieves_steal_already_stolen), fragment);
+                        } catch (Exception e) {
+                            sendDataToFragmentScanner(false, context.getResources().getString(R.string.label_thieves_steal_error), fragment);
                         }
-                    });
+                    }
+                }) {
+                @Override
+                public Map<String, String> getHeaders() throws AuthFailureError {
+                    Map<String, String> headers = new HashMap<>();
+                    headers.put("Authorization", "Bearer " + token);
+                    return headers;
+                }
+            };
 
             queue.add(stringRequest);
         } else {
