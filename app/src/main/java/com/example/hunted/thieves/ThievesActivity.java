@@ -332,7 +332,7 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
         switch(repeatingTask.getTask()){
             case CHECK_ARRESTED:
                 if(o instanceof String){
-                    Toast.makeText(this, "Error: " + o.toString(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Error: " + getResources().getString(Integer.parseInt(o.toString())), Toast.LENGTH_SHORT).show();
                 } else if ((boolean)o) {
                     isArrested();
                 }
