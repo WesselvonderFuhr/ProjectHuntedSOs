@@ -24,7 +24,12 @@ class AccesscodeController{
         let game = await Game.findOne({_id: game_id});
         var amount = body.amount
         var codes = []
-    
+
+
+        if(body.role !== "Agent" && body.role !== "Boef"){
+            return new Result(400, "Role must either be Agent or Boef");
+        }
+
         if(amount > 0){
             for(var i = 0; i < amount; i++){
                 var code = randomstring.generate(7).toUpperCase()
@@ -45,7 +50,7 @@ class AccesscodeController{
 
             return new Result(200, codes)
         }else{
-            return new Result(404, "Not a valid amount input, choose a number bigger than 0")
+            return new Result(400, "Not a valid amount input, choose a number bigger than 0")
         }
     }
 

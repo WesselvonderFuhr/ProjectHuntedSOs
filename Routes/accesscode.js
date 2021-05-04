@@ -1,22 +1,29 @@
-var express = require('express');
-var Accesscode = require('../MongoDB/accesscode');
-var Player = require('../MongoDB/player');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 const passport = require("passport");
 
-var randomstring = require("randomstring");
-let AccesscodeController = require('../Controllers/AccesscodeController');
+const AccesscodeController = require('../Controllers/AccesscodeController');
 const authorize = require("../Authorization/authorize");
 const {ResponseHandler} = require("../Helper/ResponseHandler");
 
 
 router.post('/', passport.authenticate('jwt', { session: false }), async function (req, res) {
-    var result = await AccesscodeController.addAccesscodes(req.body, req.user.game_id)
+    let unauthorized = await authorize.Administrator(req.user);
+    if(unauthorized){
+        return ResponseHandler(unauthorized, req, res);
+    }
+
+    let result = await AccesscodeController.addAccesscodes(req.body, req.user.game_id)
     ResponseHandler(result, req, res);
 });
 
 router.get('/', passport.authenticate('jwt', { session: false }), async function (req, res) {
-    var result = await AccesscodeController.getAllAccesscodes(req.user.game_id)
+    let unauthorized = await authorize.Administrator(req.user);
+    if(unauthorized){
+        return ResponseHandler(unauthorized, req, res);
+    }
+
+    let result = await AccesscodeController.getAllAccesscodes(req.user.game_id)
     ResponseHandler(result, req, res);
 });
 
@@ -31,7 +38,12 @@ router.post('/authenticate', async function (req, res){
 });
 
 router.delete('/:id', passport.authenticate('jwt', { session: false }), async function(req, res){
-    var result = await AccesscodeController.deleteCode(req.params.id, req.body.role, req.user.game_id)
+    let unauthorized = await authorize.Administrator(req.user);
+    if(unauthorized){
+        return ResponseHandler(unauthorized, req, res);
+    }
+
+    let result = await AccesscodeController.deleteCode(req.params.id, req.body.role, req.user.game_id)
     ResponseHandler(result, req, res);
 })
 
