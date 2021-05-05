@@ -8,7 +8,6 @@ const AdministratorController = require('../Controllers/AdministratorController'
 const authorize = require("../Authorization/authorize");
 const {ResponseHandler} = require("../Helper/ResponseHandler");
 
-
 router.get('/', passport.authenticate('jwt', { session: false }), async function (req, res) {
     let result;
     if(req.user.game_id != null){
@@ -34,6 +33,16 @@ router.put('/playfield', passport.authenticate('jwt', { session: false }), async
     ResponseHandler(result, req, res);
 });
 
+router.put('/time', passport.authenticate('jwt', { session: false }), async function (req, res) {
+    let unauthorized = await authorize.Administrator(req.user);
+    if(unauthorized){
+        return ResponseHandler(unauthorized, req, res);
+    }
+    
+    let result = await GameController.setgameTime(req.user.game_id, req.body);
+    ResponseHandler(result, req, res);
+});
+
 router.post('/authenticate', async function (req, res) {
     if(!req.query.name || !req.query.code){
         let message = { message: "Login with name and code"};
@@ -43,5 +52,7 @@ router.post('/authenticate', async function (req, res) {
     let result = await AdministratorController.authenticate(req.query.name, req.query.code);
     ResponseHandler(result, req, res);
 });
+
+
 
 module.exports = router;

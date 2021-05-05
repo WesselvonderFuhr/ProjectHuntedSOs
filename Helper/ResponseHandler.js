@@ -9,6 +9,6 @@ exports.ResponseHandler = (result, req, res) => {
             message.message = result.message;
         }
     }
-
+    
     return res.status(responseCode).json(message);
 }

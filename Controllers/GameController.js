@@ -48,6 +48,9 @@ class GameController{
         let playfieldModel = new Playfield(playfield);
         await playfieldModel.save();
         game.playfield = playfieldModel;
+        //time
+        game.start_time = new Date();
+        game.end_time = new Date();
 
         await game.save()
         return new Result(200, code);
@@ -81,6 +84,13 @@ class GameController{
         }else{
             return new Result(400, "Player already exists in game")
         }
+    }
+
+    async setgameTime(gameID,body){
+        let game = await Game.findOne({_id: gameID})
+        await game.updateOne(body);
+        await game.save();
+        return new Result(200, game);
     }
 
 }
