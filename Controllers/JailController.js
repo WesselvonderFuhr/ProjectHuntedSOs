@@ -8,7 +8,7 @@ class JailController{
         let query = { _id: game_id };
         let game = await Game.findOne(query);
         let jail = await Jail.findOne({_id: game.jail})
-        return jail
+        return new Result(200, jail);
     }
 
     async editJail(game_id, body){

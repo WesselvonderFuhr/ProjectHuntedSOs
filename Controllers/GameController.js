@@ -6,7 +6,6 @@ let Game = require('../MongoDB/game');
 let Playfield = require('../MongoDB/playfield');
 let Administrator = require('../MongoDB/administrator');
 const PlayfieldController = require("./PlayfieldController");
-const playfield = require("../MongoDB/playfield");
 
 class GameController{
     async getAllGames(){

@@ -7,7 +7,7 @@ class LootController{
     async getAllLoot(game_id){
         let query = { _id: game_id };
         var s = await Game.findOne(query).populate('loot');
-        return s.loot
+        return new Result(200, s.loot);
     }
 
     async getLootByID(id){

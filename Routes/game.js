@@ -14,7 +14,7 @@ router.get('/', passport.authenticate('jwt', { session: false }), async function
     if(req.user.game_id != null){
         result = await GameController.getGameById(req.user.game_id);
     } else {
-        result = await GameController.getAllGames()
+        result = await GameController.getAllGames();
     }
     ResponseHandler(result, req, res);
 });
