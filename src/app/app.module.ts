@@ -45,6 +45,7 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { SetupTimeComponent } from './components/setup-time/setup-time.component';
 
 
 @NgModule({
@@ -60,7 +61,8 @@ import { MatSidenavModule } from '@angular/material/sidenav';
     GameOutOfBoundsMessageComponent,
     SetupZoneComponent,
     SidenavComponent,
-    LoginComponent
+    LoginComponent,
+    SetupTimeComponent
   ],
   imports: [
     BrowserModule, 
