@@ -11,8 +11,8 @@ let Game = require('../MongoDB/game');
 class AccesscodeController{
     async getAllAccesscodes(game_id){
         let query = { _id: game_id };
-        let code = await Game.findOne(query).populate('accesscodes')
-        return code.accesscodes
+        let game = await Game.findOne(query).populate('accesscodes')
+        return new Result(200, game.accesscodes);
     }
 
     async getAccesscodeByID(id){
