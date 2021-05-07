@@ -18,6 +18,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.hunted.police.PoliceActivity;
+import com.example.hunted.thieves.ThievesActivity;
 
 import org.json.JSONException;
 
@@ -101,7 +102,7 @@ public abstract class APIClass {
     @RequiresApi(api = Build.VERSION_CODES.O)
     public long timeLeft(LocalTime start, LocalTime end) {
         long time = Duration.between(start, end).toMinutes();
-        long timePassed = Duration.between(start, LocalTime.of(13, 4)).toMinutes();
+        long timePassed = Duration.between(start, LocalTime.now()).toMinutes();
         long timeLeft = time - timePassed;
         return timeLeft;
     }
@@ -110,8 +111,13 @@ public abstract class APIClass {
         long h = minutes / 60;
         long m = minutes % 60;
 
-        ((PoliceActivity) context).timeLeft = h + ":" + m;
-
-        Log.d("aids", ((PoliceActivity) context).timeLeft + " = tijd");
+        if(context instanceof PoliceActivity) {
+            ((PoliceActivity) context).timeLeft = h + ":" + m;
+            ((PoliceActivity) context).setTime();
+        }
+        if(context instanceof ThievesActivity) {
+            ((ThievesActivity) context).timeLeft = h + ":" + m;
+            ((ThievesActivity) context).setTime();
+        }
     }
 }

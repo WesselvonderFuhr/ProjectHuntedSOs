@@ -25,6 +25,7 @@ import android.os.IBinder;
 import android.os.Vibrator;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -110,8 +111,18 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         setupDrawerContent(navigationView);
+    }
 
+    private TextView timeText;
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void getTime(TextView timeText) {
+        this.timeText = timeText;
         policeAPIClass.getTime();
+    }
+
+    public void setTime() {
+        timeText.setText("Tijd over: " + timeLeft);
     }
 
 
@@ -351,10 +362,6 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
             mBoundService = null;
         }
     };
-
-    protected void GetTimeLeft() {
-
-    }
 
     void doBindService() {
         if (bindService(new Intent(PoliceActivity.this, RepeatingTaskService.class), mConnection, Context.BIND_AUTO_CREATE)) {

@@ -17,17 +17,5 @@
         android:textSize="15sp"
         android:text="fragment_police_location"/>
 
-    <TextView
-        android:id="@+id/speeltijd"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Speeltijd:" />
-
-    <TextView
-        android:id="@+id/eindigt"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Eindigt over:" />
-
 
 </LinearLayout>
