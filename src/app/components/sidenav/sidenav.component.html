@@ -5,9 +5,9 @@
       [opened]="(isHandset$ | async) === false">
     <mat-toolbar color="primary">Hunted</mat-toolbar>
     <mat-nav-list>
-      <a *ngIf="this.authService.isLoggedIn" mat-list-item href="/setup"><mat-icon>settings</mat-icon><span>Setup</span></a>
-      <a *ngIf="this.authService.isLoggedIn" mat-list-item href="/game"><mat-icon>gamepad</mat-icon><span>Game</span></a>
-      <a *ngIf="this.authService.isLoggedIn" mat-list-item href="" (click)="logout()"><mat-icon>account_circle</mat-icon><span>Log out</span></a>
+      <a *ngIf="this.authService.isLoggedIn" mat-list-item href="/setup"><mat-icon>settings</mat-icon><span>Configuratie</span></a>
+      <a *ngIf="this.authService.isLoggedIn" mat-list-item href="/game"><mat-icon>gamepad</mat-icon><span>Spel</span></a>
+      <a *ngIf="this.authService.isLoggedIn" mat-list-item href="" (click)="logout()"><mat-icon>account_circle</mat-icon><span>Log uit</span></a>
       <a *ngIf="!this.authService.isLoggedIn" mat-list-item href="/login"><mat-icon>account_circle</mat-icon><span>Log in</span></a>
 
     </mat-nav-list>
@@ -26,6 +26,6 @@
     </mat-toolbar>
     <div class="wrapper">
       <ng-content></ng-content>
-    </div>    
+    </div>
   </mat-sidenav-content>
 </mat-sidenav-container>
