@@ -1,12 +1,12 @@
 <div class="auth-wrapper">
     <form class="form-signin" [formGroup]="loginForm" (ngSubmit)="login()">
-        <h3 class="h3 mb-3 font-weight-normal text-center">Please log in</h3>
+        <h3 class="h3 mb-3 font-weight-normal text-center">Inloggen</h3>
         <div class="form-group">
-            <label>Name</label>
+            <label>Naam</label>
             <input type="text" class="form-control" formControlName="name" placeholder="Enter name" required>
         </div>
         <div class="form-group">
-            <label>Code</label>
+            <label>Toegangscode</label>
             <input type="text" class="form-control" formControlName="code" placeholder="Enter code">
         </div>
         <button type="submit" class="btn btn-block btn-primary">Log in</button>
