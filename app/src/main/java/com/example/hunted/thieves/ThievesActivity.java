@@ -1,6 +1,7 @@
 package com.example.hunted.thieves;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
@@ -21,6 +22,7 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Vibrator;
@@ -28,6 +30,7 @@ import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -81,6 +84,9 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
 
     private boolean isArrested = false;
 
+    public String timeLeft;
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -111,6 +117,19 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         setupDrawerContent(navigationView);
+
+    }
+
+    private TextView timeText;
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void getTime(TextView timeText) {
+        this.timeText = timeText;
+        thievesAPIClass.getTime();
+    }
+
+    public void setTime() {
+        timeText.setText("Tijd over: " + timeLeft);
     }
 
     private void initLocation() {
