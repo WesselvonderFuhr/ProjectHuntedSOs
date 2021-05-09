@@ -101,7 +101,7 @@ class PlayerController{
                 let player_name = game.players[i].name;
                 let result = await this.CheckPlayerOutOfBounds(game.players[i]._id, gameID);
                 if(result.responseCode === 200 && result.message === true) {
-                    results.push(player_name + " is buiten het speelgebied!");
+                    results.push(player_name);
                 }
             }
 
