@@ -95,14 +95,13 @@ class PlayerController{
         let gameQuery = {_id: gameID};
         try{
 
-            let game = await Game.findOne(gameQuery).populate('player');
-            await game.populate('playfield');
+            let game = await Game.findOne(gameQuery).populate('playfield');
 
             let player = await Player.findOne(playerQuery);
 
             let polyLocations = []
-            for(let i = 0; i < game.playfield.length; i++){
-                polyLocations.push({latitude: playfield[i].location.latitude, longitude: playfield[i].location.longitude})
+            for(let i = 0; i < game.playfield.playfield.length; i++){
+                polyLocations.push({latitude: game.playfield.playfield[i].location.latitude, longitude: game.playfield.playfield[i].location.longitude})
             }
 
             if(player.location.latitude != null){
