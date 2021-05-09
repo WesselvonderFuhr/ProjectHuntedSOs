@@ -90,6 +90,27 @@ class PlayerController{
        
     }
 
+
+    async CheckPlayersOutOfBounds(gameID){
+        let gameQuery = {_id: gameID};
+        try{
+
+            let game = await Game.findOne(gameQuery).populate('players');
+            let results = [];
+            for(let i = 0; i < game.players.length; i++){
+                let player_name = game.players[i].name;
+                let result = await this.CheckPlayerOutOfBounds(game.players[i]._id, gameID);
+                if(result.responseCode === 200 && result.message === true) {
+                    results.push(player_name + " is buiten het speelgebied!");
+                }
+            }
+
+            return new Result(200, results);
+        }catch(e){
+            return new Result(400, e.message);
+        }
+    }
+
     async CheckPlayerOutOfBounds(playerID,gameID){
         let playerQuery = {_id: playerID};
         let gameQuery = {_id: gameID};

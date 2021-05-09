@@ -22,7 +22,7 @@ router.get('/outofbounds', passport.authenticate('jwt', { session: false }), asy
     if(req.user.player_id != null){
         result = await PlayerController.CheckPlayerOutOfBounds(req.user.player_id, req.user.game_id);
     } else {
-        result = await PlayerController.CheckPlayerOutOfBounds(req.user.player_id, req.user.game_id);
+        result = await PlayerController.CheckPlayersOutOfBounds(req.user.game_id);
     }
     ResponseHandler(result, req, res);
 });
