@@ -18,12 +18,12 @@ router.get('/', passport.authenticate('jwt', { session: false }), async function
 });
 
 router.get('/outofbounds', passport.authenticate('jwt', { session: false }), async function(req, res){
-    let unauthorized = await authorize.Player(req.user);
-    if(unauthorized){
-        return ResponseHandler(unauthorized, req, res);
+    let result;
+    if(req.user.player_id != null){
+        result = await PlayerController.CheckPlayerOutOfBounds(req.user.player_id, req.user.game_id);
+    } else {
+        result = await PlayerController.CheckPlayerOutOfBounds(req.user.player_id, req.user.game_id);
     }
-
-    let result = await PlayerController.CheckPlayerOutOfBounds(req.user.player_id, req.user.game_id);
     ResponseHandler(result, req, res);
 });
 
