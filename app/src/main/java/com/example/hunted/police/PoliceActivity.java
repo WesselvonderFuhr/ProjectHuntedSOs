@@ -1,6 +1,7 @@
 package com.example.hunted.police;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
@@ -18,11 +19,13 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Vibrator;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -46,6 +49,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.HashMap;
@@ -74,6 +78,9 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
     private NavigationView navigationView;
     private JSONArray arrestableThieves;
 
+    public String timeLeft;
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -105,6 +112,19 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         setupDrawerContent(navigationView);
     }
+
+    private TextView timeText;
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void getTime(TextView timeText) {
+        this.timeText = timeText;
+        policeAPIClass.getTime();
+    }
+
+    public void setTime() {
+        timeText.setText("Tijd over: " + timeLeft);
+    }
+
 
     private void initLocation() {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);

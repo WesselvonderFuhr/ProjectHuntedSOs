@@ -17,5 +17,11 @@
         android:textSize="15sp"
         android:text="fragment_police_score"/>
 
+    <TextView
+        android:id="@+id/timeLeft"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tijd over: 00:00" />
+
 
 </LinearLayout>
