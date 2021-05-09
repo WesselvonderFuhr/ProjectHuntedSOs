@@ -200,6 +200,7 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        locationManager.removeUpdates(locationListener);
         doUnbindService();
     }
 

@@ -203,6 +203,7 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        locationManager.removeUpdates(locationListener);
         doUnbindService();
     }
 
