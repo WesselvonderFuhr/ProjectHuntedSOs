@@ -35,6 +35,8 @@ public abstract class APIClass {
     protected String URL;
     protected RequestQueue queue;
 
+    private long lastToast;
+
     public APIClass(Context c, String token, String url) {
         context = c;
         this.token = token;
@@ -72,7 +74,10 @@ public abstract class APIClass {
 
     private void vibrateOutOfPlayingField(){
         Vibrator v = (Vibrator) context.getSystemService(context.VIBRATOR_SERVICE);
-        Toast.makeText(context, context.getString(R.string.label_return_playingfield), Toast.LENGTH_SHORT).show();
+        if(lastToast + 2000 < System.currentTimeMillis()){
+            lastToast = System.currentTimeMillis();
+            Toast.makeText(context, context.getString(R.string.label_return_playingfield), Toast.LENGTH_SHORT).show();
+        }
         v.vibrate(500);
     }
 

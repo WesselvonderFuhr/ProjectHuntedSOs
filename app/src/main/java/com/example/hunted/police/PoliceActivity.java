@@ -136,7 +136,6 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
                 double longitude = location.getLongitude();
 
                 String setlocURL = URL + "player/location/";
-                //TODO token
                 StringRequest stringRequest = new StringRequest(Request.Method.PUT, setlocURL,
                         response -> {
                             if(hasNotBound) {
@@ -184,7 +183,7 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
         };
 
         if (ActivityCompat.checkSelfPermission(PoliceActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, locationListener);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, locationListener);
         } else {
             ActivityCompat.requestPermissions(PoliceActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
         }
@@ -194,7 +193,7 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (ActivityCompat.checkSelfPermission(PoliceActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
+            locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, locationListener);
         }
     }
 
