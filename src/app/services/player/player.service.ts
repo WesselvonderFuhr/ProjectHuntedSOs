@@ -15,8 +15,8 @@ export class PlayerService {
     return this.http.get(this.playerURL);
   }
 
-  getPlayerOutOfBounds(id: String): Observable<any>{
-    let APIurl = this.playerURL + "/outofbounds/" + id;
+  getPlayersOutOfBounds(): Observable<any>{
+    let APIurl = this.playerURL + "/outofbounds/";
     return this.http.get(APIurl);
   }
 
