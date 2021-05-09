@@ -5,6 +5,7 @@ import android.os.Vibrator;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -14,6 +15,9 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.hunted.APIClass;
 import com.example.hunted.R;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class PoliceAPIClass extends APIClass {
 
@@ -30,7 +34,14 @@ public class PoliceAPIClass extends APIClass {
                 }, error -> {
             Toast.makeText(context, "De boef is weg gekomen!", Toast.LENGTH_SHORT).show();
         }
-        );
+        ){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
+            }
+        };
         queue.add(stringRequest);
     }
 }

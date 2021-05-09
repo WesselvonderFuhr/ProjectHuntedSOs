@@ -34,6 +34,7 @@
     <string name="label_thieves_steal_failure">Gefaald in stelen.</string>
     <string name="label_thieves_steal_stopped">Gestopt met stelen!</string>
     <string name="label_thieves_steal_already_stolen">Deze heb je al gestolen.</string>
+    <string name="label_thieves_steal_non_existant">Dit is geen buit.</string>
     <string name="label_thieves_steal_retry">Stelen is mislukt, probeer opnieuw.</string>
     <string name="label_thieves_steal_error">Er ging iets mis.</string>
 
