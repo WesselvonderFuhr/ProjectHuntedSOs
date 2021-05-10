@@ -28,9 +28,6 @@ export class GameOutOfBoundsMessageComponent implements OnInit {
       await this.checkPlayersOutOfBounds();
       await this.sleep(5000);
     }
-
-
-    
   }
 
   checkPlayersOutOfBounds(){
@@ -40,7 +37,6 @@ export class GameOutOfBoundsMessageComponent implements OnInit {
      this.playerService.getPlayerOutOfBounds(player._id).toPromise().then(result =>{               
         if(result == true){
           this.OutOfBoundsPlayerArray.push(player);
-        
         }
       },
       error =>{
