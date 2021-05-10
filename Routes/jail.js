@@ -1,44 +1,24 @@
-var express = require('express');
-const jail = require('../MongoDB/jail');
-var Jail = require('../MongoDB/jail');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
+const passport = require("passport");
 
-router.get('/', function (req, res) {
-    var jail = Jail.find({}, function (err, result) {
-        if (!err) {
-            return res.send(result);
-        }
-    });
+const JailController = require('../Controllers/JailController');
+const authorize = require("../Authorization/authorize");
+const {ResponseHandler} = require("../Helper/ResponseHandler");
+
+router.get('/', passport.authenticate('jwt', { session: false }), async function (req, res) {
+    let result = await JailController.getJailByGameId(req.user.game_id);
+    ResponseHandler(result, req, res);
 });
 
-router.put('/', function (req, res) {
-    
-    var newLoc = {
-        location:
-        {
-            latitude: req.body.location.latitude,
-            longitude: req.body.location.longitude
-        }
+router.put('/', passport.authenticate('jwt', { session: false }), async function (req, res) {
+    let unauthorized = await authorize.Administrator(req.user);
+    if(unauthorized){
+        return ResponseHandler(unauthorized, req, res);
     }
-    Jail.countDocuments({}, function (err, count){ 
-        if(count==0){
-            const location = req.body.location;
-            let jail = {};
-            jail.location = location;
-        
-            let jailModel = new Jail(jail);
-            jailModel.save();
-        
-            res.json(jailModel);
-        }else if(count ==1){
-            Jail.updateOne({}, newLoc, function(err, result){
-                function finished(err) {
-                    console.log(err)
-                }
-                res.send("Update gelukt");
-            })
-        }
-    });
+
+    let result = await JailController.editJail(req.user.game_id, req.body);
+    ResponseHandler(result, req, res);
 });
 
 module.exports = router;

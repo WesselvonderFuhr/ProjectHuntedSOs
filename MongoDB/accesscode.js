@@ -1,8 +1,8 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 
 console.log('Initializing accesscode schema');
 
-var accesscodeSchema = new mongoose.Schema({
+const accesscodeSchema = new mongoose.Schema({
     code: { type: String, required: true },
     role: { type: String, required: true },
     assignedTo: {type: String, required: false}

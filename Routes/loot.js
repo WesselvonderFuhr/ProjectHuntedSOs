@@ -1,25 +1,39 @@
-var express = require('express');
-var Loot = require('../MongoDB/loot');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
+const passport = require("passport");
 
-router.post('/', function (req, res) {
-  const name = req.body.name;
-  let loot = {};
-  loot.name = name;
+const LootController = require('../Controllers/LootController');
+const authorize = require("../Authorization/authorize");
+const {ResponseHandler} = require("../Helper/ResponseHandler");
 
-  let lootModel = new Loot(loot);
-  lootModel.save();
+router.post('/', passport.authenticate('jwt', { session: false }), async function (req, res) {
+  let unauthorized = await authorize.Administrator(req.user);
+  if(unauthorized){
+    return ResponseHandler(unauthorized, req, res);
+  }
 
-  res.json(lootModel);
+  let result = await LootController.addLoot(req.user.game_id, req.body);
+  ResponseHandler(result, req, res);
 });
 
-router.get('/', function (req, res) {
-  var loot = Loot.find({}, function (err, result) {
-    if (!err) {
-      return res.send(result);
-    }
-  });
+router.get('/', passport.authenticate('jwt', { session: false }), async function (req, res) {
+  let unauthorized = await authorize.Administrator(req.user);
+  if(unauthorized){
+    return ResponseHandler(unauthorized, req, res);
+  }
 
+  let result = await LootController.getAllLoot(req.user.game_id);
+  ResponseHandler(result, req, res);
+});
+
+router.delete('/:id', passport.authenticate('jwt', { session: false }), async function (req, res) {
+  let unauthorized = await authorize.Administrator(req.user);
+  if(unauthorized){
+    return ResponseHandler(unauthorized, req, res);
+  }
+
+  let result = await LootController.deleteLoot(req.user.game_id, req.params.id);
+  ResponseHandler(result, req, res);
 });
 
 module.exports = router;

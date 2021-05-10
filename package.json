@@ -1,0 +1,40 @@
+{
+  "name": "hunted-api",
+  "version": "1.0.0",
+  "description": "Hunted api",
+  "main": "index.js",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "connect": "^3.7.0",
+    "curl": "^0.1.4",
+    "express": "^4.17.1",
+    "express-curl": "^1.0.1",
+    "geolib": "^3.3.1",
+    "geolocation": "^0.2.0",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^5.12.2",
+    "nodemon": "^2.0.7",
+    "passport": "^0.4.1",
+    "passport-jwt": "^4.0.0",
+    "randomstring": "^1.1.5",
+    "request": "^2.88.2",
+    "serve": "^11.3.2",
+    "socket.io": "^4.0.0"
+  },
+  "engines": {
+    "node": "14.15.4"
+  },
+  "devDependencies": {
+    "chai": "^4.3.4",
+    "mocha": "^5.0.1",
+    "supertest": "^3.4.2"
+  },
+  "scripts": {
+    "test": "mocha",
+    "hmr": "nodemon index.js",
+    "nodemon": "npm run hmr",
+    "start": "node index.js"
+  },
+  "author": "",
+  "license": "ISC"
+}
