@@ -3,7 +3,7 @@ const Result = require("../Helper/Result");
 
 let Player = require('../MongoDB/player');
 let Game = require('../MongoDB/game');
-const Accesscode = require('../MongoDB/accesscode');
+const Loot = require('../MongoDB/loot');
 const geolib = require('geolib');
 
 
@@ -90,30 +90,50 @@ class PlayerController{
        
     }
 
-    async CheckPlayerOutOfBounds(playerID,gameID){
-        var playerQuery = {_id: playerID};
-        var gameQuery = {_id: gameID};
+
+    async CheckPlayersOutOfBounds(gameID){
+        let gameQuery = {_id: gameID};
         try{
-            
-            var game = await Game.findOne(gameQuery).populate('player');
-            await game.populate('playfield');
-            
-            var player = await Player.findOne(playerQuery);
-            
-            var polyLocations = []
-            game.playfield.forEach(loc =>
-                polyLocations.push({latitude: loc.location.latitude, longitude: loc.location.longitude})
-            )
+
+            let game = await Game.findOne(gameQuery).populate('players');
+            let results = [];
+            for(let i = 0; i < game.players.length; i++){
+                let player_name = game.players[i].name;
+                let result = await this.CheckPlayerOutOfBounds(game.players[i]._id, gameID);
+                if(result.responseCode === 200 && result.message === true) {
+                    results.push(player_name);
+                }
+            }
+
+            return new Result(200, results);
+        }catch(e){
+            return new Result(400, e.message);
+        }
+    }
+
+    async CheckPlayerOutOfBounds(playerID,gameID){
+        let playerQuery = {_id: playerID};
+        let gameQuery = {_id: gameID};
+        try{
+
+            let game = await Game.findOne(gameQuery).populate('playfield');
+
+            let player = await Player.findOne(playerQuery);
+
+            let polyLocations = []
+            for(let i = 0; i < game.playfield.playfield.length; i++){
+                polyLocations.push({latitude: game.playfield.playfield[i].location.latitude, longitude: game.playfield.playfield[i].location.longitude})
+            }
 
             if(player.location.latitude != null){
-                var isPoint = geolib.isPointInPolygon(player.location, polyLocations)
+                let isPoint = geolib.isPointInPolygon(player.location, polyLocations)
                 return new Result(200, !isPoint);
             }else{
                 return new Result(404, "Player does not have a location");
             }
 
         }catch(e){
-            return new Result(400, e);
+            return new Result(400, e.message);
         }
     }
 
@@ -143,8 +163,12 @@ class PlayerController{
     }
 
     async StealLoot(playerID,lootID){
-        var playerquery = { _id: playerID };
-        var lootquery =  { _id: lootID };
+        if(!mongoose.isValidObjectId(lootID)){
+            return new Result(404, "Loot does not exist");
+        }
+
+        let playerquery = { _id: playerID };
+        let lootquery =  { _id: lootID };
         //get player
         let player = await Player.findOne(playerquery)
         if(player == null){

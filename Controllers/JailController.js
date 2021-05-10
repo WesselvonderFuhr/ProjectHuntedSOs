@@ -14,11 +14,12 @@ class JailController{
     async editJail(game_id, body){
         let game = await Game.findOne({_id: game_id}).populate('jail');
         let jail = game.jail;
+
         let new_body = {
             location:
                 {
-                    latitude: body.location.latitude,
-                    longitude: body.location.longitude
+                    latitude: body.location.latitude.replace(",", "."),
+                    longitude: body.location.longitude.replace(",", ".")
                 }
         }
         await jail.updateOne(new_body);
