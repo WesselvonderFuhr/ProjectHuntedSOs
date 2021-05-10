@@ -21,9 +21,9 @@ export class SetupTimeComponent implements OnInit {
   onClickSubmit(): void {
     this.time.start_time = new Date();
 
+    
     this.gameService.updateStartTime(this.time).subscribe( (res) => {
       console.log('Updated the time');
    });
   }
-
 }
