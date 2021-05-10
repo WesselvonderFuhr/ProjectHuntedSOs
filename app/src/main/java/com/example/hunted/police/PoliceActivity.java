@@ -122,7 +122,7 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
     }
 
     public void setTime() {
-        timeText.setText("Tijd over: " + timeLeft);
+        timeText.setText(timeLeft);
     }
 
 

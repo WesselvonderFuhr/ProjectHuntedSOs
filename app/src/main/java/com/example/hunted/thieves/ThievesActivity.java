@@ -129,7 +129,7 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
     }
 
     public void setTime() {
-        timeText.setText("Tijd over: " + timeLeft);
+        timeText.setText(timeLeft);
     }
 
     private void initLocation() {

@@ -83,7 +83,7 @@ public abstract class APIClass {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void getTime() {
-        final String checkCode = URL + "game/608bfc395e6f4c126818bee4/time";
+        final String checkCode = URL + "game";
         JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
                 (Request.Method.GET, checkCode, null, response -> {
                     try {
@@ -93,7 +93,14 @@ public abstract class APIClass {
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
-                }, error -> Toast.makeText(context, R.string.label_wrong_login, Toast.LENGTH_SHORT).show());
+                }, error -> setTime(0)){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
+            }
+        };
         queue.add(jsonObjectRequest);
     }
 
@@ -109,19 +116,32 @@ public abstract class APIClass {
         long time = Duration.between(start, end).toMinutes();
         long timePassed = Duration.between(start, LocalTime.now()).toMinutes();
         long timeLeft = time - timePassed;
+        if(timeLeft < 0){
+            timeLeft = 0;
+        }
         return timeLeft;
     }
 
-    public void setTime(long minutes) {
-        long h = minutes / 60;
-        long m = minutes % 60;
+    public void setTime(long totalMinutes) {
+        long h = totalMinutes / 60;
+        long m = totalMinutes % 60;
+
+
+        String hours = h + "";
+        if(hours.length() < 2){
+            hours = "0" + hours;
+        }
+        String minutes = m + "";
+        if(minutes.length() < 2){
+            minutes = "0" + minutes;
+        }
 
         if(context instanceof PoliceActivity) {
-            ((PoliceActivity) context).timeLeft = h + ":" + m;
+            ((PoliceActivity) context).timeLeft = hours + ":" + minutes;
             ((PoliceActivity) context).setTime();
         }
         if(context instanceof ThievesActivity) {
-            ((ThievesActivity) context).timeLeft = h + ":" + m;
+            ((ThievesActivity) context).timeLeft = hours + ":" + minutes;
             ((ThievesActivity) context).setTime();
         }
     }

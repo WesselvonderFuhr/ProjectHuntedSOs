@@ -6,16 +6,4 @@
     android:orientation="vertical"
     android:gravity="center_horizontal"
     android:id="@+id/fragment_police_location"
-    android:background="@color/primary">
-
-    <TextView
-        android:id="@+id/arrestTextview"
-        android:layout_width="match_parent"
-        android:layout_height="60sp"
-        android:gravity="center"
-        android:textColor="@color/onPrimary"
-        android:textSize="15sp"
-        android:text="fragment_police_location"/>
-
-
-</LinearLayout>
+    android:background="@color/primary"/>
