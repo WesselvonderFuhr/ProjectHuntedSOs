@@ -13,12 +13,20 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.ServerError;
 import com.android.volley.toolbox.HttpHeaderParser;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.hunted.APIClass;
 import com.example.hunted.R;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ThievesAPIClass extends APIClass {
@@ -66,5 +74,23 @@ public class ThievesAPIClass extends APIClass {
         }
     }
 
+    public void getStolenLoot() {
+        final String checkCode = URL + "loot/60913d6f1d029c1a40757699";
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
+                (Request.Method.GET, checkCode, null, response -> {
+                    ArrayList<String> tempList = new ArrayList<String>();
 
+                    for(int i = 0; i < response.length(); i++) {
+                        try {
+                            tempList.add(response.getJSONObject(i).getString("name"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    ((ThievesActivity) context).setLoot(tempList);
+
+                }, error -> Toast.makeText(context, R.string.label_wrong_login, Toast.LENGTH_SHORT).show());
+        queue.add(jsonArrayRequest);
+    }
 }

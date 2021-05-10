@@ -66,12 +66,13 @@ public class MainActivity extends AppCompatActivity {
                 (Request.Method.POST, checkCode, null, response -> {
                     try {
                         String token = response.getString("token");
-                        String role = response.getString("role");
-                        if(role.equals("Boef")) {
-                            openThievesActivity(token);
-                        } else if(role.equals("Agent")) {
-                            openPoliceActivity(token);
-                        }
+                        openThievesActivity(token);
+//                        String role = response.getString("role");
+//                        if(role.equals("Boef")) {
+//                            openThievesActivity(token);
+//                        } else if(role.equals("Agent")) {
+//                            openPoliceActivity(token);
+//                        }
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }

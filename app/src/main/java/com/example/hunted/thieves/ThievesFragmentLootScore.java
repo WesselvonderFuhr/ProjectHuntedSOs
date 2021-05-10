@@ -15,10 +15,12 @@ import com.example.hunted.R;
 import com.example.hunted.police.PoliceActivity;
 
 import java.security.spec.RSAOtherPrimeInfo;
+import java.util.List;
 
 public class ThievesFragmentLootScore extends Fragment {
 
     private TextView timeLeft;
+    private TextView lootList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -28,8 +30,23 @@ public class ThievesFragmentLootScore extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_thieves_loot_score, container, false);
-        timeLeft = (TextView) view.findViewById(R.id.timeLeft2);
+        timeLeft = view.findViewById(R.id.timeLeft2);
+        lootList = view.findViewById(R.id.loot);
+        getLootList();
         return view;
+    }
+
+    private void getLootList() {
+        List<String> list = ((ThievesActivity) getActivity()).getLoot();
+
+        if(list.size() == 0) {
+            lootList.setText("Nog geen buit gevonden");
+            return;
+        }
+
+        for(int i = 0; i < list.size(); i++) {
+            lootList.setText(lootList.getText() + list.get(i) + "\n");
+        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
