@@ -1,0 +1,11 @@
+<h2>Spel starten</h2>
+<div>
+  <form class="example-form" #locationData="ngForm" (ngSubmit)="onClickSubmit()" >
+    <mat-form-field class="example-full-width" appearance="standard">
+      <mat-label>Eindtijd</mat-label>
+      <input matInput [(ngModel)]="time.end_time" name="end_time" placeholder="2021-04-20T16:20:00.336Z">
+    </mat-form-field>
+    <br/>
+    <button mat-raised-button color="primary" type="submit" color="primary">Spel starten</button>
+ </form>
+</div>

@@ -47,6 +47,7 @@ import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatCardModule } from '@angular/material/card';
 
+import { SetupTimeComponent } from './components/setup-time/setup-time.component';
 
 
 @NgModule({
@@ -62,7 +63,8 @@ import { MatCardModule } from '@angular/material/card';
     GameOutOfBoundsMessageComponent,
     SetupZoneComponent,
     SidenavComponent,
-    LoginComponent
+    LoginComponent,
+    SetupTimeComponent
   ],
   imports: [
     BrowserModule,
