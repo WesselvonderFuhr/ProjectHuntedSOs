@@ -9,24 +9,19 @@
     android:background="@color/primary">
 
     <TextView
-        android:id="@+id/arrestTextview"
-        android:layout_width="match_parent"
-        android:layout_height="60sp"
-        android:gravity="center"
-        android:textColor="@color/onPrimary"
-        android:textSize="15sp"
-        android:text="fragment_thieves_loot_score"/>
-
-    <TextView
-        android:id="@+id/timeLeft2"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="00:00" />
+        android:text="@string/label_time_remaining"
+        android:textSize="28dp"
+        android:layout_marginTop="40dp"
+        android:textColor="@color/onPrimary"/>
 
     <TextView
-        android:id="@+id/loot"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
-
+        android:layout_marginTop="10dp"
+        android:id="@+id/timeLeft"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="28dp"
+        android:text="@string/label_default_time_remaining" />
 
 </LinearLayout>

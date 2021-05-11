@@ -140,7 +140,7 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
 
 
     public void setTime() {
-        timeText.setText("Tijd over: " + timeLeft);
+        timeText.setText(timeLeft);
     }
 
     private void initLocation() {
@@ -214,6 +214,7 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        locationManager.removeUpdates(locationListener);
         doUnbindService();
     }
 

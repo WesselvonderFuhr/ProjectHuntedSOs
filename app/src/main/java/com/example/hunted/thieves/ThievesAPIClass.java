@@ -44,11 +44,17 @@ public class ThievesAPIClass extends APIClass {
 
                 error -> {
                     NetworkResponse response = error.networkResponse;
-                    if (error instanceof ServerError && response != null) {
-                        try {
-                            sendDataToFragmentScanner(false, context.getResources().getString(R.string.label_thieves_steal_already_stolen), fragment);
-                        } catch (Exception e) {
-                            sendDataToFragmentScanner(false, context.getResources().getString(R.string.label_thieves_steal_error), fragment);
+                    if(response != null && response.data != null){
+                        switch(response.statusCode) {
+                            case 400:
+                                sendDataToFragmentScanner(false, context.getResources().getString(R.string.label_thieves_steal_already_stolen), fragment);
+                                break;
+                            case 404:
+                                sendDataToFragmentScanner(false, context.getResources().getString(R.string.label_thieves_steal_non_existant), fragment);
+                                break;
+                            default:
+                                sendDataToFragmentScanner(false, context.getResources().getString(R.string.label_thieves_steal_error), fragment);
+                                break;
                         }
                     }
                 }) {

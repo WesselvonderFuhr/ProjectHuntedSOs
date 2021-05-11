@@ -22,8 +22,8 @@
         android:layout_height="wrap_content"
         android:enabled="false"
         android:text="@string/button_police_arrest"
-        android:textColor="@color/white"
-        android:background="@color/black"/>
+        android:textColor="@color/primary"
+        android:background="@color/onPrimary"/>
 
 
 </LinearLayout>

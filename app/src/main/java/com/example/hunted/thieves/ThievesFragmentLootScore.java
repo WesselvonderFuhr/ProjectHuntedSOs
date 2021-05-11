@@ -30,9 +30,7 @@ public class ThievesFragmentLootScore extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_thieves_loot_score, container, false);
-        timeLeft = view.findViewById(R.id.timeLeft2);
-        lootList = view.findViewById(R.id.loot);
-        getLootList();
+        timeLeft = (TextView) view.findViewById(R.id.timeLeft);
         return view;
     }
 
