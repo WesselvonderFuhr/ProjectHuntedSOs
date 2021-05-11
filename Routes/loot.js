@@ -26,6 +26,12 @@ router.get('/', passport.authenticate('jwt', { session: false }), async function
   ResponseHandler(result, req, res);
 });
 
+router.get('/:user_id', async function (req, res) {
+
+  let result = await LootController.getAllLootByPlayer(req.params.user_id);
+  ResponseHandler(result, req, res);
+});
+
 router.delete('/:id', passport.authenticate('jwt', { session: false }), async function (req, res) {
   let unauthorized = await authorize.Administrator(req.user);
   if(unauthorized){
