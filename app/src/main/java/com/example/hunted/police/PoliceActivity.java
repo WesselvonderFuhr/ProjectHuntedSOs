@@ -80,6 +80,16 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
 
     public String timeLeft;
 
+    private List<String> loot;
+
+    public void setLoot(List<String> loot) {
+        this.loot = loot;
+    }
+
+    public List<String> getLoot() {
+        return loot;
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
