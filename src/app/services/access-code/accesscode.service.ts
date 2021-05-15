@@ -3,13 +3,14 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { AccessCode } from 'src/app/models/accesscode.model';
 import { AccessCodePost} from 'src/app/models/accesscode_post.model'
+import { environment } from '../../../environments/environment'
 
 @Injectable({
   providedIn: 'root'
 })
 export class AccessCodeService {
 
-  private accessCodeURL = 'http://127.0.0.1:3000/accesscode';
+  private accessCodeURL = `${environment.apiUrl}/accesscode`;
 
   constructor(private http: HttpClient) { }
 

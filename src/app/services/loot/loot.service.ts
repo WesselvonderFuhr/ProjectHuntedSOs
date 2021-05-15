@@ -2,13 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Loot } from 'src/app/models/loot.model';
+import { environment } from '../../../environments/environment'
 
 @Injectable({
   providedIn: 'root'
 })
 export class LootService {
 
-  private lootURL = 'http://127.0.0.1:3000/loot';
+  private lootURL = `${environment.apiUrl}/loot`;
 
   constructor(private http: HttpClient) { }
 

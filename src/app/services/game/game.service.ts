@@ -3,13 +3,14 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { Game } from 'src/app/models/game.model';
 import { Time } from 'src/app/models/time.model';
+import { environment } from '../../../environments/environment'
 
 @Injectable({
   providedIn: 'root'
 })
 export class GameService {
 
-  private gameURL = 'http://127.0.0.1:3000/game';
+  private gameURL = `${environment.apiUrl}/game`;
   private timeURL =  this.gameURL + '/time';
 
   constructor(private http: HttpClient) { }

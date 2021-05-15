@@ -9,7 +9,7 @@ import { LoginComponent } from './components/login/login.component';
 const routes: Routes = [
   { path : 'setup', component: SetupComponent, canActivate: [AuthGuard] },
   { path : 'game', component: GameComponent, canActivate: [AuthGuard] },
-  { path : 'login', component: LoginComponent },
+  { path : 'login', component: LoginComponent, canActivate: [AuthGuard] },
   { path: '',   redirectTo: '/login', pathMatch: 'full' }
 ];
 
