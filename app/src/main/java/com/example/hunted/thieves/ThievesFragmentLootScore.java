@@ -45,7 +45,8 @@ public class ThievesFragmentLootScore extends Fragment {
         }
 
         for(int i = 0; i < list.size(); i++) {
-            lootList.setText(lootList.getText() + list.get(i) + "\n");
+            int number = i+1;
+            lootList.setText(lootList.getText().toString() + number + ". " + list.get(i) + "\n");
         }
     }
 
