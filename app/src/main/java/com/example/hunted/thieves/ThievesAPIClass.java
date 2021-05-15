@@ -80,23 +80,4 @@ public class ThievesAPIClass extends APIClass {
         }
     }
 
-    public void getStolenLoot() {
-        final String checkCode = URL + "loot/60913d6f1d029c1a40757699";
-        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
-                (Request.Method.GET, checkCode, null, response -> {
-                    ArrayList<String> tempList = new ArrayList<String>();
-
-                    for(int i = 0; i < response.length(); i++) {
-                        try {
-                            tempList.add(response.getJSONObject(i).getString("name"));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    ((ThievesActivity) context).setLoot(tempList);
-
-                }, error -> Toast.makeText(context, R.string.label_wrong_login, Toast.LENGTH_SHORT).show());
-        queue.add(jsonArrayRequest);
-    }
 }

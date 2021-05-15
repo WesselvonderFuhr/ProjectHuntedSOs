@@ -31,6 +31,8 @@ public class ThievesFragmentLootScore extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_thieves_loot_score, container, false);
         timeLeft = (TextView) view.findViewById(R.id.timeLeft);
+        lootList = (TextView) view.findViewById(R.id.loot);
+        getLootList();
         return view;
     }
 
@@ -38,7 +40,7 @@ public class ThievesFragmentLootScore extends Fragment {
         List<String> list = ((ThievesActivity) getActivity()).getLoot();
 
         if(list.size() == 0) {
-            lootList.setText("Nog geen buit gevonden");
+            lootList.setText("Nog geen buit gestolen");
             return;
         }
 

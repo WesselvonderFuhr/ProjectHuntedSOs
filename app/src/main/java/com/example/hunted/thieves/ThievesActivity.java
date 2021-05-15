@@ -127,6 +127,7 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         setupDrawerContent(navigationView);
 
+        //testcode for stolen loot
         thievesAPIClass.getStolenLoot();
     }
 
