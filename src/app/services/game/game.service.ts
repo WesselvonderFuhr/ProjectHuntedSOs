@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { Game } from 'src/app/models/game.model';
-import { Time } from 'src/app/models/time.model';
+import { Game } from '../../models/game.model'
+import { Time } from '../../models/time.model';
 import { environment } from '../../../environments/environment'
 
 @Injectable({
