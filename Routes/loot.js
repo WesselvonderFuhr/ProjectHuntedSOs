@@ -26,9 +26,12 @@ router.get('/', passport.authenticate('jwt', { session: false }), async function
   ResponseHandler(result, req, res);
 });
 
-router.get('/:user_id', async function (req, res) {
-
-  let result = await LootController.getAllLootByPlayer(req.params.user_id);
+router.get('/lootByPlayer', passport.authenticate('jwt', { session: false }), async function (req, res) {
+  let unauthorized = await authorize.Player(req.user);
+  if(unauthorized){
+    return ResponseHandler(unauthorized, req, res);
+  }
+  let result = await LootController.getAllLootByPlayer(req.user.player_id);
   ResponseHandler(result, req, res);
 });
 
