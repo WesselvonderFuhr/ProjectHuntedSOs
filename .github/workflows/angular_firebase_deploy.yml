@@ -1,9 +1,9 @@
-name: Deploy to Firebasee
+name: Deploy to Firebase
 
 on:
   push:
     branches:
-    - development-WEBSITE-firebase
+    - development-WEBSITE
 
 jobs:
   firebase-deploy:
