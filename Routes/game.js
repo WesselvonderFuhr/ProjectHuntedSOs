@@ -28,7 +28,7 @@ router.put('/playfield', passport.authenticate('jwt', { session: false }), async
     if(unauthorized){
         return ResponseHandler(unauthorized, req, res);
     }
-    
+
     let result = await PlayfieldController.editPlayfield(req.user.game_id, req.body);
     ResponseHandler(result, req, res);
 });
@@ -38,7 +38,7 @@ router.put('/time', passport.authenticate('jwt', { session: false }), async func
     if(unauthorized){
         return ResponseHandler(unauthorized, req, res);
     }
-    let result = await GameController.setgameTime(req.user.game_id, req.body);
+    let result = await GameController.setGameTime(req.user.game_id, req.body);
     ResponseHandler(result, req, res);
 });
 
