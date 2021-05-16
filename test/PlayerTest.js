@@ -1,6 +1,6 @@
 require('../test/testSetup');
-const PlayerController = require('../Controllers/PlayerController');
 var expect = require('chai').expect;
+const PlayerController = require('../Controllers/PlayerController');
 let Game = require('../MongoDB/game');
 let Player = require('../MongoDB/player');
 

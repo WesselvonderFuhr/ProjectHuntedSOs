@@ -14,34 +14,33 @@ before(async () => {
     await mongoose.connect(LocalURI);
     //fill db
     await FillDB();
-  });
+});
 
-  after(async () => {  
-    //clear db
-    await Loot.deleteMany();
-    await Jail.deleteMany();
-    await Game.deleteMany();
-    await Accesscode.deleteMany();
-    await Player.deleteMany();
-    await Playfield.deleteMany();
-    await Administrator.deleteMany();
-    await mongoose.connection.close();
-  });
+after(async () => {  
+  //clear db
+  await Loot.deleteMany();
+  await Jail.deleteMany();
+  await Game.deleteMany();
+  await Accesscode.deleteMany();
+  await Player.deleteMany();
+  await Playfield.deleteMany();
+  await Administrator.deleteMany();
+  await mongoose.connection.close();
+});
 
-  async function FillDB(){
-    //fill db
-    //game
-    let game = new Game();
-    await game.save();
-    game = new Game();
-    await game.save();
-    //player
-    let player = {};
-    player.name = "jan";
-    player.role = "agent";
-    let playerModel = new Player(player);
-    await playerModel.save();
-  }
+async function FillDB(){
+  //game
+  let game = new Game();
+  await game.save();
+  game = new Game();
+  await game.save();
+  //player
+  let player = {};
+  player.name = "jan";
+  player.role = "agent";
+  let playerModel = new Player(player);
+  await playerModel.save();
+}
 
 
 
