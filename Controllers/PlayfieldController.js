@@ -12,9 +12,8 @@ class PlayfieldController{
     }
 
     async editPlayfield(game_id, body){
-        let game = await Game.findOne({_id: game_id}).populate('playfield');
-        let playfield = game.playfield;
-        await playfield.updateOne(body);
+        let game = await Game.findOne({_id: game_id});
+        await Playfield.updateOne({_id: game.playfield}, body);
         return new Result(200, "Playfield has been updated");
     }
 

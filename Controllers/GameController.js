@@ -36,15 +36,10 @@ class GameController{
         await administratorModel.save();
         game.administrator = administratorModel;
         //playfield
-        let playfield = {
-            "playfield" :  [   {
-                                "location" : {
-                                    "latitude" : 0,
-                                    "longitude" : 0
-                                }
-                            }  
-                     ]
-        };
+        let playfield = [[[{
+            "latitude" : 0,
+            "longitude" : 0
+        }]]];
         let playfieldModel = new Playfield(playfield);
         await playfieldModel.save();
         game.playfield = playfieldModel;
