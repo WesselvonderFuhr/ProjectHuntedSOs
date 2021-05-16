@@ -111,7 +111,7 @@ class GameController{
         return new Result(200, "not started")
         // return new Result(200, "in progress")
         // return new Result(200, "stopped")
-        
+
         // //not started
         // // no startTime, no endTime
         // if (startTime == new Date(0) && endTime == new Date(0)){
