@@ -8,17 +8,17 @@
       <input matInput type="datetime-local" [(ngModel)]="time.end_time" name="end_time" placeholder="end date">
     </mat-form-field>
     <br/>
-    <button mat-raised-button color="primary" type="submit" color="primary">Spel starten</button>
+    <button mat-raised-button color="primary" type="submit" color="primary" [routerLink]="['']">Spel starten</button>
  </form>
 </div>
 
 <div *ngIf="gameStatus == 'in progress'">
   <h2>Spel is bezig!</h2>
-  <button  mat-raised-button color="primary" type="submit" color="primary" (click)="getStatus()">Spel beëindigen</button>
+  <button  mat-raised-button color="primary" type="submit" color="primary" (click)="endGame()" [routerLink]="['']">Spel beëindigen</button>
 </div>
 
-<div *ngIf="gameStatus == 'ended'">
+<div *ngIf="gameStatus == 'stopped'">
   <h2>Het spel is afgelopen! Herstarten?</h2>
-  <button  mat-raised-button color="primary" type="submit" color="primary">Herstart spel</button>
+  <button  mat-raised-button color="primary" type="submit" color="primary" (click)="restartGame()" [routerLink]="['']">Herstart spel</button>
 </div>
 
