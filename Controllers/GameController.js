@@ -100,5 +100,38 @@ class GameController{
         return new Result(200, game);
     }
 
+    async getStatus(gameID){
+        let game = await Game.findOne({_id: gameID})
+
+        let startTime = game.start_time;
+        let endTime = game.end_time;
+
+        console.log("logging game: " + game)
+
+        return new Result(200, "not started")
+        // return new Result(200, "in progress")
+        // return new Result(200, "stopped")
+        
+        // //not started
+        // // no startTime, no endTime
+        // if (startTime == new Date(0) && endTime == new Date(0)){
+        //     console.log("not started")
+        //     return new Result(200, "not started")
+        // }
+        // //running
+        // // yes startTime, yes endTime
+        // if (startTime != new Date(0) && endTime != new Date(0)){
+        //     console.log("in progress")
+        //     return new Result(200, "in progress")
+        // }
+
+        // //stopped
+        // // no startTime, yes endTime
+        // if (startTime == new Date(0) && endTime != new Date(0)){
+        //     console.log("stopped")
+        //     return new Result(200, "stopped")
+        // }
+    }
+
 }
 module.exports = new GameController();
