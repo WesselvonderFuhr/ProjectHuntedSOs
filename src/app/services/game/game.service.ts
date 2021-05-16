@@ -12,6 +12,7 @@ export class GameService {
 
   private gameURL = `${environment.apiUrl}/game`;
   private timeURL =  this.gameURL + '/time';
+  private statusURL =  this.gameURL + '/status';
 
   constructor(private http: HttpClient) { }
 
@@ -19,7 +20,13 @@ export class GameService {
     return this.http.get(this.gameURL);
   }
 
-  updateStartTime(time: Time) {
+  getStatus(): Observable<any> {
+    return this.http.get(this.statusURL);
+  }
+
+  updateTime(time: Time) {
     return this.http.put(this.timeURL, time, {responseType: 'text'});
   }
+
+
 }

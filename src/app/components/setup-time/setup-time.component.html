@@ -1,5 +1,6 @@
-<h2>Spel starten</h2>
-<div>
+
+<div *ngIf="gameStatus == 'not started'">
+  <h2>Spel starten</h2>
   <form class="example-form" #locationData="ngForm" (ngSubmit)="onClickSubmit()" >
     <mat-form-field class="example-full-width" appearance="standard">
       <mat-label>Eindtijd</mat-label>
@@ -10,3 +11,14 @@
     <button mat-raised-button color="primary" type="submit" color="primary">Spel starten</button>
  </form>
 </div>
+
+<div *ngIf="gameStatus == 'in progress'">
+  <h2>Spel is bezig!</h2>
+  <button  mat-raised-button color="primary" type="submit" color="primary" (click)="getStatus()">Spel beëindigen</button>
+</div>
+
+<div *ngIf="gameStatus == 'ended'">
+  <h2>Het spel is afgelopen! Herstarten?</h2>
+  <button  mat-raised-button color="primary" type="submit" color="primary">Herstart spel</button>
+</div>
+
