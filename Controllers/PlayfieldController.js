@@ -8,7 +8,7 @@ class PlayfieldController{
         let query = { _id: game_id };
         let game = await Game.findOne(query);
         let playfield = await Playfield.findOne({_id: game.playfield})
-        return playfield;
+        return new Result(200, playfield);
     }
 
     async editPlayfield(game_id, body){

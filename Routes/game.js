@@ -23,6 +23,11 @@ router.post('/', async function (req, res) {
     ResponseHandler(result, req, res);
 });
 
+router.get('/playfield', passport.authenticate('jwt', { session: false }), async function (req, res) {
+    let result = await PlayfieldController.getPlayfieldByGameId(req.user.game_id)
+    ResponseHandler(result, req, res);
+});
+
 router.put('/playfield', passport.authenticate('jwt', { session: false }), async function (req, res) {
     let unauthorized = await authorize.Administrator(req.user);
     if(unauthorized){
