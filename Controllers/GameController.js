@@ -42,15 +42,15 @@ class GameController{
                                     "latitude" : 0,
                                     "longitude" : 0
                                 }
-                            }  
+                            }
                      ]
         };
         let playfieldModel = new Playfield(playfield);
         await playfieldModel.save();
         game.playfield = playfieldModel;
         //time
-        game.start_time = new Date();
-        game.end_time = new Date();
+        game.start_time = new Date(0);
+        game.end_time = new Date(0);
 
         await game.save()
         return new Result(200, code);
@@ -86,10 +86,12 @@ class GameController{
         }
     }
 
-    async setgameTime(gameID,body){
+    async setGameTime(gameID,body){
         let game = await Game.findOne({_id: gameID})
 
-        body.end_time = new Date(body.end_time + 'Z')
+        let end_date = new Date(body.end_time)
+        body.end_time = new Date(end_date.getTime()-end_date.getTimezoneOffset()*60*1000)
+
         let start_date = new Date(body.start_time)
         body.start_time = new Date(start_date.getTime()-start_date.getTimezoneOffset()*60*1000)
 
