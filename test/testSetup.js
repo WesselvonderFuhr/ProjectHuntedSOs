@@ -6,6 +6,7 @@ let Player = require('../MongoDB/player');
 let Playfield = require('../MongoDB/playfield');
 let Loot = require('../MongoDB/loot');
 let Administrator = require('../MongoDB/administrator');
+const { setgameTime } = require('../Controllers/GameController');
 
 before(async () => {  
     //connect
@@ -38,7 +39,21 @@ async function FillDB(){
   let player = {};
   player.name = "jan";
   player.role = "agent";
+  player.location = {
+        "latitude": 0,
+        "longitude": 0,      
+  }
   let playerModel = new Player(player);
+  await playerModel.save();
+  player = {};
+  player.name = "peter";
+  player.role = "boef";
+  player.location = {
+        "latitude": 0,
+        "longitude": 0,    
+  }
+
+  playerModel = new Player(player);
   await playerModel.save();
 }
 

@@ -115,7 +115,7 @@ class PlayerController{
         let playerQuery = {_id: playerID};
         let gameQuery = {_id: gameID};
         try{
-
+            
             let game = await Game.findOne(gameQuery).populate('playfield');
 
             let player = await Player.findOne(playerQuery);
