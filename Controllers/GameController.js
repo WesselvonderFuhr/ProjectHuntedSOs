@@ -8,6 +8,7 @@ let Administrator = require('../MongoDB/administrator');
 const PlayfieldController = require("./PlayfieldController");
 
 class GameController{
+
     async getAllGames(){
         return new Result(200, await Game.find());
     }
@@ -36,16 +37,21 @@ class GameController{
         await administratorModel.save();
         game.administrator = administratorModel;
         //playfield
-        let playfield = [[[{
-            "latitude" : 0,
-            "longitude" : 0
-        }]]];
+        let playfield = {
+            "playfield" :  [   {
+                                "location" : {
+                                    "latitude" : 0,
+                                    "longitude" : 0
+                                }
+                            }
+                     ]
+        };
         let playfieldModel = new Playfield(playfield);
         await playfieldModel.save();
         game.playfield = playfieldModel;
         //time
-        game.start_time = new Date();
-        game.end_time = new Date();
+        game.start_time = new Date(0);
+        game.end_time = new Date(0);
 
         await game.save()
         return new Result(200, code);
@@ -81,15 +87,56 @@ class GameController{
         }
     }
 
-    async setgameTime(gameID,body){
+    async setGameTime(gameID,body){
         let game = await Game.findOne({_id: gameID})
-        body.end_time = new Date(body.end_time + 'Z')
+
+        let end_date = new Date(body.end_time)
+        body.end_time = new Date(end_date.getTime()-end_date.getTimezoneOffset()*60*1000)
+
         let start_date = new Date(body.start_time)
         body.start_time = new Date(start_date.getTime()-start_date.getTimezoneOffset()*60*1000)
 
         await game.updateOne(body);
         await game.save();
         return new Result(200, game);
+    }
+
+    async getStatus(gameID){
+        let game = await Game.findOne({_id: gameID})
+
+        let startTime = game.start_time;
+        let endTime = game.end_time;
+
+        console.log("start time: " + startTime.getFullYear())
+        console.log("end time: " + endTime.getFullYear())
+        console.log("null time: " + new Date(0))
+
+        //not started
+        // no startTime, no endTime
+        if (!this.isValidDate(startTime) && !this.isValidDate(endTime)){
+            console.log("not started")
+            return new Result(200, "not started")
+        }
+        //running
+        // yes startTime, yes endTime
+        if (this.isValidDate(startTime) && this.isValidDate(endTime)){
+            console.log("in progress")
+            return new Result(200, "in progress")
+        }
+
+        //stopped
+        // no startTime, yes endTime
+        if (!this.isValidDate(startTime) && this.isValidDate(endTime)){
+            console.log("stopped")
+            return new Result(200, "stopped")
+        }
+    }
+
+    isValidDate(date) {
+        if(date.getFullYear() == "1970") {
+            return false
+        }
+        return true
     }
 
 }
