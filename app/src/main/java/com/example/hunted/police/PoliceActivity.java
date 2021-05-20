@@ -80,6 +80,9 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
 
     public String timeLeft;
 
+    public int amountOfThieves;
+    public int arrestedThieves;
+
     private List<String> loot;
 
     public void setLoot(List<String> loot) {
@@ -124,6 +127,9 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
 
         //testcode for stolen loot
         policeAPIClass.getStolenLoot();
+
+        //testcode for arrested thieves
+        policeAPIClass.getArrestedThievesCount();
     }
 
     private TextView timeText;

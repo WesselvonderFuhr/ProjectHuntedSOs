@@ -20,6 +20,7 @@ public class PoliceFragmentScore extends Fragment {
 
     private TextView timeLeft;
     private TextView lootList;
+    private TextView arrestedThieves;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -31,8 +32,14 @@ public class PoliceFragmentScore extends Fragment {
         View view = inflater.inflate(R.layout.fragment_police_score, container, false);
         timeLeft = (TextView) view.findViewById(R.id.timeLeft);
         lootList = (TextView) view.findViewById(R.id.lootRetrieved);
+        arrestedThieves = (TextView) view.findViewById(R.id.thievesArrested);
         getLootList();
+        getArrestedThieves();
         return view;
+    }
+
+    private void getArrestedThieves() {
+        arrestedThieves.setText("Er zijn " + ((PoliceActivity) getActivity()).arrestedThieves + " van de " + ((PoliceActivity) getActivity()).amountOfThieves + " gearresteerd.");
     }
 
     private void getLootList() {

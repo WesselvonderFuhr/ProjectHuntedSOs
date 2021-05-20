@@ -24,7 +24,10 @@ import com.example.hunted.thieves.ThievesActivity;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.sql.Time;
 import java.time.Duration;
@@ -55,5 +58,26 @@ public class PoliceAPIClass extends APIClass {
             }
         };
         queue.add(stringRequest);
+    }
+
+    public void getArrestedThievesCount() {
+        final String checkCode = URL + "player/getArrestedThieves";
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.GET, checkCode, null, response -> {
+                    try {
+                        ((PoliceActivity) context).amountOfThieves = response.getInt("thieves");
+                        ((PoliceActivity) context).arrestedThieves = response.getInt("arrestedThieves");
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }, error -> Toast.makeText(context, R.string.label_thieves_steal_error, Toast.LENGTH_SHORT).show()) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
+            }
+        };
+        queue.add(jsonObjectRequest);
     }
 }
