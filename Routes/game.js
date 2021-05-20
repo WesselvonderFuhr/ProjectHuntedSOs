@@ -43,10 +43,10 @@ router.put('/time', passport.authenticate('jwt', { session: false }), async func
 });
 
 router.get('/status', passport.authenticate('jwt', { session: false }), async function (req, res) {
-    let unauthorized = await authorize.Administrator(req.user);
-    if(unauthorized){
-        return ResponseHandler(unauthorized, req, res);
-    }
+    // let unauthorized = await authorize.Administrator(req.user);
+    // if(unauthorized){
+    //     return ResponseHandler(unauthorized, req, res);
+    // }
     let result = await GameController.getStatus(req.user.game_id);
     ResponseHandler(result, req, res);
 });
