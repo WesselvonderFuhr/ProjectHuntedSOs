@@ -198,6 +198,7 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
 
         if (ActivityCompat.checkSelfPermission(PoliceActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, locationListener);
+            locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 1, locationListener);
         } else {
             ActivityCompat.requestPermissions(PoliceActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
         }
