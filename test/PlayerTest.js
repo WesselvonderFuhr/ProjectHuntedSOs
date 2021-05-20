@@ -128,42 +128,18 @@ describe('player CheckPlayersOutOfBounds ', async function(){
 describe('player CheckPlayerOutOfBounds ', async function(){
     it('get CheckPlayerOutOfBounds  200', async ()  => {
         let player = await Player.findOne();
+        player.location = {
+            "latitude": 0,
+            "longitude": 0,    
+        }
+        await player.save();
         let player_id = player.id;
         let game = await Game.findOne();
         let game_id = game.id;
-        let body = {
-            "playfield" :  [   {
-                                "location" : {
-                                    "latitude" : 400,
-                                    "longitude" : 600
-                                }
-                            },
-                            {
-                                "location" : {
-                                    "latitude" : 400,
-                                    "longitude" : 600
-                                }
-                            },
-                            {
-                                "location" : {
-                                    "latitude" : 400,
-                                    "longitude" : 600
-                                }
-                            },
-                            {
-                                "location" : {
-                                    "latitude" : 400,
-                                    "longitude" : 600
-                                }
-                            }     
-                     ]
-        }
-        await PlayfieldController.editPlayfield(game_id, body);
         let result = await PlayerController.CheckPlayerOutOfBounds(player_id,game_id);
-        console.log(result.message)
         expect(result.responseCode).to.equal(200);
     });
-});/*
+});
 describe('player CheckPlayerrOutOfBounds', async function(){
     it('get CheckPlayerOutOfBounds 400', async ()  => {
         let player = await Player.findOne();
@@ -176,12 +152,12 @@ describe('player CheckPlayerrOutOfBounds', async function(){
 describe('player CheckPlayersOutOfBounds player ', async function(){
     it('get CheckPlayersOutOfBounds player 404', async ()  => {
         let player = await Player.findOne();
+        player.location = null;
+        await player.save();
         let player_id = player.id;
         let game = await Game.findOne();
         let game_id = game.id;
-        player.location = null;
-        await player.save();
-        let result = await PlayerController.CheckPlayersOutOfBounds(player_id,game_id);
+        let result = await PlayerController.CheckPlayerOutOfBounds(player_id,game_id);
         expect(result.responseCode).to.equal(404);
     });
-});*/
+});

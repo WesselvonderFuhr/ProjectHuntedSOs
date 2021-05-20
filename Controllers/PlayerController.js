@@ -31,13 +31,12 @@ class PlayerController{
     async CheckPlayerRole(id){
         let role;
         var query = { _id: id};
-        var player = await Player.findOne(query, function (err, result) {
-            if(result != null){
-                role = result.role;
-            }else{
-                role = null;
-            }
-        });
+        var player = await Player.findOne(query);
+        if(player != null){
+            role = player.role;
+        }else{
+            role = null;
+        }
         if(role == null){
             return new Result(404, "Player not found");
         }else{
@@ -119,7 +118,6 @@ class PlayerController{
             let game = await Game.findOne(gameQuery).populate('playfield');
 
             let player = await Player.findOne(playerQuery);
-
             let polyLocations = []
             for(let i = 0; i < game.playfield.playfield.length; i++){
                 polyLocations.push({latitude: game.playfield.playfield[i].location.latitude, longitude: game.playfield.playfield[i].location.longitude})

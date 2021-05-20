@@ -7,12 +7,14 @@ let Playfield = require('../MongoDB/playfield');
 let Loot = require('../MongoDB/loot');
 let Administrator = require('../MongoDB/administrator');
 const { setgameTime } = require('../Controllers/GameController');
+const jail = require('../MongoDB/jail');
+const game = require('../MongoDB/game');
 
 before(async () => {  
     //connect
     let LocalURI = "mongodb://localhost:27017/?readPreference=primary&appname=MongoDB%20Compass&ssl=false"
     let URI = "mongodb+srv://userTest:Tpy7KYPhMdzz5fSQ@cluster0.lpisu.mongodb.net/test";
-    await mongoose.connect(LocalURI);
+    await mongoose.connect(URI);
     //fill db
     await FillDB();
 });
@@ -30,11 +32,27 @@ after(async () => {
 });
 
 async function FillDB(){
-  //game
-  let game = new Game();
-  await game.save();
-  game = new Game();
-  await game.save();
+  //jail
+  let jailModel = new Jail();
+  jailModel.location = {
+    "latitude": 51,
+    "longitude": 51,    
+  };
+  await jailModel.save();
+  //loot
+  let lootModel = new Loot();
+  lootModel.name = "ketting";
+  await lootModel.save();
+  //administrator
+  let administratorModel = new Administrator();
+  administratorModel.name = "bert";
+  administratorModel.code = "CODE1";
+  await administratorModel.save();
+  //accesscode
+  let AccesscodeModel = new Accesscode();
+  AccesscodeModel.code = "CODE2";
+  AccesscodeModel.role = "boef";
+  await AccesscodeModel.save();
   //player
   let player = {};
   player.name = "jan";
@@ -53,8 +71,52 @@ async function FillDB(){
         "longitude": 0,    
   }
 
-  playerModel = new Player(player);
-  await playerModel.save();
+  let playerModel2 = new Player(player);
+  await playerModel2.save();
+  //playfield
+  let playfield = {
+    "playfield" :  [   {
+                        "location" : {
+                            "latitude" : 400,
+                            "longitude" : 600
+                        }
+                    },
+                    {
+                        "location" : {
+                            "latitude" : 400,
+                            "longitude" : 600
+                        }
+                    },
+                    {
+                        "location" : {
+                            "latitude" : 400,
+                            "longitude" : 600
+                        }
+                    },
+                    {
+                        "location" : {
+                            "latitude" : 400,
+                            "longitude" : 600
+                        }
+                    }     
+             ]
+}
+  let PlayfieldModel = new Playfield(playfield);
+  await PlayfieldModel.save();
+  //game
+  let gameModel = new Game();
+  gameModel.jail = jailModel;
+  gameModel.administrator = administratorModel;
+  gameModel.loot = new Array();
+  gameModel.loot.push(lootModel);
+  gameModel.Accesscodes = new Array();
+  gameModel.Accesscodes.push(AccesscodeModel);
+  gameModel.players = new Array();
+  gameModel.players.push(playerModel2);
+  gameModel.playfield = PlayfieldModel;
+  gameModel.start_time = new Date();
+  gameModel.end_time = new Date();
+  await gameModel.save();
 }
 
 
