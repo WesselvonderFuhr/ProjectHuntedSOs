@@ -67,7 +67,7 @@ class GameController{
         }
 
         for(var i = 0; i < game.players.length; i++){
-            if(req.params.playerId == game.players[i]){
+            if(playerId == game.players[i]){
                 isDuplicate = true
                 break;
             }
@@ -83,7 +83,6 @@ class GameController{
 
     async setgameTime(gameID,body){
         let game = await Game.findOne({_id: gameID})
-
         body.end_time = new Date(body.end_time + 'Z')
         let start_date = new Date(body.start_time)
         body.start_time = new Date(start_date.getTime()-start_date.getTimezoneOffset()*60*1000)
