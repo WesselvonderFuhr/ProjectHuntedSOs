@@ -120,43 +120,43 @@ class PlayerController{
 
             let player = await Player.findOne(playerQuery);
 
-            if(player.location.latitude != null){
+            if(player.location.latitude == null){
                 return new Result(400, "Player does not have a location");
             }
 
             let isOutOfBounds = false;
             // {"playfield": [[[{ "latitude": 0, "longitude": 0}]]]}
 
-            // Playfield array
-            for(let i = 0; i < game.playfield.playfield.length; i++) {
-                let polygonCollectionArray = game.playfield.playfield[i];
-                // PolygonCollection array
-                for(let j = 0; j < polygonCollectionArray.length; j++) {
-                    let polygonArray = polygonCollectionArray[j];
+            let polygonCollectionArray = game.playfield.playfield;
+            // PolygonCollection array
+            for(let j = 0; j < polygonCollectionArray.length; j++) {
+                let polygonArray = polygonCollectionArray[j];
 
-                    // Polygon array first entry (which is the polygon)
-                    if(polygonArray.length > 0){
-                        let polygonLocations = []
-                        // Location array
-                        for(let k = 0; k < polygonArray[0].length; k++){
-                            polygonLocations.push({latitude: polygonArray[0].latitude, longitude: polygonArray[0].longitude})
-                        }
-                        isOutOfBounds = !geolib.isPointInPolygon(player.location, polygonLocations);
+                // Polygon array first entry (which is the polygon)
+                if(polygonArray.length > 0){
+                    let polygonLocations = []
+                    // Location array
+                    for(let k = 0; k < polygonArray[0].length; k++){
+                        polygonLocations.push({latitude: polygonArray[0][k].latitude, longitude: polygonArray[0][k].longitude})
                     }
+                    isOutOfBounds = !geolib.isPointInPolygon(player.location, polygonLocations);
+                    console.log(isOutOfBounds);
+                }
 
-                    // Polygon array other entries (which are the cutouts)
-                    for(let k = 1; k < polygonArray.length; k++) {
-                        let polygonLocations = []
-                        // Location array
-                        for(let l = 0; l < polygonArray[0].length; l++){
-                            polygonLocations.push({latitude: polygonArray[k].latitude, longitude: polygonArray[k].longitude})
-                        }
-                        isOutOfBounds = geolib.isPointInPolygon(player.location, polygonLocations);
+                // Polygon array other entries (which are the cutouts)
+                for(let k = 1; k < polygonArray.length; k++) {
+                    let polygonLocations = []
+                    // Location array
+                    for(let l = 0; l < polygonArray[k].length; l++){
+                        polygonLocations.push({latitude: polygonArray[k][l].latitude, longitude: polygonArray[k][l].longitude})
                     }
+                    isOutOfBounds = !geolib.isPointInPolygon(player.location, polygonLocations);
+                    console.log(isOutOfBounds);
                 }
             }
             return new Result(200, isOutOfBounds);
         }catch(e){
+            console.log(e);
             return new Result(400, e.message);
         }
     }
