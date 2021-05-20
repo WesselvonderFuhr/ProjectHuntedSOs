@@ -156,7 +156,6 @@ class PlayerController{
             }
             return new Result(200, isOutOfBounds);
         }catch(e){
-            console.log(e);
             return new Result(400, e.message);
         }
     }
