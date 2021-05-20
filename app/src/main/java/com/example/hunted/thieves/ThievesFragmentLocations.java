@@ -2,21 +2,30 @@ package com.example.hunted.thieves;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
+import androidx.core.content.res.ResourcesCompat;
 import androidx.fragment.app.Fragment;
 
 import com.example.hunted.R;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.osmdroid.config.Configuration;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
+import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.Polygon;
 
 import java.util.ArrayList;
@@ -24,7 +33,10 @@ import java.util.List;
 
 public class ThievesFragmentLocations extends Fragment {
     private TextView tvIsArrested;
-    private MapView map = null;
+    private MapView osmMap = null;
+    private Marker playerMarker;
+    private Marker jailMarker;
+    private Polygon playfieldPolygon;
 
     private final int REQUEST_PERMISSIONS_REQUEST_CODE = 1;
 
@@ -38,63 +50,102 @@ public class ThievesFragmentLocations extends Fragment {
         return inflater.inflate(R.layout.fragment_thieves_location, container, false);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         tvIsArrested = getView().findViewById(R.id.tvIsArrested);
+
+        osmMap = getView().findViewById(R.id.mapView);
+        osmMap.setTileSource(TileSourceFactory.MAPNIK);
+        osmMap.getController().setZoom(19.0);
+
+        playfieldPolygon = new Polygon();
+        playfieldPolygon.getFillPaint().setColor(Color.BLUE);
+        playfieldPolygon.getFillPaint().setAlpha(20);
+
+        playerMarker = new Marker(osmMap);
+        playerMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+
+        Drawable icon = ResourcesCompat.getDrawable(getResources(), R.drawable.ic_baseline_location_city_24, getActivity().getTheme());
+        jailMarker = new Marker(osmMap);
+        jailMarker.setIcon(icon);
+
+        osmMap.getOverlays().add(playerMarker);
+        osmMap.getOverlays().add(jailMarker);
+        osmMap.getOverlays().add(playfieldPolygon);
 
         if(requireArguments().getBoolean("isArrested")){
             isArrested();
         }
 
+        ((ThievesActivity) getActivity()).getPlayfield();
+        ((ThievesActivity) getActivity()).getJail();
+
         Context ctx = this.getActivity().getApplicationContext();
         Configuration.getInstance().setUserAgentValue(ctx.getPackageName());
-
-        map = getView().findViewById(R.id.mapView);
-        map.setTileSource(TileSourceFactory.MAPNIK);
-        map.getController().setZoom(19.0);
-
-        map.getController().setCenter(new GeoPoint(51.6890463, 5.3035104));
-
-        ArrayList points = new ArrayList<>();
-        points.add(new GeoPoint(51.6896881, 5.3021801));
-        points.add(new GeoPoint(51.6883945, 5.3026468));
-        points.add(new GeoPoint(51.6889864, 5.3051680));
-        points.add(new GeoPoint(51.6899142, 5.3043956));
-        points.add(new GeoPoint(51.6896881, 5.3021801));
-
-        List<List<GeoPoint>> holes = new ArrayList<>();
-
-        List<GeoPoint> h1 = new ArrayList<GeoPoint>();
-        h1.add(new GeoPoint( 51.6892059, 5.3037223));
-        h1.add(new GeoPoint( 51.6891909, 5.3033575));
-        h1.add(new GeoPoint( 51.6889665, 5.3033468));
-        h1.add(new GeoPoint( 51.6889465, 5.3037760));
-        h1.add(new GeoPoint( 51.6892059, 5.3037223));
-        holes.add(h1);
-
-        Polygon p = new Polygon();
-        p.setPoints(points);
-        p.setHoles(holes);
-
-        Polygon p2 = new Polygon();
-        points.clear();
-        points.add(new GeoPoint(51.6880087, 5.3001952));
-        points.add(new GeoPoint(51.6868979, 5.2994978));
-        points.add(new GeoPoint(51.6866917, 5.3022873));
-        points.add(new GeoPoint(51.6877559, 5.3025234));
-        points.add(new GeoPoint(51.6880087, 5.3001952));
-        p2.setPoints(points);
-
-        p.getFillPaint().setColor(Color.BLUE);
-        p.getFillPaint().setAlpha(20);
-        p2.getFillPaint().setColor(Color.RED);
-        p2.getFillPaint().setAlpha(20);
-
-        map.getOverlays().add(p);
-        map.getOverlays().add(p2);
     }
 
     public void isArrested(){
         tvIsArrested.setText(getResources().getString(R.string.label_thieves_arrested));
+    }
+
+    public void setPlayfield(JSONArray result) {
+        ArrayList playField = new ArrayList();
+        try {
+            JSONArray playFieldJArray = result.getJSONArray(0).getJSONArray(0);
+            for (int i = 0; i < playFieldJArray.length(); i++) {
+                double locLat = playFieldJArray.getJSONObject(i).getDouble("latitude");
+                double locLong = playFieldJArray.getJSONObject(i).getDouble("longitude");
+                playField.add(new GeoPoint(locLat, locLong));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        List<List<GeoPoint>> holesList = new ArrayList<>();
+
+        //if length is 1 then there are no holes
+        if(result.length() > 1){
+            try {
+                JSONArray holesJArray = result.getJSONArray(1);
+                for (int i = 0; i < holesJArray.length(); i++) {
+                    JSONArray holeJArray = holesJArray.getJSONArray(i);
+                    List<GeoPoint> holes = new ArrayList<>();
+                    for (int x = 0; x < holeJArray.length(); x++) {
+                        double locLat = holeJArray.getJSONObject(x).getDouble("latitude");
+                        double locLong = holeJArray.getJSONObject(x).getDouble("longitude");
+                        holes.add(new GeoPoint(locLat, locLong));
+                    }
+                    holesList.add(holes);
+                }
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        //TODO: method om map te focussen op center van playfield
+        osmMap.getController().setCenter(new GeoPoint(51.6890463, 5.3035104));
+
+        playfieldPolygon.setPoints(playField);
+        playfieldPolygon.setHoles(holesList);
+    }
+
+    public void updatePlayerOnMap(double locLat, double locLong){
+        GeoPoint ownLoc = new GeoPoint(locLat, locLong);
+        playerMarker.setPosition(ownLoc);
+
+//        Map kan niet meer bewogen worden als center steeds wordt gecalled
+//        osmMap.getController().setCenter(new GeoPoint(locLat, locLong));
+    }
+
+    public void setJail(JSONObject result){
+        try {
+            double locLat = result.getDouble("latitude");
+            double locLong = result.getDouble("longitude");
+            GeoPoint jailLoc = new GeoPoint(locLat, locLong);
+            jailMarker.setPosition(jailLoc);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
     }
 }

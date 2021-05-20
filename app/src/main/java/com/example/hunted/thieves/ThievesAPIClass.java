@@ -72,5 +72,4 @@ public class ThievesAPIClass extends APIClass {
         }
     }
 
-
 }

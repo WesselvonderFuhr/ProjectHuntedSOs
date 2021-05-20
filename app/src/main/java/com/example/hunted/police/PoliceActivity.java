@@ -43,11 +43,13 @@ import com.example.hunted.R;
 import com.example.hunted.repeatingtask.RepeatingTask;
 import com.example.hunted.repeatingtask.RepeatingTaskName;
 import com.example.hunted.repeatingtask.RepeatingTaskService;
+import com.example.hunted.thieves.ThievesFragmentLocations;
 import com.google.android.material.navigation.NavigationView;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.osmdroid.util.GeoPoint;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -68,6 +70,7 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
 
     private LocationManager locationManager;
     private LocationListener locationListener;
+    private Location lastLoc;
 
     public String token;
 
@@ -125,6 +128,15 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
         timeText.setText(timeLeft);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void getPlayfield() {
+        policeAPIClass.getPlayfield(getCurrentFragment());
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void getJail() {
+        policeAPIClass.getJail(getCurrentFragment());
+    }
 
     private void initLocation() {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -134,6 +146,8 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
             public void onLocationChanged(Location location) {
                 double latitude = location.getLatitude();
                 double longitude = location.getLongitude();
+
+                sendLocationToFragment(latitude, longitude, getCurrentFragment());
 
                 String setlocURL = URL + "player/location/";
                 StringRequest stringRequest = new StringRequest(Request.Method.PUT, setlocURL,
@@ -186,6 +200,14 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, locationListener);
         } else {
             ActivityCompat.requestPermissions(PoliceActivity.this, new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, LOCATION_REQUEST_CODE);
+        }
+    }
+
+    private void sendLocationToFragment(double locLat, double locLong, Fragment fragment){
+        // Send location to PoliceFragmentLocations
+        if(fragment instanceof PoliceFragmentLocations){
+            PoliceFragmentLocations policeFragmentLocations = (PoliceFragmentLocations) fragment;
+            policeFragmentLocations.updatePlayerOnMap(locLat, locLong);
         }
     }
 
@@ -259,10 +281,14 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
     public Fragment getCurrentFragment(){
         FragmentManager fragmentManager = this.getSupportFragmentManager();
         List<Fragment> fragments = fragmentManager.getFragments();
-        for(Fragment fragment : fragments){
-            if(fragment != null && fragment.isVisible())
-                return fragment;
-        }
+         if(fragments.size() == 1){
+            return fragments.get(0);
+        }else {
+             for (Fragment fragment : fragments) {
+                 if (fragment != null && fragment.isVisible())
+                     return fragment;
+             }
+         }
         return null;
     }
 

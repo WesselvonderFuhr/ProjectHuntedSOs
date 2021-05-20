@@ -7,6 +7,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
+import androidx.fragment.app.Fragment;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
@@ -18,9 +19,14 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.hunted.police.PoliceActivity;
+import com.example.hunted.police.PoliceFragmentLocations;
 import com.example.hunted.thieves.ThievesActivity;
+import com.example.hunted.thieves.ThievesFragmentLocations;
+import com.example.hunted.thieves.ThievesFragmentScanner;
 
+import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.time.Duration;
 import java.time.LocalTime;
@@ -143,6 +149,88 @@ public abstract class APIClass {
         if(context instanceof ThievesActivity) {
             ((ThievesActivity) context).timeLeft = hours + ":" + minutes;
             ((ThievesActivity) context).setTime();
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void getPlayfield(Fragment fragment) {
+        final String getPlayfield = URL + "game/playfield/";
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.GET, getPlayfield, null, response -> {
+                    try {
+                        sendPlayfieldToFragmentLocations(response.getJSONArray("playfield"), fragment);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }, error -> {
+                    NetworkResponse response = error.networkResponse;
+                    if (error instanceof ServerError && response != null) {
+                        try {
+                            String res = new String(response.data, HttpHeaderParser.parseCharset(response.headers, "utf-8"));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
+            }
+        };
+        queue.add(jsonObjectRequest);
+    }
+
+    private void sendPlayfieldToFragmentLocations(JSONArray result, Fragment fragment){
+        // Send data to ThievesFragmentLocations
+        if(fragment instanceof ThievesFragmentLocations){
+            ThievesFragmentLocations thievesFragmentLocation = (ThievesFragmentLocations) fragment;
+            thievesFragmentLocation.setPlayfield(result);
+        }else if (fragment instanceof PoliceFragmentLocations) {
+            PoliceFragmentLocations policeFragmentLocations = (PoliceFragmentLocations) fragment;
+            policeFragmentLocations.setPlayfield(result);
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void getJail(Fragment fragment) {
+        final String getJail = URL + "jail";
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.GET, getJail, null, response -> {
+                    try {
+                        sendJailToFragmentLocations(response.getJSONObject("location"), fragment);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }, error -> {
+                    NetworkResponse response = error.networkResponse;
+                    if (error instanceof ServerError && response != null) {
+                        try {
+                            String res = new String(response.data, HttpHeaderParser.parseCharset(response.headers, "utf-8"));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
+            }
+        };
+        queue.add(jsonObjectRequest);
+    }
+
+    private void sendJailToFragmentLocations(JSONObject result, Fragment fragment){
+        // Send data to ThievesFragmentLocations
+        if(fragment instanceof ThievesFragmentLocations) {
+            ThievesFragmentLocations thievesFragmentLocation = (ThievesFragmentLocations) fragment;
+            thievesFragmentLocation.setJail(result);
+        }else if (fragment instanceof PoliceFragmentLocations){
+                PoliceFragmentLocations policeFragmentLocations = (PoliceFragmentLocations) fragment;
+                policeFragmentLocations.setJail(result);
         }
     }
 }
