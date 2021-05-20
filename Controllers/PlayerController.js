@@ -138,7 +138,6 @@ class PlayerController{
                         polygonLocations.push({latitude: polygonArray[0][k].latitude, longitude: polygonArray[0][k].longitude})
                     }
                     isOutOfBounds = !geolib.isPointInPolygon(player.location, polygonLocations);
-                    console.log(isOutOfBounds);
                 }
 
                 if(!isOutOfBounds){
@@ -150,7 +149,6 @@ class PlayerController{
                             polygonLocations.push({latitude: polygonArray[k][l].latitude, longitude: polygonArray[k][l].longitude})
                         }
                         isOutOfBounds = geolib.isPointInPolygon(player.location, polygonLocations);
-                        console.log(isOutOfBounds);
                     }
                 }
             }
