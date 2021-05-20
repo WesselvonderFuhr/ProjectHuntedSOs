@@ -214,6 +214,31 @@ class PlayerController{
         }   
     }
 
+    async getArrestedThieves(game_id){
+        let query = { _id: game_id };
+        let result = await Game.findOne(query).populate('players');
+        result = result.players;
+
+        var thieves = []
+        var arrestedThieves = []
+
+        for(var i = 0; i < result.length; i++) {
+            if(result[i].role == "Boef") {
+                thieves.push(result[i])
+                if(result[i].arrested == true) {
+                    arrestedThieves.push(result[i])
+                }
+            }
+        }
+
+        result = {thieves: thieves.length, arrestedThieves: arrestedThieves.length}
+
+        if(result == null || result.length === 0){
+            return new Result(404, "There are no players found");
+        }else{
+            return new Result(200, result);
+        }
+    }
 
 }
 module.exports = new PlayerController();
