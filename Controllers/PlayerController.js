@@ -124,7 +124,6 @@ class PlayerController{
             }
 
             let isOutOfBounds = false;
-            // {"playfield": [[[{ "latitude": 0, "longitude": 0}]]]}
 
             let polygonCollectionArray = game.playfield.playfield;
             // PolygonCollection array
@@ -142,15 +141,17 @@ class PlayerController{
                     console.log(isOutOfBounds);
                 }
 
-                // Polygon array other entries (which are the cutouts)
-                for(let k = 1; k < polygonArray.length; k++) {
-                    let polygonLocations = []
-                    // Location array
-                    for(let l = 0; l < polygonArray[k].length; l++){
-                        polygonLocations.push({latitude: polygonArray[k][l].latitude, longitude: polygonArray[k][l].longitude})
+                if(!isOutOfBounds){
+                    // Polygon array other entries (which are the cutouts)
+                    for(let k = 1; k < polygonArray.length; k++) {
+                        let polygonLocations = []
+                        // Location array
+                        for(let l = 0; l < polygonArray[k].length; l++){
+                            polygonLocations.push({latitude: polygonArray[k][l].latitude, longitude: polygonArray[k][l].longitude})
+                        }
+                        isOutOfBounds = geolib.isPointInPolygon(player.location, polygonLocations);
+                        console.log(isOutOfBounds);
                     }
-                    isOutOfBounds = !geolib.isPointInPolygon(player.location, polygonLocations);
-                    console.log(isOutOfBounds);
                 }
             }
             return new Result(200, isOutOfBounds);
