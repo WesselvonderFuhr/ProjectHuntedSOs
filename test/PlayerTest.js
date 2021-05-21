@@ -126,7 +126,7 @@ describe('player CheckPlayersOutOfBounds ', async function(){
 });
 //CheckPlayerOutOfBounds
 /*
-describe('player CheckPlayerOutOfBounds ', async function(){
+describe('player Ch eckPlayerOutOfBounds ', async function(){
     it('get CheckPlayerOutOfBounds  200', async ()  => {
         let player = await Player.findOne();
         player.location = {
