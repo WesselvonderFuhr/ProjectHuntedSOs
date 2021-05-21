@@ -79,7 +79,7 @@ describe('game set time ', async function(){
         }
         let game = await Game.findOne();
         let game_id = game.id;
-        let result = await GameController.setgameTime(game_id,body);
+        let result = await GameController.setGameTime(game_id,body);
         expect(result.responseCode).to.equal(200);
     });
 });

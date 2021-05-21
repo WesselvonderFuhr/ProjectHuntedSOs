@@ -118,28 +118,30 @@ class PlayerController{
             let game = await Game.findOne(gameQuery).populate('playfield');
 
             let player = await Player.findOne(playerQuery);
-
+            
             if(player.location.latitude == null){
                 return new Result(400, "Player does not have a location");
             }
 
             let isOutOfBounds = false;
-
+          
             let polygonCollectionArray = game.playfield.playfield;
             // PolygonCollection array
             for(let j = 0; j < polygonCollectionArray.length; j++) {
                 let polygonArray = polygonCollectionArray[j];
-
+              
                 // Polygon array first entry (which is the polygon)
                 if(polygonArray.length > 0){
+                    
                     let polygonLocations = []
                     // Location array
                     for(let k = 0; k < polygonArray[0].length; k++){
                         polygonLocations.push({latitude: polygonArray[0][k].latitude, longitude: polygonArray[0][k].longitude})
                     }
                     isOutOfBounds = !geolib.isPointInPolygon(player.location, polygonLocations);
+                  
                 }
-
+               
                 if(!isOutOfBounds){
                     // Polygon array other entries (which are the cutouts)
                     for(let k = 1; k < polygonArray.length; k++) {
