@@ -12,7 +12,7 @@ describe('game get games', async function(){
     });
 });
 //getGameByID
-describe('game get game by id ', async function(){
+describe('game get game by id', async function(){
     it('get game 200', async ()  => {
         let game = await Game.findOne();
         let game_id = game.id;
