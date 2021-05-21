@@ -137,6 +137,7 @@ describe('player CheckPlayerOutOfBounds ', async function(){
         let game = await Game.findOne();
         let game_id = game.id;
         let result = await PlayerController.CheckPlayerOutOfBounds(player_id,game_id);
+        console.log(result.message)
         expect(result.responseCode).to.equal(200);
     });
 });

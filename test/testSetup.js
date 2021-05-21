@@ -14,7 +14,7 @@ before(async () => {
     //connect
     let LocalURI = "mongodb://localhost:27017/?readPreference=primary&appname=MongoDB%20Compass&ssl=false"
     let URI = "mongodb+srv://userTest:Tpy7KYPhMdzz5fSQ@cluster0.lpisu.mongodb.net/test";
-    await mongoose.connect(URI);
+    await mongoose.connect(LocalURI);
     //fill db
     await FillDB();
 });
@@ -78,7 +78,7 @@ async function FillDB(){
     "playfield" :  [   {
                         "location" : {
                             "latitude" : 400,
-                            "longitude" : 600
+                            "longitude" : 500
                         }
                     },
                     {
@@ -89,14 +89,14 @@ async function FillDB(){
                     },
                     {
                         "location" : {
-                            "latitude" : 400,
+                            "latitude" : 500,
                             "longitude" : 600
                         }
                     },
                     {
                         "location" : {
-                            "latitude" : 400,
-                            "longitude" : 600
+                            "latitude" : 500,
+                            "longitude" : 500
                         }
                     }     
              ]
