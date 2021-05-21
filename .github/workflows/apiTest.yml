@@ -1,10 +1,10 @@
 name: Node.js CI
 
-on:
+on:  
   push:
-    branches: [ development-API ]
   pull_request:
-    branches: [ development-API ]
+    branches:
+      - master
 
 jobs:
   build:
