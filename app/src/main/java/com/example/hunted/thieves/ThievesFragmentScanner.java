@@ -31,11 +31,11 @@ public class ThievesFragmentScanner extends Fragment {
     public void setResult(boolean success, String result) {
         if(success){
             successTextView.setTextColor(getResources().getColor(R.color.success));
-            successTextView.setText("Succesvol gestolen!");
-            result = "Gestolen buit:\n" + result.substring(0, 1).toUpperCase() + result.substring(1).toLowerCase();
+            successTextView.setText(getResources().getString(R.string.label_thieves_steal_succes));
+            result = getResources().getString(R.string.label_thieves_stolen_loot) + "\n" + result.substring(0, 1).toUpperCase() + result.substring(1).toLowerCase();
         } else {
             successTextView.setTextColor(getResources().getColor(R.color.error));
-            successTextView.setText("Gefaald in stelen.");
+            successTextView.setText(getResources().getString(R.string.label_thieves_steal_failure));
         }
         resultTextView.setText(result);
     }

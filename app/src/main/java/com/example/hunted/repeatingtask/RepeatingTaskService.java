@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -18,6 +19,8 @@ import org.json.JSONObject;
 import org.json.JSONArray;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import static java.lang.Thread.sleep;
@@ -25,7 +28,7 @@ import static java.lang.Thread.sleep;
 public class RepeatingTaskService extends Service {
 	
     private String URL;
-    private String ID;
+    private String token;
 	
     private final long DELAY = 200;
     final int CATCH_THIEVES_DISTANCE_METERS = 100;
@@ -81,7 +84,7 @@ public class RepeatingTaskService extends Service {
     // REPEATING TASK METHODS
 
     private void checkArrested(RepeatingTask task) {
-        final String getArrestedUrl = URL + "player/" + ID;
+        final String getArrestedUrl = URL + "player/";
         StringRequest stringRequest = new StringRequest(Request.Method.GET, getArrestedUrl,
                 response -> {
                     try {
@@ -92,7 +95,7 @@ public class RepeatingTaskService extends Service {
                         //Observable
                         task.notifyObservers(obj.get("arrested"));
                     } catch (Throwable t) {
-                        task.notifyObservers("Er ging iets mis met het ophalen van je status");
+                        task.notifyObservers(R.string.label_service_status_fail);
                     }
                 }, error -> {
                     NetworkResponse response = error.networkResponse;
@@ -101,25 +104,31 @@ public class RepeatingTaskService extends Service {
                             String res = new String(response.data, HttpHeaderParser.parseCharset(response.headers, "utf-8"));
                             task.notifyObservers(res);
                         } catch (Exception e) {
-                            task.notifyObservers("Er ging iets mis met het communiceren met de server");
+                            task.notifyObservers(R.string.label_service_server_fail);
                         }
                     }
-        });
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
+            }
+        };
         queue.add(stringRequest);
     }
 
     private void checkThievesNearby(RepeatingTask task){
-        final String getArrestableThieves = URL + "player/arrestableThieves/" + ID + "/" + CATCH_THIEVES_DISTANCE_METERS;
+        final String getArrestableThieves = URL + "player/arrestableThieves/" + CATCH_THIEVES_DISTANCE_METERS;
         StringRequest stringRequest = new StringRequest(Request.Method.GET, getArrestableThieves,
                 response -> {
                     try {
                         JSONArray obj = new JSONArray(response);
-
                         //Observable
                         task.notifyObservers(obj);
 
                     } catch (Throwable t) {
-                        task.notifyObservers("Er ging iets mis met het ophalen van de richting van boeven.");
+                        task.notifyObservers(R.string.label_service_thief_direction_fail);
                     }
                 }, error -> {
                     NetworkResponse response = error.networkResponse;
@@ -128,11 +137,18 @@ public class RepeatingTaskService extends Service {
                             String res = new String(response.data, HttpHeaderParser.parseCharset(response.headers, "utf-8"));
                             task.notifyObservers(res);
                         } catch (Exception e) {
-                            task.notifyObservers("Er ging iets mis met laden van de boeven");
+                            task.notifyObservers(R.string.label_service_thief_loading_fail);
                         }
                     }
                 }
-        );
+        ) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
+            }
+        };
         queue.add(stringRequest);
     }
 
@@ -140,13 +156,13 @@ public class RepeatingTaskService extends Service {
     public void onCreate() {
         repeatingTasks = new ArrayList<>();
         URL = getString(R.string.url);
-        ID = "";
+        token = "";
         new Thread(runnable).start();
         queue = Volley.newRequestQueue(this);
     }
 
-    public void setID(String ID){
-        this.ID = ID;
+    public void setToken(String token){
+        this.token = token;
     }
 
     @Override

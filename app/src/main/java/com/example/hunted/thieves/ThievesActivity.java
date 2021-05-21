@@ -1,6 +1,7 @@
 package com.example.hunted.thieves;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
@@ -21,6 +22,7 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Vibrator;
@@ -28,8 +30,10 @@ import android.text.SpannableString;
 import android.text.style.ForegroundColorSpan;
 import android.util.Log;
 import android.view.MenuItem;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.AuthFailureError;
 import com.android.volley.ClientError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
@@ -62,6 +66,8 @@ import java.util.Observer;
 public class ThievesActivity extends AppCompatActivity implements Observer {
     private final int LOCATION_REQUEST_CODE = 1234;
 
+    private ThievesAPIClass thievesAPIClass;
+
     private String URL;
     private RequestQueue queue;
 
@@ -70,7 +76,7 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
 
     private RepeatingTask arrestedRepeatingTask;
 
-    private String ID;
+    public String token;
 
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
@@ -78,15 +84,19 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
 
     private boolean isArrested = false;
 
+    public String timeLeft;
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_thieves);
-        URL = getString(R.string.url);
 
+        URL = getString(R.string.url);
         queue = Volley.newRequestQueue(this);
 
-        ID = getIntent().getStringExtra("ID");
+        token = getIntent().getStringExtra("token");
+        thievesAPIClass = new ThievesAPIClass(this, token, URL);
 
         initLocation();
 
@@ -101,12 +111,25 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
 
         //Set initial fragment
         setFragment(new ThievesFragmentLocations());
-        setTitle("Locaties");
+        setTitle(getString(R.string.label_thieves_locations));
 
         drawerLayout = (DrawerLayout) findViewById(R.id.drawer_thieves);
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         setupDrawerContent(navigationView);
+
+    }
+
+    private TextView timeText;
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    public void getTime(TextView timeText) {
+        this.timeText = timeText;
+        thievesAPIClass.getTime();
+    }
+
+    public void setTime() {
+        timeText.setText(timeLeft);
     }
 
     private void initLocation() {
@@ -118,11 +141,18 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
                 double latitude = location.getLatitude();
                 double longitude = location.getLongitude();
 
-                String setlocURL = URL + "player/location/" + ID;
+                String setlocURL = URL + "player/location/";
                 StringRequest stringRequest = new StringRequest(Request.Method.PUT, setlocURL,
                         response -> {
+                    //leeg?
                         }, error -> {
                 }) {
+                    @Override
+                    public Map<String, String> getHeaders() throws AuthFailureError {
+                        Map<String, String> headers = new HashMap<>();
+                        headers.put("Authorization", "Bearer " + token);
+                        return headers;
+                    }
 
                     @Override
                     public String getBodyContentType() {
@@ -136,7 +166,7 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
                     }
                 };
                 queue.add(stringRequest);
-                checkOutOfBounds();
+                thievesAPIClass.checkOutOfBounds();
             }
 
             @Override
@@ -173,6 +203,7 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        locationManager.removeUpdates(locationListener);
         doUnbindService();
     }
 
@@ -193,6 +224,9 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
                 break;
             case R.id.nav_scanner:
                 fragmentClass = ThievesFragmentScanner.class;
+                break;
+            case R.id.nav_stolen:
+                fragmentClass = ThievesFragmentLootScore.class;
                 break;
             default:
                 fragmentClass = ThievesFragmentLocations.class;
@@ -250,40 +284,6 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
         return super.onOptionsItemSelected(item);
     }
 
-    //OUT OF BOUNDS
-    private void checkOutOfBounds(){
-        String requestURL = URL + "player/outofbounds/" + ID;
-//        Log.d("checkOutOfBounds requestURL: ", requestURL);
-        StringRequest request = new StringRequest(Request.Method.GET, requestURL, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                if (response.equals("true")){
-                    Log.d("response: ", "player is out of bounds");
-                    vibrateOutOfPlayingField();
-                } else if (response.equals("false")){
-                    Log.d("response: ", "player is within bounds");
-                }
-            }
-        }, error -> {
-            NetworkResponse response = error.networkResponse;
-            if (error instanceof ServerError && response != null) {
-                try {
-                    String res = new String(response.data, HttpHeaderParser.parseCharset(response.headers, "utf-8"));
-                    Log.d("checkOutOfBounds error: ", res);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        });
-        queue.add(request);
-    }
-
-    private void vibrateOutOfPlayingField(){
-        Vibrator v = (Vibrator) getSystemService(this.VIBRATOR_SERVICE);
-
-        Toast.makeText(this, "Keer terug naar het speelgebied!", Toast.LENGTH_SHORT).show();
-        v.vibrate(500);
-    }
 
     //region Scanner
 
@@ -304,48 +304,18 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
 
         if(intentResult != null) {
             if(intentResult.getContents() == null) {
-                result = "Gestopt met stelen!";
+                result = getString(R.string.label_thieves_steal_stopped);
             } else {
                 success = true;
                 result = intentResult.getContents();
             }
         } else {
-            result = "Stelen is mislukt, probeer opnieuw.";
+            result = getString(R.string.label_thieves_steal_retry);
             super.onActivityResult(requestCode, resultCode, data);
         }
 
-        if(success){
-            final String postStolenLoot = URL + "player/" + ID + "/stolen/" + result;
-            StringRequest stringRequest = new StringRequest(Request.Method.POST, postStolenLoot,
-                    response -> sendDataToFragmentScanner(true, response),
-
-                    error -> {
-                        NetworkResponse response = error.networkResponse;
-                        if (error instanceof ServerError && response != null) {
-                            try {
-                                String res = new String(response.data, HttpHeaderParser.parseCharset(response.headers, "utf-8"));
-                                sendDataToFragmentScanner(false, res);
-                            } catch (Exception e) {
-                                sendDataToFragmentScanner(false, "Er ging iets mis.");
-                            }
-                        }
-                    });
-
-            queue.add(stringRequest);
-        } else {
-            sendDataToFragmentScanner(false, result);
-        }
+        thievesAPIClass.steal(success, result, getCurrentFragment());
     }
-
-    private void sendDataToFragmentScanner(boolean success, String result){
-        // Send data to ThievesFragmentScanner
-        Fragment fragment = getCurrentFragment();
-        if(fragment instanceof ThievesFragmentScanner){
-            ThievesFragmentScanner thievesFragmentScanner = (ThievesFragmentScanner) fragment;
-            thievesFragmentScanner.setResult(success, result);
-        }
-    }
-
     //endregion
 
     //region Arrested
@@ -382,7 +352,7 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
         switch(repeatingTask.getTask()){
             case CHECK_ARRESTED:
                 if(o instanceof String){
-                    Toast.makeText(this, "Error: " + o.toString(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Error: " + getResources().getString(Integer.parseInt(o.toString())), Toast.LENGTH_SHORT).show();
                 } else if ((boolean)o) {
                     isArrested();
                 }
@@ -398,7 +368,7 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
     private final ServiceConnection mConnection = new ServiceConnection() {
         public void onServiceConnected(ComponentName className, IBinder service) {
             mBoundService = ((RepeatingTaskService.LocalBinder)service).getService();
-            mBoundService.setID(ID);
+            mBoundService.setToken(token);
 
             // Add task to the service.
             arrestedRepeatingTask = new RepeatingTask(RepeatingTaskName.CHECK_ARRESTED, 3000);
