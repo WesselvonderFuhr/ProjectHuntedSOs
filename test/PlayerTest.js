@@ -125,6 +125,7 @@ describe('player CheckPlayersOutOfBounds ', async function(){
     });
 });
 //CheckPlayerOutOfBounds
+/*
 describe('player CheckPlayerOutOfBounds ', async function(){
     it('get CheckPlayerOutOfBounds  200', async ()  => {
         let player = await Player.findOne();
@@ -161,4 +162,4 @@ describe('player CheckPlayersOutOfBounds player ', async function(){
         let result = await PlayerController.CheckPlayerOutOfBounds(player_id,game_id);
         expect(result.responseCode).to.equal(404);
     });
-});
+});*/
