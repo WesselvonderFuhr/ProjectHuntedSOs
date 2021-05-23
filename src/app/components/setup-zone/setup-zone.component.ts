@@ -42,7 +42,7 @@ export class SetupZoneComponent implements AfterViewInit  {
         navigator.geolocation.getCurrentPosition((position) => {
           const coords = position.coords;
           // Offset to center in view.
-          const latLong = new LatLng(coords.latitude - 0.009, coords.longitude + 0.028);
+          const latLong = new LatLng(coords.latitude, coords.longitude);
           this.map.zoomIn(9);
           this.map.panTo(latLong);
         });
