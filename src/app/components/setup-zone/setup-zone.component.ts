@@ -1,8 +1,9 @@
 import {AfterViewInit, Component} from '@angular/core';
-import {Location, Polygon, Zone} from '../../models/zone.model';
+import {Location, Playfield} from '../../models/zone.model';
 import {ZoneService} from '../../services/zone/zone.service';
 import * as L from 'leaflet';
 import '@geoman-io/leaflet-geoman-free';
+import {LatLng, Layer} from "leaflet";
 
 @Component({
   selector: 'app-setup-zone',
@@ -16,11 +17,36 @@ export class SetupZoneComponent implements AfterViewInit  {
   constructor(private zoneService: ZoneService) { }
 
   ngAfterViewInit(): void {
-    //this.zoneService.getZone().subscribe(zone => this.polygon = zone.polygon);
-
     this.map = L.map('map', {
-      center: [ 51.688714, 5.303229 ],
-      zoom: 17
+      center: [ 52.155, 5.295 ],
+      zoom: 7
+    });
+
+    this.zoneService.getZone().subscribe( (zone: Playfield) => {
+      if (zone.playfield[0][0][0].latitude !== undefined){
+        const playfields: LatLng[][][] = [];
+        for (let i = 0; i < zone.playfield.length; i++){
+          const polygons: LatLng[][] = [];
+          playfields[i] = polygons;
+          for (let j = 0; j < zone.playfield[i].length; j++){
+            const latLngs: LatLng[] = [];
+            polygons[j] = latLngs;
+            for (let k = 0; k < zone.playfield[i][j].length; k++){
+              latLngs.push(new LatLng(zone.playfield[i][j][k].latitude, zone.playfield[i][j][k].longitude));
+            }
+          }
+        }
+        const polygon = L.polygon(playfields).addTo(this.map);
+        this.map.fitBounds(polygon.getBounds());
+      } else if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition((position) => {
+          const coords = position.coords;
+          // Offset to center in view.
+          const latLong = new LatLng(coords.latitude - 0.009, coords.longitude + 0.028);
+          this.map.zoomIn(9);
+          this.map.panTo(latLong);
+        });
+      }
     });
 
     this.map.pm.setLang('nl');
@@ -35,7 +61,7 @@ export class SetupZoneComponent implements AfterViewInit  {
     });
 
     const tiles = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      maxZoom: 18,
+      maxZoom: 19,
       minZoom: 3,
       attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
     });

@@ -9,13 +9,12 @@ import { environment } from '../../../environments/environment';
 })
 export class ZoneService {
 
-  private gameUrl = `${environment.apiUrl}/game`;
   private zoneUrl = `${environment.apiUrl}/game/playfield`;
 
   constructor(private http: HttpClient) { }
 
   getZone(): Observable<Playfield> {
-    return this.http.get<Playfield>(this.gameUrl);
+    return this.http.get<Playfield>(this.zoneUrl);
   }
 
   updateZone(map: string) {
