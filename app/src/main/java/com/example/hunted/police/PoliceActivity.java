@@ -59,6 +59,7 @@ import java.util.Observer;
 
 public class PoliceActivity extends AppCompatActivity implements Observer {
     private final int PING_MS = 3000;
+    private final int PING_STATUS = 1000;
     private final int LOCATION_REQUEST_CODE = 1234;
 
     private PoliceAPIClass policeAPIClass;
@@ -72,6 +73,7 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
     public String token;
 
     private boolean hasNotBound = true;
+    private boolean isPlaying;
 
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
@@ -86,6 +88,7 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_police);
 
+        isPlaying = false;
 
         URL = getString(R.string.url);
         queue = Volley.newRequestQueue(this);
@@ -244,12 +247,38 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
         }
     }
 
+    private void checkGameStatus(Object object){
+        String string;
+        try {
+            string = object.toString();
+            Log.d("object  tostring ", string);
+            switch (string){
+                case "\"not started\"":
+                    isPlaying = false;
+                    Log.d("status", "not started");
+                    break;
+                case "\"in progress\"":
+                    isPlaying = true;
+                    Log.d("status", "in progress");
+                    break;
+                case "\"stopped\"":
+                    isPlaying = false;
+                    Log.d("status", "stopped");
+                    break;
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
     //sets the arrest button to active or non-active based on
     private boolean shouldUpdateArrestButton() {
-        ArrayList<String> tempList = getArrestableThieves();
-        if(tempList != null) {
-            if(tempList.size() > 0) {
-                return true;
+        if (isPlaying){
+            ArrayList<String> tempList = getArrestableThieves();
+            if(tempList != null) {
+                if(tempList.size() > 0) {
+                    return true;
+                }
             }
         }
         return false;
@@ -340,6 +369,9 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
                     runOnUiThread(() -> Toast.makeText(PoliceActivity.this, "Error: " + o.toString(), Toast.LENGTH_SHORT).show());
                 }
                 break;
+            case CHECK_GAME_STATUS:
+                runOnUiThread(() -> checkGameStatus(o));
+                break;
         }
     }
 
@@ -356,6 +388,11 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
             RepeatingTask repeatingTask = new RepeatingTask(RepeatingTaskName.CHECK_THIEF_NEARBY, PING_MS);
             repeatingTask.addObserver(PoliceActivity.this);
             mBoundService.addRepeatingTask(repeatingTask);
+
+            RepeatingTask statusTask = new RepeatingTask(RepeatingTaskName.CHECK_GAME_STATUS, PING_STATUS);
+            statusTask.addObserver(PoliceActivity.this);
+            mBoundService.addRepeatingTask(statusTask);
+
         }
 
         public void onServiceDisconnected(ComponentName className) {
