@@ -11,8 +11,9 @@ import { AccessCodeService } from 'src/app/services/access-code/accesscode.servi
 export class SetupAccesscodeComponent implements OnInit {
   public accessCodePost: AccessCodePost;
   public accessCodes: AccessCode[];
+  public showSaveConfirmation = false;
 
-  constructor(private accessCodeService: AccessCodeService) { 
+  constructor(private accessCodeService: AccessCodeService) {
     this.accessCodePost = new AccessCodePost();
   }
 
@@ -25,13 +26,20 @@ export class SetupAccesscodeComponent implements OnInit {
   }
 
   createNewCodes(): void {
+    this.resetConfirmations();
+
     let accessCodePost = new AccessCodePost();
     accessCodePost = this.accessCodePost;
 
     this.accessCodeService.generateCodes(this.accessCodePost).subscribe((res) => {
       console.log('Added ' + this.accessCodePost.amount + ' new ' + this.accessCodePost.role + ' access codes!');
       this.ngOnInit();
+      this.showSaveConfirmation = true;
     });
+  }
+
+  resetConfirmations(): void {
+    this.showSaveConfirmation = false;
   }
 
   compare(a: AccessCode, b: AccessCode ) {
@@ -43,5 +51,7 @@ export class SetupAccesscodeComponent implements OnInit {
     }
     return 0;
   }
-  
+
+
+
 }

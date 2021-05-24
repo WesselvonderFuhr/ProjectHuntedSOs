@@ -14,6 +14,10 @@ export class SetupZoneComponent implements AfterViewInit  {
   private lPolygon: L.Polygon;
   private map: L.Map;
 
+  public showSaveConfirmation = false;
+  public showUndoConfirmation = false;
+  public showResetConfirmation = false;
+
   constructor(private zoneService: ZoneService) {
     this.latlngs = [];
   }
@@ -41,6 +45,8 @@ export class SetupZoneComponent implements AfterViewInit  {
   }
 
   onAddPoint(): void {
+    this.resetConfirmations();
+
     if (this.latlngs.length > 0){
       if (this.lPolygon == null){
         this.lPolygon = L.polygon(this.latlngs, {color: 'blue'}).addTo(this.map);
@@ -51,20 +57,30 @@ export class SetupZoneComponent implements AfterViewInit  {
   }
 
   onClickUndo(): void {
+    this.resetConfirmations();
+
     if (this.lPolygon != null){
       this.latlngs = this.latlngs.filter(latlng => latlng !== this.latlngs[this.latlngs.length - 1]);
       this.lPolygon.setLatLngs(this.latlngs);
+
+      this.showUndoConfirmation = true;
     }
   }
 
   onClickReset(): void {
+    this.resetConfirmations();
+
     if (this.lPolygon != null){
       this.latlngs = [];
       this.lPolygon.setLatLngs(this.latlngs);
+
+      this.showResetConfirmation = true;
     }
   }
 
   onClickSubmit(): void {
+    this.resetConfirmations();
+
     const zone = new Zone();
     for (let i = 0; i < this.latlngs.length; i++){
       const location = new Location();
@@ -75,5 +91,13 @@ export class SetupZoneComponent implements AfterViewInit  {
       zone.playfield.push(point);
     }
     this.zoneService.updateZone(zone).subscribe( () => console.log('Updated the zone'));
+
+    this.showSaveConfirmation = true;
+  }
+
+  resetConfirmations(): void {
+    this.showSaveConfirmation = false;
+    this.showUndoConfirmation = false;
+    this.showResetConfirmation = false;
   }
 }

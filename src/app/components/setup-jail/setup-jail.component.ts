@@ -16,6 +16,7 @@ import { MatDialog } from '@angular/material/dialog';
 export class SetupJailComponent implements OnInit {
 
   public location: Location;
+  public showConfirmation = false
 
   constructor(private jailService: JailService) {
     this.location = new Location();
@@ -26,11 +27,13 @@ export class SetupJailComponent implements OnInit {
   }
 
   onClickSubmit(): void {
+    this.showConfirmation = false;
     const jail = new Jail();
     jail.location = this.location;
 
     this.jailService.updateJail(jail).subscribe( (res) => {
       console.log('Updated the jail');
+      this.showConfirmation = true;
    });
   }
 }

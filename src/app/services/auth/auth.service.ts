@@ -19,7 +19,7 @@ export class AuthService {
   constructor(private http: HttpClient, public router: Router) {
   }
 
-  login(user: User) {
+  login(user: User){
     return this.http.post<any>(`${this.endpoint}/game/authenticate?name=${user.name}&code=${user.code}`,'{}')
       .subscribe((res: any) => {
         localStorage.setItem('access_token', res.token)

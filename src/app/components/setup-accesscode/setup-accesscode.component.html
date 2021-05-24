@@ -27,9 +27,8 @@
     <br/>
     <button mat-raised-button color="primary" type="submit" color="primary">Opslaan</button>
  </form>
-
-
 </div>
+<h4 class="mat-h4" *ngIf="showSaveConfirmation">Toegangscode(s) aangemaakt</h4>
 <div class="container">
   <app-setup-accesscode-card *ngFor="let accessCode of accessCodes" [accessCode]="accessCode"></app-setup-accesscode-card>
 </div>

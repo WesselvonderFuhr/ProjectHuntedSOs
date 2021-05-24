@@ -12,6 +12,7 @@ export class SetupQrComponent implements OnInit {
 
   public lootArray: Loot[];
   public loot: Loot;
+  public showSaveConfirmation = false;
 
   constructor(private lootService: LootService) {
     this.loot = new Loot();
@@ -24,10 +25,16 @@ export class SetupQrComponent implements OnInit {
   }
 
   onClickSubmit(): void {
+    this.resetConfirmations();
+
     this.lootService.postLoot(this.loot).subscribe((res) => {
       console.log('Added ' + this.loot.name + ' to loot');
       this.ngOnInit();
+      this.showSaveConfirmation = true;
     });
   }
 
+  resetConfirmations(): void {
+    this.showSaveConfirmation = false;
+  }
 }

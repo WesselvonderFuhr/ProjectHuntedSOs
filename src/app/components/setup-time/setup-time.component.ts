@@ -26,27 +26,37 @@ export class SetupTimeComponent implements OnInit {
   onClickSubmit(): void {
     this.time.start_time = new Date();
 
-    this.gameService.updateTime(this.time).subscribe( (res) => {
-      console.log('Updated the time - Game has now started');
-    });
+    if(confirm("Spel starten?")) {
+      this.gameService.updateTime(this.time).subscribe( (res) => {
+        console.log('Updated the time - Game has now started');
+        this.ngOnInit();
+      });
+
+    }
   }
 
   endGame(): void {
-    let time = new Time();
-    time.start_time = new Date(0);
-    time.end_time = new Date();
-    this.gameService.updateTime(time).subscribe( (res) => {
-      console.log("Updated end time - Game has now ended")
-    });
+    if(confirm("Spel beeindigen?")) {
+      let time = new Time();
+      time.start_time = new Date(0);
+      time.end_time = new Date();
+      this.gameService.updateTime(time).subscribe( (res) => {
+        console.log("Updated end time - Game has now ended")
+        this.ngOnInit();
+      });
+    }
   }
 
   restartGame(): void {
-    let time = new Time();
-    time.start_time = new Date(0);
-    time.end_time = new Date(0);
-    this.gameService.updateTime(time).subscribe( (res) => {
-      console.log("Updated end time - Game has now restarted")
-    });
+    if(confirm("Spel herstarten?")) {
+      let time = new Time();
+      time.start_time = new Date(0);
+      time.end_time = new Date(0);
+      this.gameService.updateTime(time).subscribe( (res) => {
+        console.log("Updated end time - Game has now restarted")
+        this.ngOnInit();
+      });
+    }
   }
 
   getStatus(): any {
