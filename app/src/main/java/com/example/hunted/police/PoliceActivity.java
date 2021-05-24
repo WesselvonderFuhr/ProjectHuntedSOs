@@ -178,6 +178,8 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
             return;
         }
 
+        lootText.setText("");
+
         for(int i = 0; i < loot.size(); i++) {
             int number = i+1;
             lootText.setText(lootText.getText().toString() + number + ". " + loot.get(i) + "\n");
