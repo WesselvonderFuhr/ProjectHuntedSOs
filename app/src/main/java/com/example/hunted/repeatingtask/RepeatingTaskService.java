@@ -78,6 +78,9 @@ public class RepeatingTaskService extends Service {
             case CHECK_THIEF_NEARBY:
                 this.checkThievesNearby(task);
                 break;
+            case CHECK_GAME_STATUS:
+                this.checkGameStatus(task);
+                break;
         }
     }
 
@@ -141,6 +144,40 @@ public class RepeatingTaskService extends Service {
                         }
                     }
                 }
+        ) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
+            }
+        };
+        queue.add(stringRequest);
+    }
+
+    private void checkGameStatus(RepeatingTask task){
+        final String getStatus = URL + "game/status";
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getStatus,
+                response -> {
+                    try {
+//                        JSONArray obj = new JSONArray(response);
+                        //Observable
+                        task.notifyObservers(response);
+
+                    } catch (Throwable t) {
+                        task.notifyObservers("error in game status response try");
+                    }
+                }, error -> {
+            NetworkResponse response = error.networkResponse;
+            if (error instanceof ServerError && response != null) {
+                try {
+                    String res = new String(response.data, HttpHeaderParser.parseCharset(response.headers, "utf-8"));
+                    task.notifyObservers(res);
+                } catch (Exception e) {
+                    task.notifyObservers("error checking game status"); //add string
+                }
+            }
+        }
         ) {
             @Override
             public Map<String, String> getHeaders() throws AuthFailureError {
