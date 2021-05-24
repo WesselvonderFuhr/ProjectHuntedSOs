@@ -32,7 +32,7 @@ public class ThievesFragmentLootScore extends Fragment {
         View view = inflater.inflate(R.layout.fragment_thieves_loot_score, container, false);
         timeLeft = (TextView) view.findViewById(R.id.timeLeft);
         lootList = (TextView) view.findViewById(R.id.loot);
-        getLootList();
+        ((ThievesActivity) getActivity()).setLootList(lootList);
         return view;
     }
 
@@ -55,5 +55,6 @@ public class ThievesFragmentLootScore extends Fragment {
     public void onResume(){
         super.onResume();
         ((ThievesActivity) getActivity()).getTime(timeLeft);
+        ((ThievesActivity) getActivity()).setLootList(lootList);
     }
 }

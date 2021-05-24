@@ -33,27 +33,9 @@ public class PoliceFragmentScore extends Fragment {
         timeLeft = (TextView) view.findViewById(R.id.timeLeft);
         lootList = (TextView) view.findViewById(R.id.lootRetrieved);
         arrestedThieves = (TextView) view.findViewById(R.id.thievesArrested);
-        getLootList();
-        getArrestedThieves();
+        ((PoliceActivity) getActivity()).setLootList(lootList);
+        ((PoliceActivity) getActivity()).getArrestedPlayers(arrestedThieves);
         return view;
-    }
-
-    private void getArrestedThieves() {
-        arrestedThieves.setText("Er zijn " + ((PoliceActivity) getActivity()).arrestedThieves + " van de " + ((PoliceActivity) getActivity()).amountOfThieves + " gearresteerd.");
-    }
-
-    private void getLootList() {
-        List<String> list = ((PoliceActivity) getActivity()).getLoot();
-
-        if(list.size() == 0) {
-            lootList.setText("Nog geen buit ingenomen");
-            return;
-        }
-
-        for(int i = 0; i < list.size(); i++) {
-            int number = i+1;
-            lootList.setText(lootList.getText().toString() + number + ". " + list.get(i) + "\n");
-        }
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
@@ -61,5 +43,7 @@ public class PoliceFragmentScore extends Fragment {
     public void onResume(){
         super.onResume();
         ((PoliceActivity) getActivity()).getTime(timeLeft);
+        ((PoliceActivity) getActivity()).getArrestedPlayers(arrestedThieves);
+        ((PoliceActivity) getActivity()).setLootList(lootList);
     }
 }

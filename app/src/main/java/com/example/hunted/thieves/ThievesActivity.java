@@ -126,9 +126,6 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         setupDrawerContent(navigationView);
-
-        //testcode for stolen loot
-        thievesAPIClass.getStolenLoot();
     }
 
     private TextView timeText;
@@ -139,9 +136,27 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
         thievesAPIClass.getTime();
     }
 
-
     public void setTime() {
         timeText.setText(timeLeft);
+    }
+
+    private TextView lootText;
+
+    public void setLootList(TextView lootList) {
+        lootText = lootList;
+        thievesAPIClass.getStolenLoot();
+    }
+
+    public void getLootList() {
+        if(loot.size() == 0) {
+            lootText.setText("Nog geen buit gestolen");
+            return;
+        }
+
+        for(int i = 0; i < loot.size(); i++) {
+            int number = i+1;
+            lootText.setText(lootText.getText().toString() + number + ". " + loot.get(i) + "\n");
+        }
     }
 
     private void initLocation() {

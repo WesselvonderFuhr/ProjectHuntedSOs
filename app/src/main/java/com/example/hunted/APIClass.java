@@ -99,9 +99,11 @@ public abstract class APIClass {
 
                     if(context instanceof PoliceActivity) {
                         ((PoliceActivity) context).setLoot(tempList);
+                        ((PoliceActivity) context).getLootList();
                     }
                     if(context instanceof ThievesActivity) {
                         ((ThievesActivity) context).setLoot(tempList);
+                        ((ThievesActivity) context).getLootList();
 
                     }
 

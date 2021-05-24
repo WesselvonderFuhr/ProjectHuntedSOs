@@ -125,11 +125,6 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         setupDrawerContent(navigationView);
 
-        //testcode for stolen loot
-        policeAPIClass.getStolenLoot();
-
-        //testcode for arrested thieves
-        policeAPIClass.getArrestedThievesCount();
     }
 
     private TextView timeText;
@@ -144,6 +139,35 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
         timeText.setText(timeLeft);
     }
 
+    private TextView arrestedText;
+
+    public void getArrestedPlayers(TextView arrestedText) {
+        this.arrestedText = arrestedText;
+        policeAPIClass.getArrestedThievesCount();
+    }
+
+    public void setArrestedPlayers() {
+        arrestedText.setText("Er zijn " + arrestedThieves + " van de " + amountOfThieves + " gearresteerd.");
+    }
+
+    private TextView lootText;
+
+    public void setLootList(TextView lootList) {
+        lootText = lootList;
+        policeAPIClass.getStolenLoot();
+    }
+
+    public void getLootList() {
+        if(loot.size() == 0) {
+            lootText.setText("Nog geen buit ingenomen");
+            return;
+        }
+
+        for(int i = 0; i < loot.size(); i++) {
+            int number = i+1;
+            lootText.setText(lootText.getText().toString() + number + ". " + loot.get(i) + "\n");
+        }
+    }
 
     private void initLocation() {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);

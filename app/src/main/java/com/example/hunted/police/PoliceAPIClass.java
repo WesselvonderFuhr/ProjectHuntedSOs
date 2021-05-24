@@ -67,6 +67,7 @@ public class PoliceAPIClass extends APIClass {
                     try {
                         ((PoliceActivity) context).amountOfThieves = response.getInt("thieves");
                         ((PoliceActivity) context).arrestedThieves = response.getInt("arrestedThieves");
+                        ((PoliceActivity) context).setArrestedPlayers();
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
