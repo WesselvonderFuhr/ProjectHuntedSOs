@@ -4,9 +4,5 @@
     <div id="map"></div>
   </div>
   <button (click)="onClickSubmit()" mat-raised-button color="primary" type="submit" color="primary">Speelgebied opslaan</button>
-  <button (click)="onClickUndo()" mat-raised-button color="secondary" color="secondary">Ongedaan maken</button>
-  <button (click)="onClickReset()" mat-raised-button color="secondary" color="secondary">Kaart resetten</button>
 </div>
 <h4 class="mat-h4" *ngIf="showSaveConfirmation">Speelgebied opgeslagen</h4>
-<h4 class="mat-h4" *ngIf="showUndoConfirmation">Stap ongedaan gemaakt</h4>
-<h4 class="mat-h4" *ngIf="showResetConfirmation">Speelgebied gereset</h4>

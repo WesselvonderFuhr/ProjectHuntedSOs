@@ -3,10 +3,6 @@ export class Location {
   longitude: number;
 }
 
-export class Point {
-  location: Location;
-}
-
-export class Zone {
-  playfield: Point[] = [];
+export class Playfield {
+  playfield: Location[][][];
 }
