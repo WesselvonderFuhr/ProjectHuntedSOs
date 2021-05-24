@@ -90,44 +90,40 @@ public class ThievesFragmentLocations extends Fragment {
     }
 
     public void setPlayfield(JSONArray result) {
-        ArrayList playField = new ArrayList();
-        try {
-            JSONArray playFieldJArray = result.getJSONArray(0).getJSONArray(0);
-            for (int i = 0; i < playFieldJArray.length(); i++) {
-                double locLat = playFieldJArray.getJSONObject(i).getDouble("latitude");
-                double locLong = playFieldJArray.getJSONObject(i).getDouble("longitude");
-                playField.add(new GeoPoint(locLat, locLong));
+        ArrayList playField;
+        List<List<GeoPoint>> holesList;
+
+        try{
+//            JSONArray playFieldJArray = result
+            for(int i = 0; i < result.length(); i++){
+                playField = new ArrayList();
+                JSONArray playFieldArea = result.getJSONArray(i).getJSONArray(0);
+                for(int x = 0; x < playFieldArea.length(); x++){
+                    double locLat = playFieldArea.getJSONObject(x).getDouble("latitude");
+                    double locLong = playFieldArea.getJSONObject(x).getDouble("longitude");
+                    playField.add(new GeoPoint(locLat, locLong));
+                }
+
+                holesList = new ArrayList<>();
+                List<GeoPoint> holes = new ArrayList<>();
+                for(int holesIndex = 1; holesIndex < result.getJSONArray(i).length(); holesIndex++){
+                    JSONArray holesArea = result.getJSONArray(i).getJSONArray(holesIndex);
+                    for(int holeLoc = 0; holeLoc < holesArea.length(); holeLoc++){
+                        double locLat = holesArea.getJSONObject(holeLoc).getDouble("latitude");
+                        double locLong = holesArea.getJSONObject(holeLoc).getDouble("longitude");
+                        holes.add(new GeoPoint(locLat, locLong));
+                    }
+                    holesList.add(holes);
+                }
+                playfieldPolygon.setPoints(playField);
+                playfieldPolygon.setHoles(holesList);
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
-        List<List<GeoPoint>> holesList = new ArrayList<>();
-
-        //if length is 1 then there are no holes
-        if(result.length() > 1){
-            try {
-                JSONArray holesJArray = result.getJSONArray(1);
-                for (int i = 0; i < holesJArray.length(); i++) {
-                    JSONArray holeJArray = holesJArray.getJSONArray(i);
-                    List<GeoPoint> holes = new ArrayList<>();
-                    for (int x = 0; x < holeJArray.length(); x++) {
-                        double locLat = holeJArray.getJSONObject(x).getDouble("latitude");
-                        double locLong = holeJArray.getJSONObject(x).getDouble("longitude");
-                        holes.add(new GeoPoint(locLat, locLong));
-                    }
-                    holesList.add(holes);
-                }
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        }
-
         //TODO: method om map te focussen op center van playfield
         osmMap.getController().setCenter(new GeoPoint(51.6890463, 5.3035104));
-
-        playfieldPolygon.setPoints(playField);
-        playfieldPolygon.setHoles(holesList);
     }
 
     public void updatePlayerOnMap(double locLat, double locLong){
