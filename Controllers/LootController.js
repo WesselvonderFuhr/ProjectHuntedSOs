@@ -10,6 +10,20 @@ class LootController{
         return new Result(200, s.loot);
     }
 
+    async getAllLootByPlayer(player_id){
+        let query = { _id: player_id };
+        let s = await Player.findOne(query);
+
+        let allLoot = []
+
+        for(var i = 0; i < s.loot.length; i++) {
+            var loot = await Loot.findOne(s[i]);
+            allLoot.push(loot)
+        }
+
+        return new Result(200, allLoot)
+    }
+
     async getLootByID(id){
         let query = { _id: id };
         return await Loot.findOne(query);

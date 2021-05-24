@@ -17,7 +17,7 @@ exports.AdministratorOrOwner = async (user, player_id) => {
 }
 
 exports.Boef = async (user) => {
-    // Authorized if Player
+    // Authorized if Boef
     if (user.role === "Boef") {
         return null;
     }
@@ -33,7 +33,7 @@ exports.Player = async (user) => {
 }
 
 exports.Agent = async (user) => {
-    // Authorized if Player
+    // Authorized if Agent
     if (user.role === "Agent") {
         return null;
     }

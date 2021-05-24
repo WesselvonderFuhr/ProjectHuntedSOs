@@ -139,5 +139,12 @@ class GameController{
         return true
     }
 
+    async getGameTimeById(game_id) {
+        let query = { _id: game_id }
+        let game = await Game.findOne(query)
+        let times = {start_time: game.start_time, end_time: game.end_time}
+        return new Result(200, times)
+    }
+
 }
 module.exports = new GameController();

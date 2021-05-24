@@ -7,6 +7,16 @@ const authorize = require("../Authorization/authorize");
 const {ResponseHandler} = require("../Helper/ResponseHandler");
 
 //get
+router.get('/getArrestedThieves', passport.authenticate('jwt', { session: false }), async function (req, res) {
+    let unauthorized = await authorize.Agent(req.user);
+    if(unauthorized){
+        return ResponseHandler(unauthorized, req, res);
+    }
+
+    let result = await PlayerController.getArrestedThieves(req.user.game_id);
+    ResponseHandler(result, req, res);
+});
+
 router.get('/', passport.authenticate('jwt', { session: false }), async function (req, res) {
     if(req.user.role === "Administrator"){
         let result = await PlayerController.getAllPlayers(req.user.game_id);
@@ -86,5 +96,13 @@ router.put('/location', passport.authenticate('jwt', { session: false }),async  
     let result = await PlayerController.editPlayer(req.user.player_id, location);
     ResponseHandler(result, req, res);
 });
+
+
+
+// router.get('/getArrestedThieves', async function (req, res) {
+//     console.log("aids")
+//     let result = await PlayerController.getArrestedThieves("608bfc395e6f4c126818bee4");
+//     ResponseHandler(result, req, res);
+// });
 
 module.exports = router;

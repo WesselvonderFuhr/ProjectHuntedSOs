@@ -56,6 +56,11 @@ router.get('/status', passport.authenticate('jwt', { session: false }), async fu
     ResponseHandler(result, req, res);
 });
 
+router.get('/:id/time', async function (req, res) {
+    let result = await GameController.getGameTimeById(req.params.id);
+    ResponseHandler(result, req, res);
+});
+
 router.post('/authenticate', async function (req, res) {
     if(!req.query.name || !req.query.code){
         let message = { message: "Login with name and code"};
