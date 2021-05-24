@@ -164,3 +164,12 @@ describe('player CheckPlayersOutOfBounds false', async function(){
         expect(result.message).to.equal(false);
     });
 });
+
+describe('player getArrestedThieves true', async function(){
+    it('get getArrestedThieves true', async ()  => {
+        let game = await Game.findOne();
+        let game_id = game.id;
+        let result = await PlayerController.getArrestedThieves(game_id);
+        expect(result.responseCode).to.equal(200);
+    });
+});
