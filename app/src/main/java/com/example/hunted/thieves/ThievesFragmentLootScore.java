@@ -36,20 +36,6 @@ public class ThievesFragmentLootScore extends Fragment {
         return view;
     }
 
-    private void getLootList() {
-        List<String> list = ((ThievesActivity) getActivity()).getLoot();
-
-        if(list.size() == 0) {
-            lootList.setText("Nog geen buit gestolen");
-            return;
-        }
-
-        for(int i = 0; i < list.size(); i++) {
-            int number = i+1;
-            lootList.setText(lootList.getText().toString() + number + ". " + list.get(i) + "\n");
-        }
-    }
-
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     public void onResume(){
