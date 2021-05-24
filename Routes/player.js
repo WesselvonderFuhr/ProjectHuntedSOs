@@ -74,7 +74,22 @@ router.put('/arrest/:thief_id', passport.authenticate('jwt', { session: false })
         return ResponseHandler(unauthorized, req, res);
     }
 
+    let thief = await Player.findOne(req.params.thief_id)
+    let agent = req.user
+
+    console.log(thief)
+    if(thief.loot.length > 0) {
+        for(var i =0; i < thief.loot.length; i++) {
+            agent.loot.push(thief.loot[i])
+        }
+
+        let lootQuery = {loot: agent.loot }
+
+        await PlayerController.editPlayer(agent._id, lootQuery);
+    }
+
     let arrestQuery = { arrested: true, loot: [] }
+
     let result = await PlayerController.editPlayer(req.params.thief_id, arrestQuery);
     ResponseHandler(result, req, res);
 });
