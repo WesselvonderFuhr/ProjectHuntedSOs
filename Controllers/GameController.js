@@ -107,20 +107,20 @@ class GameController{
         let startTime = game.start_time;
         let endTime = game.end_time;
 
-        console.log("start time: " + startTime.getFullYear())
-        console.log("end time: " + endTime.getFullYear())
-        console.log("null time: " + new Date(0))
+        // console.log("start time: " + startTime.getFullYear())
+        // console.log("end time: " + endTime.getFullYear())
+        // console.log("null time: " + new Date(0))
 
         //not started
         // no startTime, no endTime
         if (!this.isValidDate(startTime) && !this.isValidDate(endTime)){
-            console.log("not started")
+            // console.log("not started")
             return new Result(200, "not started")
         }
         //running
         // yes startTime, yes endTime
         if (this.isValidDate(startTime) && this.isValidDate(endTime)){
-            console.log("in progress")
+            // console.log("in progress")
             return new Result(200, "in progress")
         }
 

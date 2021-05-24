@@ -74,20 +74,20 @@ router.put('/arrest/:thief_id', passport.authenticate('jwt', { session: false })
         return ResponseHandler(unauthorized, req, res);
     }
 
-    let thief = await Player.findOne(req.params.thief_id)
-    let agent = req.user
+    let thief = await Player.findOne({_id: req.params.thief_id})
+    let loot = []
 
     console.log(thief)
     if(thief.loot.length > 0) {
         for(var i =0; i < thief.loot.length; i++) {
-            agent.loot.push(thief.loot[i])
+            loot.push(thief.loot[i])
         }
+        console.log("loot: " + loot)
+        let lootQuery = {loot: loot }
 
-        let lootQuery = {loot: agent.loot }
-
-        await PlayerController.editPlayer(agent._id, lootQuery);
+        await PlayerController.editPlayer(req.user.player_id, lootQuery);
     }
-
+    
     let arrestQuery = { arrested: true, loot: [] }
 
     let result = await PlayerController.editPlayer(req.params.thief_id, arrestQuery);
