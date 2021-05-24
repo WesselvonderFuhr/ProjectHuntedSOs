@@ -83,6 +83,19 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
 
     public String timeLeft;
 
+    public int amountOfThieves;
+    public int arrestedThieves;
+
+    private List<String> loot;
+
+    public void setLoot(List<String> loot) {
+        this.loot = loot;
+    }
+
+    public List<String> getLoot() {
+        return loot;
+    }
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -114,6 +127,7 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         setupDrawerContent(navigationView);
+
     }
 
     private TextView timeText;
@@ -132,10 +146,39 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
     public void getPlayfield() {
         policeAPIClass.getPlayfield(getCurrentFragment());
     }
+    private TextView arrestedText;
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void getJail() {
         policeAPIClass.getJail(getCurrentFragment());
+    }
+
+    public void getArrestedPlayers(TextView arrestedText) {
+        this.arrestedText = arrestedText;
+        policeAPIClass.getArrestedThievesCount();
+    }
+
+    public void setArrestedPlayers() {
+        arrestedText.setText("Er zijn " + arrestedThieves + " van de " + amountOfThieves + " gearresteerd.");
+    }
+
+    private TextView lootText;
+
+    public void setLootList(TextView lootList) {
+        lootText = lootList;
+        policeAPIClass.getStolenLoot();
+    }
+
+    public void getLootList() {
+        if(loot.size() == 0) {
+            lootText.setText("Nog geen buit ingenomen");
+            return;
+        }
+
+        for(int i = 0; i < loot.size(); i++) {
+            int number = i+1;
+            lootText.setText(lootText.getText().toString() + number + ". " + loot.get(i) + "\n");
+        }
     }
 
     private void initLocation() {

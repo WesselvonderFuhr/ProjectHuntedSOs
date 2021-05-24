@@ -85,6 +85,15 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
     private boolean isArrested = false;
 
     public String timeLeft;
+    private List<String> loot;
+
+    public void setLoot(List<String> loot) {
+        this.loot = loot;
+    }
+
+    public List<String> getLoot() {
+        return loot;
+    }
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
@@ -117,7 +126,6 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         setupDrawerContent(navigationView);
-
     }
 
     private TextView timeText;
@@ -140,6 +148,28 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
     @RequiresApi(api = Build.VERSION_CODES.O)
     public void getJail() {
         thievesAPIClass.getJail(getCurrentFragment());
+    }
+
+    private TextView lootText;
+
+    public void setLootList(TextView lootList) {
+        lootText = lootList;
+        thievesAPIClass.getStolenLoot();
+    }
+
+    public void getLootList() {
+        if(loot.size() == 0) {
+            lootText.setText("Nog geen buit gestolen");
+            return;
+        }
+
+        lootText.setText("");
+
+        for(int i = 0; i < loot.size(); i++) {
+            int number = i+1;
+            Log.d("loot:", loot.get(i));
+            lootText.setText(lootText.getText().toString() + number + ". " + loot.get(i) + "\n");
+        }
     }
 
     private void initLocation() {

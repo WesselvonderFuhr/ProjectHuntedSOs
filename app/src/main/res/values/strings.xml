@@ -24,7 +24,8 @@
     <string name="label_police_header">Politie</string>
     <string name="label_police_locations">Locaties</string>
     <string name="label_police_arrest">Arresteren</string>
-    <string name="label_police_score">Beschermde buit</string>
+    <string name="label_police_score">Ingenomen buit</string>
+    <string name="label_police_amount_arrested">Boeven gearresteerd</string>
     <string name="button_police_arrest">Arresteer!</string>
 
     <!--  THIEVES  -->

@@ -15,10 +15,12 @@ import com.example.hunted.R;
 import com.example.hunted.police.PoliceActivity;
 
 import java.security.spec.RSAOtherPrimeInfo;
+import java.util.List;
 
 public class ThievesFragmentLootScore extends Fragment {
 
     private TextView timeLeft;
+    private TextView lootList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -29,6 +31,8 @@ public class ThievesFragmentLootScore extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_thieves_loot_score, container, false);
         timeLeft = (TextView) view.findViewById(R.id.timeLeft);
+        lootList = (TextView) view.findViewById(R.id.loot);
+        ((ThievesActivity) getActivity()).setLootList(lootList);
         return view;
     }
 
@@ -37,5 +41,6 @@ public class ThievesFragmentLootScore extends Fragment {
     public void onResume(){
         super.onResume();
         ((ThievesActivity) getActivity()).getTime(timeLeft);
+        ((ThievesActivity) getActivity()).setLootList(lootList);
     }
 }

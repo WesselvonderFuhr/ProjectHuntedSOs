@@ -15,6 +15,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.ServerError;
 import com.android.volley.toolbox.HttpHeaderParser;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
@@ -30,6 +31,7 @@ import org.json.JSONObject;
 
 import java.time.Duration;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -85,6 +87,41 @@ public abstract class APIClass {
             Toast.makeText(context, context.getString(R.string.label_return_playingfield), Toast.LENGTH_SHORT).show();
         }
         v.vibrate(500);
+    }
+
+    public void getStolenLoot() {
+        final String checkCode = URL + "loot/lootByPlayer";
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest
+                (Request.Method.GET, checkCode, null, response -> {
+                    ArrayList<String> tempList = new ArrayList<String>();
+
+                    for(int i = 0; i < response.length(); i++) {
+                        try {
+                            tempList.add(response.getJSONObject(i).getString("name"));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    if(context instanceof PoliceActivity) {
+                        ((PoliceActivity) context).setLoot(tempList);
+                        ((PoliceActivity) context).getLootList();
+                    }
+                    if(context instanceof ThievesActivity) {
+                        ((ThievesActivity) context).setLoot(tempList);
+                        ((ThievesActivity) context).getLootList();
+
+                    }
+
+                }, error -> Toast.makeText(context, R.string.label_thieves_steal_error, Toast.LENGTH_SHORT).show()) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
+            }
+        };
+        queue.add(jsonArrayRequest);
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)

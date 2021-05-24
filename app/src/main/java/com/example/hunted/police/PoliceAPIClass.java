@@ -13,15 +13,21 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.ServerError;
 import com.android.volley.toolbox.HttpHeaderParser;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.hunted.APIClass;
 import com.example.hunted.R;
+import com.example.hunted.thieves.ThievesActivity;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+
+import org.json.JSONArray;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.sql.Time;
 import java.time.Duration;
@@ -54,4 +60,25 @@ public class PoliceAPIClass extends APIClass {
         queue.add(stringRequest);
     }
 
+    public void getArrestedThievesCount() {
+        final String checkCode = URL + "player/getArrestedThieves";
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.GET, checkCode, null, response -> {
+                    try {
+                        ((PoliceActivity) context).amountOfThieves = response.getInt("thieves");
+                        ((PoliceActivity) context).arrestedThieves = response.getInt("arrestedThieves");
+                        ((PoliceActivity) context).setArrestedPlayers();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }, error -> Toast.makeText(context, R.string.label_thieves_steal_error, Toast.LENGTH_SHORT).show()) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
+            }
+        };
+        queue.add(jsonObjectRequest);
+    }
 }
