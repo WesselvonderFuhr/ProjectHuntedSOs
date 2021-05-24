@@ -17,7 +17,7 @@ class LootController{
         let allLoot = []
 
         for(var i = 0; i < s.loot.length; i++) {
-            var loot = await Loot.findOne(s[i]);
+            var loot = await Loot.findOne(s.loot[i]);
             allLoot.push(loot)
         }
 
