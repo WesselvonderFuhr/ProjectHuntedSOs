@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Hunted</string>
-        <string name="url">http://192.168.0.172:3000/</string>
-<!--    <string name="url">https://apihuntedsos.herokuapp.com/</string>-->
+<!--        <string name="url">http://192.168.0.172:3000/</string>-->
+    <string name="url">https://apihuntedsos.herokuapp.com/</string>
 
     <!-- GENERIC -->
     <string name="label_return_playingfield">Keer terug naar het speelgebied!</string>
