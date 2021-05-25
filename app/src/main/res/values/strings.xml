@@ -48,4 +48,5 @@
     <string name="label_service_server_fail">Er ging iets mis met het communiceren met de server.</string>
     <string name="label_service_thief_direction_fail">Er ging iets mis met het ophalen van de richting van boeven.</string>
     <string name="label_service_thief_loading_fail">Er ging iets mis met laden van de boeven.</string>
+    <string name="minutes">minuten</string>
 </resources>
