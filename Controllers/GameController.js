@@ -107,20 +107,20 @@ class GameController{
         let startTime = game.start_time;
         let endTime = game.end_time;
 
-        // console.log("start time: " + startTime.getFullYear())
-        // console.log("end time: " + endTime.getFullYear())
-        // console.log("null time: " + new Date(0))
+        console.log("start time: " + startTime.getFullYear())
+        console.log("end time: " + endTime.getFullYear())
+        console.log("null time: " + new Date(0))
 
         //not started
         // no startTime, no endTime
         if (!this.isValidDate(startTime) && !this.isValidDate(endTime)){
-            // console.log("not started")
+            console.log("not started")
             return new Result(200, "not started")
         }
         //running
         // yes startTime, yes endTime
         if (this.isValidDate(startTime) && this.isValidDate(endTime)){
-            // console.log("in progress")
+            console.log("in progress")
             return new Result(200, "in progress")
         }
 
@@ -132,6 +132,33 @@ class GameController{
         }
     }
 
+    async isSetup(gameID) {
+        let game = await Game.findOne({_id: gameID});
+
+        let jail = await Jail.findOne({_id: game.jail});
+        let latitude = jail.location.latitude;                           //0 if not set
+        let longitude = jail.location.longitude;                         //0 if not set
+
+        let playField = await Playfield.findOne({_id: game.playfield});
+        let playFieldCount = playField.playfield[0][0].length;           //1 if not set, otherwise >1
+
+        let accessCodesCount = game.accesscodes.length;                  //0 if not set
+
+        let lootCount = game.loot.length;                                //0 if not set
+
+        let jailSet = (latitude != 0 && longitude != 0) ? true : false;
+        let playFieldSet = (playFieldCount > 1) ? true : false;
+        let accessCodesSet = (accessCodesCount > 0) ? true: false;
+        let lootSet = (lootCount > 0) ? true : false;
+
+        console.log(latitude)
+
+        if(jailSet && playFieldSet && accessCodesSet && lootSet) {
+            return new Result(200, { "setup": "ready" });
+        }
+        return new Result(200, { "setup": "not ready" });
+    }
+
     isValidDate(date) {
         if(date.getFullYear() == "1970") {
             return false
@@ -139,12 +166,7 @@ class GameController{
         return true
     }
 
-    async getGameTimeById(game_id) {
-        let query = { _id: game_id }
-        let game = await Game.findOne(query)
-        let times = {start_time: game.start_time, end_time: game.end_time}
-        return new Result(200, times)
-    }
+
 
 }
 module.exports = new GameController();

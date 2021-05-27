@@ -71,6 +71,11 @@ router.post('/authenticate', async function (req, res) {
     ResponseHandler(result, req, res);
 });
 
+router.get('/issetup', passport.authenticate('jwt', { session: false }), async function (req, res) {
+    let result = await GameController.isSetup(req.user.game_id)
+    ResponseHandler(result, req, res);
+});
+
 
 
 module.exports = router;
