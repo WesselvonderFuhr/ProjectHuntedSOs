@@ -151,8 +151,6 @@ class GameController{
         let accessCodesSet = (accessCodesCount > 0) ? true: false;
         let lootSet = (lootCount > 0) ? true : false;
 
-        console.log(latitude)
-
         if(jailSet && playFieldSet && accessCodesSet && lootSet) {
             return new Result(200, { "setup": "ready" });
         }

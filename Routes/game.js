@@ -56,6 +56,11 @@ router.get('/status', passport.authenticate('jwt', { session: false }), async fu
     ResponseHandler(result, req, res);
 });
 
+router.get('/setupstatus', passport.authenticate('jwt', { session: false }), async function (req, res) {
+    let result = await GameController.isSetup(req.user.game_id)
+    ResponseHandler(result, req, res);
+});
+
 router.get('/:id/time', async function (req, res) {
     let result = await GameController.getGameTimeById(req.params.id);
     ResponseHandler(result, req, res);
@@ -68,11 +73,6 @@ router.post('/authenticate', async function (req, res) {
     }
 
     let result = await AdministratorController.authenticate(req.query.name, req.query.code);
-    ResponseHandler(result, req, res);
-});
-
-router.get('/issetup', passport.authenticate('jwt', { session: false }), async function (req, res) {
-    let result = await GameController.isSetup(req.user.game_id)
     ResponseHandler(result, req, res);
 });
 
