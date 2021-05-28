@@ -29,6 +29,22 @@ class LootController{
         return await Loot.findOne(query);
     }
 
+    async GetStolenLootFromGame(game_id){
+        let amountOfStolenLoot = 0;
+        let query = { _id: game_id };
+        var game = await Game.findOne(query).populate('players');
+        let players = game.players;
+        for(let i = 0; i<players.length;i++){
+            let loot = players[i].loot;
+            for(let j = 0; j < loot.length;j++){
+                amountOfStolenLoot++;
+            }
+        }
+        return new Result(200, amountOfStolenLoot);
+    }
+
+    
+
     async addLoot(game_id, body){
         let loot = new Loot(body);
         try {
