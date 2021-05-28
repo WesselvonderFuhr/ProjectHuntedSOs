@@ -30,17 +30,19 @@ class LootController{
     }
 
     async GetStolenLootFromGame(game_id){
-        let amountOfStolenLoot = 0;
         let query = { _id: game_id };
         var game = await Game.findOne(query).populate('players');
         let players = game.players;
+        let uniqueLoot = new Array();
         for(let i = 0; i<players.length;i++){
             let loot = players[i].loot;
             for(let j = 0; j < loot.length;j++){
-                amountOfStolenLoot++;
+                if(!uniqueLoot.includes(loot[j]._id)){
+                    uniqueLoot.push(loot[j]._id);
+                }    
             }
         }
-        return new Result(200, amountOfStolenLoot);
+        return new Result(200, uniqueLoot.length);
     }
 
     
