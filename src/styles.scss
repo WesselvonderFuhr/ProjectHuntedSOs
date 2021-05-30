@@ -14,11 +14,14 @@ body {
 
 
 h1, h2, h3, h4, h5, h6 {
-    font-weight: normal;
-  }
+  font-weight: normal;
+}
 
+.mat-h4 {
+  margin: 10px 0 0 0;
+  color: green;
+}
 
-  .mat-h4 {
-    margin: 10px 0 0 0;
-    color: green;
-  }
+.red {
+  color: red;
+}

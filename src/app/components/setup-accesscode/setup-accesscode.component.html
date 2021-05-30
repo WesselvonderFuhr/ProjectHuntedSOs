@@ -1,4 +1,4 @@
-<h2>Toegangscodes</h2>
+<h2 [matTooltip]="toolTipText" matTooltipPosition="left">Toegangscodes</h2>
 <div>
   <form class="example-form" #accessCodeData="ngForm" (ngSubmit)="createNewCodes()" >
     <mat-form-field appearance="fill">
@@ -25,7 +25,7 @@
       </mat-select>
     </mat-form-field>
     <br/>
-    <button mat-raised-button color="primary" type="submit" color="primary">Opslaan</button>
+    <button mat-raised-button color="primary" type="submit" color="primary">Toegangscodes aanmaken</button>
  </form>
 </div>
 <h4 class="mat-h4" *ngIf="showSaveConfirmation">Toegangscode(s) aangemaakt</h4>

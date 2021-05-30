@@ -46,6 +46,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatCardModule } from '@angular/material/card';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 import { SetupTimeComponent } from './components/setup-time/setup-time.component';
 
@@ -84,7 +85,8 @@ import { SetupTimeComponent } from './components/setup-time/setup-time.component
     MatToolbarModule,
     MatIconModule,
     MatListModule,
-    MatCardModule
+    MatCardModule,
+    MatTooltipModule
   ],
   providers: [
     ZoneService,

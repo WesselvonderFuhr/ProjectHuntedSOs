@@ -15,6 +15,8 @@ export class SetupZoneComponent implements AfterViewInit  {
   private map: L.Map;
   public showSaveConfirmation = false;
 
+  public toolTipText = "Teken het speelveld op de kaart en druk op Speelgebied opslaan"
+
   constructor(private zoneService: ZoneService) { }
 
   ngAfterViewInit(): void {

@@ -14,6 +14,9 @@ export class SetupQrComponent implements OnInit {
   public loot: Loot;
   public showSaveConfirmation = false;
 
+  public toolTipTextAdd = "Voer de naam van de buit in en druk op Buit Opslaan om de QR code aan te maken";
+  public toolTipTextOverview = "Deze QR codes worden door de boeven gescand om gestolen te worden"
+
   constructor(private lootService: LootService) {
     this.loot = new Loot();
   }

@@ -4,6 +4,7 @@ import { Observable } from 'rxjs';
 import { Game } from '../../models/game.model'
 import { Time } from '../../models/time.model';
 import { environment } from '../../../environments/environment'
+import { Status } from 'src/app/models/status.model';
 
 @Injectable({
   providedIn: 'root'
@@ -11,8 +12,6 @@ import { environment } from '../../../environments/environment'
 export class GameService {
 
   private gameURL = `${environment.apiUrl}/game`;
-  private timeURL =  this.gameURL + '/time';
-  private statusURL =  this.gameURL + '/status';
 
   constructor(private http: HttpClient) { }
 
@@ -21,12 +20,15 @@ export class GameService {
   }
 
   getStatus(): Observable<any> {
-    return this.http.get(this.statusURL);
+    return this.http.get(`${this.gameURL}/status`);
   }
 
   updateTime(time: Time) {
-    return this.http.put(this.timeURL, time, {responseType: 'text'});
+    return this.http.put(`${this.gameURL}/time`, time, {responseType: 'text'});
   }
 
+  getSetupStatus(): Observable<any> {
+    return this.http.get(`${this.gameURL}/setupstatus`)
+  }
 
 }

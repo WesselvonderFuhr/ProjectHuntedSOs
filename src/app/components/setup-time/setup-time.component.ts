@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Time } from 'src/app/models/time.model';
 import { GameService } from 'src/app/services/game/game.service';
 import { Router } from '@angular/router';
+import { ThrowStmt } from '@angular/compiler';
 
 @Component({
   selector: 'app-setup-time',
@@ -12,7 +13,13 @@ export class SetupTimeComponent implements OnInit {
 
   public time: Time;
   public gameStatus: string;
-  private mySubscription: any;
+  public gameSetupStatus: string;
+
+  public showSaveConfirmation = false;
+  public showNotEntered = false;
+  public showGameNotSetup = false;
+
+  public toolTipText = "Stel een einddatum en eindtijd in en druk op Spel Starten om het spel te beginnen"
 
   constructor(private gameService: GameService, private router: Router) {
     this.time = new Time();
@@ -23,16 +30,29 @@ export class SetupTimeComponent implements OnInit {
 
   }
 
-  onClickSubmit(): void {
+  startGame(): void {
+    this.resetConfirmations();
+
     this.time.start_time = new Date();
 
-    if(confirm("Spel starten?")) {
-      this.gameService.updateTime(this.time).subscribe( (res) => {
-        console.log('Updated the time - Game has now started');
-        this.ngOnInit();
-      });
+    this.gameService.getSetupStatus().subscribe((res) => {
+      this.gameSetupStatus = res.status;
 
-    }
+      if(this.time.end_time == undefined) {
+        this.showNotEntered = true;
+      }
+
+      if(this.gameSetupStatus == "not ready") {
+        this.showGameNotSetup = true;
+      } else {
+        if(confirm("Spel starten?")) {
+          this.gameService.updateTime(this.time).subscribe( (res) => {
+            console.log('Updated the time - Game has now started');
+            this.ngOnInit();
+          });
+        }
+      }
+    });
   }
 
   endGame(): void {
@@ -63,5 +83,11 @@ export class SetupTimeComponent implements OnInit {
     this.gameService.getStatus().subscribe( (res) => {
       this.gameStatus = res;
     });
+  }
+
+  resetConfirmations(): void {
+    this.showSaveConfirmation = false;
+    this.showNotEntered = false;
+    this.showGameNotSetup = false;
   }
 }

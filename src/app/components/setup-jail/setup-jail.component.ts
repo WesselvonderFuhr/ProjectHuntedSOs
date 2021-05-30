@@ -16,7 +16,9 @@ import { MatDialog } from '@angular/material/dialog';
 export class SetupJailComponent implements OnInit {
 
   public location: Location;
-  public showConfirmation = false
+  public showConfirmation = false;
+
+  public toolTipText = "Voer de coördinaten van de gevangenis is en druk op Gevangenis Opslaan"
 
   constructor(private jailService: JailService) {
     this.location = new Location();

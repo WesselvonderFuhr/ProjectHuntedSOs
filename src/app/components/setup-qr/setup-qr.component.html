@@ -1,4 +1,4 @@
-<h2>Buit toevoegen</h2>
+<h2 [matTooltip]="toolTipTextAdd" matTooltipPosition="left">Buit toevoegen</h2>
 <div>
     <form #lootData="ngForm" (ngSubmit)="onClickSubmit()" >
       <mat-form-field class="example-full-width" appearance="standard">
@@ -11,7 +11,7 @@
 </div>
 <h4 class="mat-h4" *ngIf="showSaveConfirmation">Buit aangemaakt</h4>
 
-<h2>Buit overzicht</h2>
+<h2 [matTooltip]="toolTipTextOverview" matTooltipPosition="left">Buit overzicht</h2>
 <div class="container">
   <app-setup-qr-card *ngFor="let loot of lootArray" [loot]="loot">
   </app-setup-qr-card>

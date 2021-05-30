@@ -1,14 +1,17 @@
 
 <div *ngIf="gameStatus == 'not started'">
-  <h2>Spel starten</h2>
-  <form class="example-form" #locationData="ngForm" (ngSubmit)="onClickSubmit()" >
-    <mat-form-field class="example-full-width" appearance="standard">
+  <h2 [matTooltip]="toolTipText" matTooltipPosition="left">Spel starten</h2>
+  <form class="example-form" #locationData="ngForm" (ngSubmit)="startGame()" >
+    <mat-form-field appearance="standard">
       <mat-label>Eindtijd</mat-label>
       <!-- <input matInput [(ngModel)]="time.end_time" name="end_time" placeholder="2021-04-20T16:20:00.336Z"> -->
       <input matInput type="datetime-local" [(ngModel)]="time.end_time" name="end_time" placeholder="end date">
     </mat-form-field>
     <br/>
     <button mat-raised-button color="primary" type="submit" color="primary" [routerLink]="['']">Spel starten</button>
+    <h4 class="mat-h4" *ngIf="showSaveConfirmation">Spel gestart</h4>
+    <h4 class="mat-h4 red" *ngIf="showNotEntered">Vul een datum en tijd in</h4>
+    <h4 class="mat-h4 red" *ngIf="showGameNotSetup">Het spel is nog niet volledig ingesteld</h4>
  </form>
 </div>
 

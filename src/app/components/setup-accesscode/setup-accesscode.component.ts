@@ -13,6 +13,8 @@ export class SetupAccesscodeComponent implements OnInit {
   public accessCodes: AccessCode[];
   public showSaveConfirmation = false;
 
+  public toolTipText = "Vul de Rol en het Aantal in, en druk op Toegangscodes aanmaken";
+
   constructor(private accessCodeService: AccessCodeService) {
     this.accessCodePost = new AccessCodePost();
   }
