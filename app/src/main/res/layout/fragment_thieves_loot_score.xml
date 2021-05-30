@@ -11,6 +11,21 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="@string/label_thieves_stolen_loot"
+        android:textSize="28dp"
+        android:layout_marginTop="40dp"
+        android:textColor="@color/onPrimary"/>
+
+    <TextView
+        android:layout_marginTop="10dp"
+        android:id="@+id/loot"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="28dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="@string/label_time_remaining"
         android:textSize="28dp"
         android:layout_marginTop="40dp"

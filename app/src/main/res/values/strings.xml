@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">Hunted</string>
-    <string name="url">http://192.168.0.172:3000/</string>
+<!--        <string name="url">http://192.168.0.172:3000/</string>-->
+    <string name="url">https://apihuntedsos.herokuapp.com/</string>
 
     <!-- GENERIC -->
     <string name="label_return_playingfield">Keer terug naar het speelgebied!</string>
@@ -23,7 +24,8 @@
     <string name="label_police_header">Politie</string>
     <string name="label_police_locations">Locaties</string>
     <string name="label_police_arrest">Arresteren</string>
-    <string name="label_police_score">Beschermde buit</string>
+    <string name="label_police_score">Ingenomen buit</string>
+    <string name="label_police_amount_arrested">Boeven gearresteerd</string>
     <string name="button_police_arrest">Arresteer!</string>
 
     <!--  THIEVES  -->
@@ -46,4 +48,5 @@
     <string name="label_service_server_fail">Er ging iets mis met het communiceren met de server.</string>
     <string name="label_service_thief_direction_fail">Er ging iets mis met het ophalen van de richting van boeven.</string>
     <string name="label_service_thief_loading_fail">Er ging iets mis met laden van de boeven.</string>
+    <string name="minutes">minuten</string>
 </resources>

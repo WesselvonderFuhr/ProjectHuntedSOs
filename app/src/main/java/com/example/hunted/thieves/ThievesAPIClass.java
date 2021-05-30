@@ -13,12 +13,20 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.ServerError;
 import com.android.volley.toolbox.HttpHeaderParser;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.example.hunted.APIClass;
 import com.example.hunted.R;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class ThievesAPIClass extends APIClass {
@@ -71,6 +79,5 @@ public class ThievesAPIClass extends APIClass {
             thievesFragmentScanner.setResult(success, result);
         }
     }
-
 
 }

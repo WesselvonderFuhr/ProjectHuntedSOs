@@ -31,7 +31,7 @@ public class RepeatingTaskService extends Service {
     private String token;
 	
     private final long DELAY = 200;
-    final int CATCH_THIEVES_DISTANCE_METERS = 100;
+    final int CATCH_THIEVES_DISTANCE_METERS = 5;
 
     private RequestQueue queue;
     private ArrayList<RepeatingTask> repeatingTasks;
