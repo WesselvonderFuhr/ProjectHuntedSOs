@@ -1,11 +1,11 @@
 const Result = require("../Helper/Result");
 const randomstring = require("randomstring");
+const bcrypt = require('bcrypt');
 
 let Jail = require('../MongoDB/jail');
 let Game = require('../MongoDB/game');
 let Playfield = require('../MongoDB/playfield');
 let Administrator = require('../MongoDB/administrator');
-const PlayfieldController = require("./PlayfieldController");
 
 class GameController{
 
@@ -32,7 +32,8 @@ class GameController{
         game.jail = jailModel;
         //admin
         let code = randomstring.generate(7).toUpperCase();
-        let administrator = { name: body.name, code: code };
+        let hash = bcrypt.hashSync(code, 8);
+        let administrator = { name: body.name, code: hash };
         let administratorModel = new Administrator(administrator);
         await administratorModel.save();
         game.administrator = administratorModel;
