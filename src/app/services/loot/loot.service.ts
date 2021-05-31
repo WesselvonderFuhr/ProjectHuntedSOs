@@ -10,6 +10,7 @@ import { environment } from '../../../environments/environment'
 export class LootService {
 
   private lootURL = `${environment.apiUrl}/loot`;
+  private stolenLootURL = `${environment.apiUrl}/loot/AmountOfStolenLoot`;
 
   constructor(private http: HttpClient) { }
 
@@ -19,6 +20,10 @@ export class LootService {
 
   postLoot(loot: Loot) {
     return this.http.post(`${this.lootURL}`, loot, {responseType: 'text'});
+  }
+
+  getStolenLoot(): Observable<any> {
+    return this.http.get(this.stolenLootURL);
   }
 }
 
