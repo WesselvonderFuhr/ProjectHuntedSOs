@@ -1,0 +1,13 @@
+<h2>Buit winst percentage</h2>
+<div>
+  <form class="example-form" #locationData="ngForm" (ngSubmit)="onClickSubmit()" >
+    <mat-form-field class="example-full-width" appearance="standard">
+      <mat-label>Percentage</mat-label>
+     <input matInput [(ngModel)]="lootWinPercentage" type="number" min="0" max="100" name="lootwin">
+    </mat-form-field>
+    <br/>
+    <button mat-raised-button color="primary" type="submit" color="primary">Percentage opslaan</button>
+
+    <h4 class="mat-h4" *ngIf="showConfirmation">Percentage opgeslagen</h4>
+ </form>
+</div>

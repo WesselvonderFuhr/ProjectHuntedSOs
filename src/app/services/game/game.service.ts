@@ -12,6 +12,7 @@ export class GameService {
 
   private gameURL = `${environment.apiUrl}/game`;
   private timeURL =  this.gameURL + '/time';
+  private lootwinURL =  this.gameURL + '/lootwinpercentage';
   private statusURL =  this.gameURL + '/status';
 
   constructor(private http: HttpClient) { }
@@ -26,6 +27,11 @@ export class GameService {
 
   updateTime(time: Time) {
     return this.http.put(this.timeURL, time, {responseType: 'text'});
+  }
+
+  updateLootWinPercentage(percentage: Number) {
+    let lootWinpercentage = { lootWinPercentage: percentage};
+    return this.http.put(this.lootwinURL, lootWinpercentage, {responseType: 'text'});
   }
 
 

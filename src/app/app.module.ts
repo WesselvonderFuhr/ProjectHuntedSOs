@@ -24,6 +24,7 @@ import { SetupQrCardComponent } from './components/setup-qr-card/setup-qr-card.c
 import { SetupZoneComponent } from './components/setup-zone/setup-zone.component';
 import { SetupAccesscodeComponent } from './components/setup-accesscode/setup-accesscode.component';
 import { SetupAccesscodeCardComponent } from './components/setup-accesscode-card/setup-accesscode-card.component';
+import { SetupLootwinpercComponent } from './components/setup-lootwinperc/setup-lootwinperc.component';
 
 //Game Components
 import { GameComponent } from './components/game/game.component';
@@ -39,6 +40,7 @@ import { AccessCodeService } from './services/access-code/accesscode.service'
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSliderModule} from '@angular/material/slider';
 import { MatTableModule } from '@angular/material/table'
 import { MatSelectModule } from '@angular/material/select'
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -48,6 +50,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatCardModule } from '@angular/material/card';
 
 import { SetupTimeComponent } from './components/setup-time/setup-time.component';
+import { GameLootAmountComponent } from './components/game-loot-amount/game-loot-amount.component';
 
 
 @NgModule({
@@ -64,7 +67,9 @@ import { SetupTimeComponent } from './components/setup-time/setup-time.component
     SetupZoneComponent,
     SidenavComponent,
     LoginComponent,
-    SetupTimeComponent
+    SetupTimeComponent,
+    SetupLootwinpercComponent,
+    GameLootAmountComponent,
   ],
   imports: [
     BrowserModule,
@@ -76,8 +81,9 @@ import { SetupTimeComponent } from './components/setup-time/setup-time.component
     QRCodeModule,
     MatSidenavModule,
     MatButtonModule,
-    MatInputModule,
     MatFormFieldModule,
+    MatInputModule,
+    MatSliderModule,
     MatTableModule,
     MatSelectModule,
     LayoutModule,
