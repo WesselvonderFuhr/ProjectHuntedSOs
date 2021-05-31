@@ -9,6 +9,7 @@ const gameSchema = new mongoose.Schema({
     accesscodes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Accesscode'}],
     players: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Player' }],
     playfield: { type: mongoose.Schema.Types.ObjectId, ref: 'Playfield' },
+    lootWinPercentage: { type: Number},
     start_time: { type: Date},
     end_time: { type: Date},
 }, {

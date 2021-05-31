@@ -52,6 +52,7 @@ class GameController{
         //time
         game.start_time = new Date(0);
         game.end_time = new Date(0);
+        game.lootWinPercentage = 70;
 
         await game.save()
         return new Result(200, code);
@@ -144,6 +145,13 @@ class GameController{
         let game = await Game.findOne(query)
         let times = {start_time: game.start_time, end_time: game.end_time}
         return new Result(200, times)
+    }
+
+    async setLootWinPercentage(gameID, body){
+        let game = await Game.findOne({_id: gameID})
+        await game.updateOne(body);
+        await game.save();
+        return new Result(200, game);
     }
 
 }
