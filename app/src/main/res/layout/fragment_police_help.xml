@@ -15,20 +15,23 @@
         android:layout_height="wrap_content"
         android:text="@string/label_help_map"
         android:textSize="20dp"
-        android:layout_marginBottom="20dp"/>
+        android:layout_marginBottom="20dp"
+        android:textColor="@color/onPrimary"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/label_help_arrest"
         android:textSize="20dp"
-        android:layout_marginBottom="20dp"/>
+        android:layout_marginBottom="20dp"
+        android:textColor="@color/onPrimary"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/label_help_overview"
         android:textSize="20dp"
-        android:layout_marginBottom="20dp"/>
+        android:layout_marginBottom="20dp"
+        android:textColor="@color/onPrimary"/>
 
 </LinearLayout>
