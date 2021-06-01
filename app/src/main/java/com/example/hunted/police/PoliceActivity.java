@@ -319,7 +319,6 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
         String string;
         try {
             string = object.toString();
-            Log.d("object  tostring ", string);
             switch (string){
                 case "\"not started\"":
                     isPlaying = false;
