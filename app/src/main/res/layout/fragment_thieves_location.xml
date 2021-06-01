@@ -5,11 +5,13 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:gravity="center"
-    android:id="@+id/fragment_thieves_location">
+    android:id="@+id/fragment_thieves_location"
+    android:background="@color/thieves">
 
     <TextView
         android:id="@+id/tvIsArrested"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="10dp"
         android:textColor="@color/error"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
