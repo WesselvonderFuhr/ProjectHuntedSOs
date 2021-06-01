@@ -221,8 +221,6 @@ class PlayerController{
 
     async editPlayer(id, body){
         let query = { _id: id };
-        console.log("id: " + id)
-        console.log(body)
         try{
             let player = await this.getPlayerByID(id);
             player = player.message;

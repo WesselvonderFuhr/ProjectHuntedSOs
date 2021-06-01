@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt');
 let Jail = require('../MongoDB/jail');
 let Game = require('../MongoDB/game');
 let Playfield = require('../MongoDB/playfield');
+let Owner = require('../MongoDB/owner');
 let Administrator = require('../MongoDB/administrator');
 
 class GameController{
@@ -18,44 +19,54 @@ class GameController{
         return new Result(200, await Game.findOne(query));
     }
 
-    async addGame(body){
-        let game = new Game();
-        //jail
-        let jail = {
-            "location" : {
-                "latitude" : 0,
-                "longitude" : 0
-            }
-        };
-        let jailModel = new Jail(jail);
-        await jailModel.save();
-        game.jail = jailModel;
-        //admin
-        let code = randomstring.generate(7).toUpperCase();
-        let hash = bcrypt.hashSync(code, 8);
-        let administrator = { name: body.name, code: hash };
-        let administratorModel = new Administrator(administrator);
-        await administratorModel.save();
-        game.administrator = administratorModel;
-        //playfield
-        let playfield = {
-            "playfield" :  [   {
-                                "location" : {
-                                    "latitude" : 0,
-                                    "longitude" : 0
-                                }
-                            }
-                     ]
-        };
-        let playfieldModel = new Playfield(playfield);
-        await playfieldModel.save();
-        game.playfield = playfieldModel;
-        //time
-        game.start_time = new Date(0);
-        game.end_time = new Date(0);
+    async addGame(body, password){
+        if(password == null){
+            return new Result(401, "Authentication needed.");
+        }
 
-        await game.save()
-        return new Result(200, code);
+        let owner = await Owner.findOne();
+
+        if(bcrypt.compareSync(password, owner.password)) {
+            let game = new Game();
+            //jail
+            let jail = {
+                "location" : {
+                    "latitude" : 0,
+                    "longitude" : 0
+                }
+            };
+            let jailModel = new Jail(jail);
+            await jailModel.save();
+            game.jail = jailModel;
+            //admin
+            let code = randomstring.generate(7).toUpperCase();
+            let hash = bcrypt.hashSync(code, 8);
+            let administrator = { name: body.name, code: hash };
+            let administratorModel = new Administrator(administrator);
+            await administratorModel.save();
+            game.administrator = administratorModel;
+            //playfield
+            let playfield = {
+                "playfield" :  [   {
+                    "location" : {
+                        "latitude" : 0,
+                        "longitude" : 0
+                    }
+                }
+                ]
+            };
+            let playfieldModel = new Playfield(playfield);
+            await playfieldModel.save();
+            game.playfield = playfieldModel;
+            //time
+            game.start_time = new Date(0);
+            game.end_time = new Date(0);
+
+            await game.save()
+            return new Result(200, code);
+        } else {
+            return new Result(403, "Forbidden, failed to authenticate");
+        }
     }
 
 
