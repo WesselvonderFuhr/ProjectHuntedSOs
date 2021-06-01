@@ -107,7 +107,8 @@ public class PoliceFragmentLocations extends Fragment {
                         double locLong = holesArea.getJSONObject(holeLoc).getDouble("longitude");
                         holes.add(new GeoPoint(locLat, locLong));
                     }
-                    holesList.add(holes);
+                    holesList.add(new ArrayList<GeoPoint>(holes));
+                    holes.clear();
                 }
                 playfieldPolygon.setPoints(playField);
                 playfieldPolygon.setHoles(holesList);

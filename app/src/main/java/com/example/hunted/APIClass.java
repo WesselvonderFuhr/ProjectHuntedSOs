@@ -166,25 +166,12 @@ public abstract class APIClass {
     }
 
     public void setTime(long totalMinutes) {
-        long h = totalMinutes / 60;
-        long m = totalMinutes % 60;
-
-
-        String hours = h + "";
-        if(hours.length() < 2){
-            hours = "0" + hours;
-        }
-        String minutes = m + "";
-        if(minutes.length() < 2){
-            minutes = "0" + minutes;
-        }
-
         if(context instanceof PoliceActivity) {
-            ((PoliceActivity) context).timeLeft = hours + ":" + minutes;
+            ((PoliceActivity) context).timeLeft = totalMinutes + " " + context.getString(R.string.minutes);
             ((PoliceActivity) context).setTime();
         }
         if(context instanceof ThievesActivity) {
-            ((ThievesActivity) context).timeLeft = hours + ":" + minutes;
+            ((ThievesActivity) context).timeLeft = totalMinutes + " " + context.getString(R.string.minutes);
             ((ThievesActivity) context).setTime();
         }
     }
