@@ -159,7 +159,7 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
 
     public void getLootList() {
         if(loot.size() == 0) {
-            lootText.setText("Nog geen buit gestolen");
+            lootText.setText(getString(R.string.label_thieves_nothing_stolen));
             return;
         }
 
@@ -167,8 +167,8 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
 
         for(int i = 0; i < loot.size(); i++) {
             int number = i+1;
-            Log.d("loot:", loot.get(i));
-            lootText.setText(lootText.getText().toString() + number + ". " + loot.get(i) + "\n");
+            String lootStolenText = lootText.getText().toString() + number + ". " + loot.get(i) + "\n";
+            lootText.setText(lootStolenText);
         }
     }
 
