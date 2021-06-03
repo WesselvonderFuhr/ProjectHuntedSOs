@@ -13,6 +13,7 @@ export class SetupLootwinpercComponent implements OnInit {
 
   public lootWinPercentage: Number;
   public showConfirmation = false
+  public showInvalid = false
 
   constructor(private gameService: GameService) {
   }
@@ -23,10 +24,15 @@ export class SetupLootwinpercComponent implements OnInit {
 
   onClickSubmit(): void {
     this.showConfirmation = false;
-
-    this.gameService.updateLootWinPercentage(this.lootWinPercentage).subscribe( (res) => {
-      console.log('Updated the lootwinpercentage');
-      this.showConfirmation = true;
-   });
+    this.showInvalid = false;
+    if(this.lootWinPercentage < 0 || this.lootWinPercentage > 100){
+      this.showInvalid = true;
+    }else{
+        this.showConfirmation = false;
+        this.gameService.updateLootWinPercentage(this.lootWinPercentage).subscribe( (res) => {
+          console.log('Updated the lootwinpercentage');
+          this.showConfirmation = true;
+      });
+    }
   }
 }

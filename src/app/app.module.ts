@@ -50,7 +50,7 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatCardModule } from '@angular/material/card';
 
 import { SetupTimeComponent } from './components/setup-time/setup-time.component';
-import { GameLootAmountComponent } from './components/game-loot-amount/game-loot-amount.component';
+import { GameStatsComponent } from './components/game-stats/game-stats.component';
 
 
 @NgModule({
@@ -69,7 +69,7 @@ import { GameLootAmountComponent } from './components/game-loot-amount/game-loot
     LoginComponent,
     SetupTimeComponent,
     SetupLootwinpercComponent,
-    GameLootAmountComponent,
+    GameStatsComponent,
   ],
   imports: [
     BrowserModule,
