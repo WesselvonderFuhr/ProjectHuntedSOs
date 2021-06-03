@@ -8,9 +8,10 @@ const {ResponseHandler} = require("../Helper/ResponseHandler");
 
 //get
 router.get('/getArrestedThieves', passport.authenticate('jwt', { session: false }), async function (req, res) {
-    let unauthorized = await authorize.Agent(req.user);
-    if(unauthorized){
-        return ResponseHandler(unauthorized, req, res);
+    let unauthorizedAgent = await authorize.Agent(req.user);
+    let unauthorizedAdmin = await authorize.Administrator(req.user);
+    if(unauthorizedAgent && unauthorizedAdmin){
+        return ResponseHandler(unauthorizedAgent, req, res);
     }
 
     let result = await PlayerController.getArrestedThieves(req.user.game_id);
