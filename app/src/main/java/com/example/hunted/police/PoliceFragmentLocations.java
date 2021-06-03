@@ -124,6 +124,7 @@ public class PoliceFragmentLocations extends Fragment {
     public void updatePlayerOnMap(double locLat, double locLong){
         GeoPoint ownLoc = new GeoPoint(locLat, locLong);
         playerMarker.setPosition(ownLoc);
+        osmMap.postInvalidate();
 
 //        Map kan niet meer bewogen worden als center steeds wordt gecalled
 //        osmMap.getController().setCenter(new GeoPoint(locLat, locLong));
