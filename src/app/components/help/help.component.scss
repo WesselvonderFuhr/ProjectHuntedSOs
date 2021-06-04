@@ -1,0 +1,15 @@
+.container {
+    display: grid;
+    grid-template-areas: "t i";
+    grid-template-columns: 50%;
+}
+
+.text {
+     grid-area: 't';
+}
+.image { grid-area: 'i';
+}
+
+mat-divider {
+    margin: 20px 0 20px 0;
+}

@@ -47,8 +47,10 @@ import { MatListModule } from '@angular/material/list';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatCardModule } from '@angular/material/card';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import  {MatDividerModule } from '@angular/material/divider';
 
 import { SetupTimeComponent } from './components/setup-time/setup-time.component';
+import { HelpComponent } from './components/help/help.component';
 
 
 @NgModule({
@@ -65,7 +67,8 @@ import { SetupTimeComponent } from './components/setup-time/setup-time.component
     SetupZoneComponent,
     SidenavComponent,
     LoginComponent,
-    SetupTimeComponent
+    SetupTimeComponent,
+    HelpComponent
   ],
   imports: [
     BrowserModule,
@@ -86,7 +89,8 @@ import { SetupTimeComponent } from './components/setup-time/setup-time.component
     MatIconModule,
     MatListModule,
     MatCardModule,
-    MatTooltipModule
+    MatTooltipModule,
+    MatDividerModule
   ],
   providers: [
     ZoneService,
