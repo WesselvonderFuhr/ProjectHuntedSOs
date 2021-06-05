@@ -1,0 +1,5 @@
+<button mat-stroked-button color="basic" (click)="printPage()">Pagina printen</button>
+<div class="container">
+    <app-setup-qr-card *ngFor="let loot of lootArray" [loot]="loot">
+    </app-setup-qr-card>
+</div>

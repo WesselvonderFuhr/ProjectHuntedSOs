@@ -40,4 +40,5 @@ export class SetupQrComponent implements OnInit {
   resetConfirmations(): void {
     this.showSaveConfirmation = false;
   }
+
 }

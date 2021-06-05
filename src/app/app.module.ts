@@ -51,6 +51,7 @@ import  {MatDividerModule } from '@angular/material/divider';
 
 import { SetupTimeComponent } from './components/setup-time/setup-time.component';
 import { HelpComponent } from './components/help/help.component';
+import { PrintComponent } from './components/print/print.component';
 
 
 @NgModule({
@@ -68,7 +69,8 @@ import { HelpComponent } from './components/help/help.component';
     SidenavComponent,
     LoginComponent,
     SetupTimeComponent,
-    HelpComponent
+    HelpComponent,
+    PrintComponent
   ],
   imports: [
     BrowserModule,

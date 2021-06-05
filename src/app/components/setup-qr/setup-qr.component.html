@@ -6,13 +6,15 @@
         <input matInput [(ngModel)]="loot.name" name="loot" placeholder="Bijv. 'Ketting'">
       </mat-form-field>
       <br/>
-      <button mat-raised-button color="primary" type="submit" color="primary">Buit opslaan</button>
+      <button mat-raised-button type="submit" color="primary">Buit opslaan</button>
    </form>
 </div>
 <h4 class="mat-h4" *ngIf="showSaveConfirmation">Buit aangemaakt</h4>
 
 <h2 [matTooltip]="toolTipTextOverview" matTooltipPosition="left">Buit overzicht</h2>
+<button mat-raised-button color="primary" [routerLink]="['/print']">Buit printen</button>
 <div class="container">
   <app-setup-qr-card *ngFor="let loot of lootArray" [loot]="loot">
   </app-setup-qr-card>
 </div>
+
