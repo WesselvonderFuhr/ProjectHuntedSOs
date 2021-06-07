@@ -24,6 +24,7 @@ import { SetupQrCardComponent } from './components/setup-qr-card/setup-qr-card.c
 import { SetupZoneComponent } from './components/setup-zone/setup-zone.component';
 import { SetupAccesscodeComponent } from './components/setup-accesscode/setup-accesscode.component';
 import { SetupAccesscodeCardComponent } from './components/setup-accesscode-card/setup-accesscode-card.component';
+import { SetupLootwinpercComponent } from './components/setup-lootwinperc/setup-lootwinperc.component';
 
 //Game Components
 import { GameComponent } from './components/game/game.component';
@@ -39,6 +40,7 @@ import { AccessCodeService } from './services/access-code/accesscode.service'
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSliderModule} from '@angular/material/slider';
 import { MatTableModule } from '@angular/material/table'
 import { MatSelectModule } from '@angular/material/select'
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -52,6 +54,7 @@ import  {MatDividerModule } from '@angular/material/divider';
 import { SetupTimeComponent } from './components/setup-time/setup-time.component';
 import { HelpComponent } from './components/help/help.component';
 import { PrintComponent } from './components/print/print.component';
+import { GameStatsComponent } from './components/game-stats/game-stats.component';
 
 
 @NgModule({
@@ -70,7 +73,8 @@ import { PrintComponent } from './components/print/print.component';
     LoginComponent,
     SetupTimeComponent,
     HelpComponent,
-    PrintComponent
+    PrintComponent,
+    GameStatsComponent,
   ],
   imports: [
     BrowserModule,
@@ -82,8 +86,9 @@ import { PrintComponent } from './components/print/print.component';
     QRCodeModule,
     MatSidenavModule,
     MatButtonModule,
-    MatInputModule,
     MatFormFieldModule,
+    MatInputModule,
+    MatSliderModule,
     MatTableModule,
     MatSelectModule,
     LayoutModule,

@@ -1,0 +1,29 @@
+.container {
+    display: flex;
+    align-content: flex-start;
+    flex-wrap: wrap;
+}
+
+.card-green {
+    margin-right: 75px;
+    margin-bottom: 30px;
+    height: 100px;
+    width: 100px;
+    background-color: #3F51B5;
+    color:white;
+
+    text-align: center;
+    
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    border-radius: 15px; /* 5px rounded corners */
+}
+
+h2 {
+    padding-top: 30px;
+    font-size: 30px;
+}
+
+h3{
+    padding-left: 10px;
+}

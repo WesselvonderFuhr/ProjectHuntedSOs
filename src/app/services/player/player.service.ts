@@ -21,6 +21,9 @@ export class PlayerService {
     return this.http.get(APIurl);
   }
 
-
+  getArrestedThieves(): Observable<any>{
+    let APIurl = this.playerURL + "/getArrestedThieves/";
+    return this.http.get(APIurl);
+  }
 
 }
