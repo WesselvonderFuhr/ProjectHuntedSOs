@@ -2,14 +2,23 @@ const Result = require("../Helper/Result");
 const jwt = require('jsonwebtoken');
 const secret = require("../Authorization/secret");
 const randomstring = require("randomstring");
+const bcrypt = require('bcrypt');
 
 let Administrator = require('../MongoDB/administrator');
 let Game = require('../MongoDB/game');
 
 class AdministratorController{
     async authenticate(name, code){
-        let query = { name: name, code: code };
-        let administrator = await Administrator.findOne(query);
+        let query = { name: name };
+        let administrators = await Administrator.find(query);
+
+        let administrator = null;
+        for(let i = 0; i < administrators.length; i++) {
+            if(bcrypt.compareSync(code, administrators[i].code)) {
+                administrator = administrators[i];
+                break;
+            }
+        }
 
         if(administrator != null){
             let query = { administrator: administrator._id };

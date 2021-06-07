@@ -29,6 +29,24 @@ class LootController{
         return await Loot.findOne(query);
     }
 
+    async GetStolenLootFromGame(game_id){
+        let query = { _id: game_id };
+        var game = await Game.findOne(query).populate('players');
+        let players = game.players;
+        let uniqueLoot = new Array();
+        for(let i = 0; i<players.length;i++){
+            let loot = players[i].loot;
+            for(let j = 0; j < loot.length;j++){
+                if(!uniqueLoot.includes(loot[j]._id)){
+                    uniqueLoot.push(loot[j]._id);
+                }    
+            }
+        }
+        return new Result(200, uniqueLoot.length);
+    }
+
+    
+
     async addLoot(game_id, body){
         let loot = new Loot(body);
         try {
@@ -58,10 +76,9 @@ class LootController{
                 return new Result(404, "Loot not found");
             }
         }
-        catch{
-            return null;
-        }
-        
+        catch (e){
+            return new Result(400, e.message);
+        }   
     }
 
     async deleteLoot(game_id, id){
@@ -85,9 +102,9 @@ class LootController{
                 return new Result(404, "Loot not found");
             }
         }
-        catch{
-            return null;
-        }
+        catch (e){
+            return new Result(400, e.message);
+        }   
     }
 
 

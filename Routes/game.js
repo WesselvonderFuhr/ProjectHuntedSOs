@@ -19,7 +19,7 @@ router.get('/', passport.authenticate('jwt', { session: false }), async function
 });
 
 router.post('/', async function (req, res) {
-    let result = await GameController.addGame(req.body);
+    let result = await GameController.addGame(req.body, req.query.password);
     ResponseHandler(result, req, res);
 });
 
@@ -47,6 +47,15 @@ router.put('/time', passport.authenticate('jwt', { session: false }), async func
     ResponseHandler(result, req, res);
 });
 
+router.put('/lootwinpercentage', passport.authenticate('jwt', { session: false }), async function (req, res) {
+    let unauthorized = await authorize.Administrator(req.user);
+    if(unauthorized){
+        return ResponseHandler(unauthorized, req, res);
+    }
+    let result = await GameController.setLootWinPercentage(req.user.game_id, req.body);
+    ResponseHandler(result, req, res);
+});
+
 router.get('/status', passport.authenticate('jwt', { session: false }), async function (req, res) {
     // let unauthorized = await authorize.Administrator(req.user);
     // if(unauthorized){
@@ -70,7 +79,5 @@ router.post('/authenticate', async function (req, res) {
     let result = await AdministratorController.authenticate(req.query.name, req.query.code);
     ResponseHandler(result, req, res);
 });
-
-
 
 module.exports = router;

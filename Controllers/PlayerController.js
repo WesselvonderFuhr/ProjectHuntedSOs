@@ -51,6 +51,7 @@ class PlayerController{
         }
         return new Result(200,result);
     }
+
     async CheckPlayerRole(id){
         let role;
         var query = { _id: id};
@@ -244,8 +245,6 @@ class PlayerController{
 
     async editPlayer(id, body){
         let query = { _id: id };
-        console.log("id: " + id)
-        console.log(body)
         try{
             let player = await this.getPlayerByID(id);
             player = player.message;
