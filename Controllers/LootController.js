@@ -58,10 +58,9 @@ class LootController{
                 return new Result(404, "Loot not found");
             }
         }
-        catch{
-            return null;
-        }
-        
+        catch (e){
+            return new Result(400, e.message);
+        }   
     }
 
     async deleteLoot(game_id, id){
@@ -85,9 +84,9 @@ class LootController{
                 return new Result(404, "Loot not found");
             }
         }
-        catch{
-            return null;
-        }
+        catch (e){
+            return new Result(400, e.message);
+        }   
     }
 
 
