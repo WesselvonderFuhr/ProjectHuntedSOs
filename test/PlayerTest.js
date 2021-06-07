@@ -28,6 +28,28 @@ describe('player get players', async function(){
         expect(result.responseCode).to.equal(404);
     });
 });
+//getScores
+describe('player get scores', async function(){
+    it('get scores 200', async ()  => {
+        let game = await Game.findOne();
+        let game_id = game.id;
+        let result = await PlayerController.getScoresLists(game_id);
+        expect(result.responseCode).to.equal(200);
+    });
+});
+describe('player get scores', async function(){
+    it('get scores 404', async ()  => {
+        let game_id;
+        let games = await Game.find();
+        games.forEach(g => {
+            if(g.players.length == 0){
+                game_id = g.id;
+            }
+        });        
+        let result = await PlayerController.getScoresLists(game_id);
+        expect(result.responseCode).to.equal(404);
+    });
+});
 //getPlayerByID
 describe('player get player by id', async function(){
     it('get player 200', async ()  => {

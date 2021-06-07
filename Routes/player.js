@@ -17,6 +17,17 @@ router.get('/getArrestedThieves', passport.authenticate('jwt', { session: false 
     ResponseHandler(result, req, res);
 });
 
+router.get('/scores', passport.authenticate('jwt', { session: false }), async  function (req, res) {
+
+    //let result = await PlayerController.getScoresLists(req.user.game_id)
+    let unauthorized = await authorize.Player(req.user);
+    if(unauthorized){
+        return ResponseHandler(unauthorized, req, res);
+    }
+    let result = await PlayerController.getScoresLists(req.user.game_id)
+    ResponseHandler(result, req, res);
+});
+
 router.get('/', passport.authenticate('jwt', { session: false }), async function (req, res) {
     if(req.user.role === "Administrator"){
         let result = await PlayerController.getAllPlayers(req.user.game_id);

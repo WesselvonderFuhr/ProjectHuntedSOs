@@ -19,6 +19,29 @@ class PlayerController{
         }
     }
 
+    async getScoresLists(game_id) {
+        let query = { _id: game_id };
+        let result = await Game.findOne(query).populate('players');
+        result = result.players;
+
+        let thieves = []
+        let police = []
+
+        result.forEach(player => {
+            if(player.role == "Boef") {
+                thieves.push(player)
+            }
+        });
+
+        result.forEach(player => {
+            if(player.role == "Agent") {
+                police.push(player)
+            }
+        });
+
+        return new Result(200, {thieves, police})
+    }
+
     async getPlayerByID(id){
         
         let query = { _id: id };
