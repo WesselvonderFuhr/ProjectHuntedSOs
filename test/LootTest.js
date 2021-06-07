@@ -125,4 +125,12 @@ describe('loot delete loot', async function(){
     });
 });
 
-
+//GetStolenLootFromGame
+describe('loot get stolen loot by game', async function(){
+    it('get loot 200', async ()  => {
+        let game = await Game.findOne();
+        let game_id = game.id;
+        let result = await LootController.GetStolenLootFromGame(game_id);
+        expect(result.responseCode).to.equal(200);
+    });
+});

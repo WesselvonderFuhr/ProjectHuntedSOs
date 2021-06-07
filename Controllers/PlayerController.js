@@ -28,6 +28,7 @@ class PlayerController{
         }
         return new Result(200,result);
     }
+
     async CheckPlayerRole(id){
         let role;
         var query = { _id: id};

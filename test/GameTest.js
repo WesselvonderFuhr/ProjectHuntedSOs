@@ -85,3 +85,14 @@ describe('game set time ', async function(){
     });
 });
 
+describe('set loot win', async function(){
+    it('set win 200', async ()  => {
+        let body = {
+            "lootWinPercentage": 30
+        }
+        let game = await Game.findOne();
+        let game_id = game.id;
+        let result = await GameController.setLootWinPercentage(game_id,body);
+        expect(result.responseCode).to.equal(200);
+    });
+});
