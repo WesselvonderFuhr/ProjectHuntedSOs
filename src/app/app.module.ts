@@ -75,6 +75,7 @@ import { GameStatsComponent } from './components/game-stats/game-stats.component
     HelpComponent,
     PrintComponent,
     GameStatsComponent,
+    SetupLootwinpercComponent,
   ],
   imports: [
     BrowserModule,
