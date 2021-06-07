@@ -227,6 +227,7 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
                     }
                 };
                 queue.add(stringRequest);
+                Log.d("int outofbounds", "dsfgds");
                 policeAPIClass.checkOutOfBounds();
             }
 
@@ -321,19 +322,19 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
         String string;
         try {
             string = object.toString();
-            Log.d("object  tostring ", string);
+//            Log.d("object  tostring ", string);
             switch (string){
                 case "\"not started\"":
                     isPlaying = false;
-                    Log.d("status", "not started");
+//                    Log.d("status", "not started");
                     break;
                 case "\"in progress\"":
                     isPlaying = true;
-                    Log.d("status", "in progress");
+//                    Log.d("status", "in progress");
                     break;
                 case "\"stopped\"":
                     isPlaying = false;
-                    Log.d("status", "stopped");
+//                    Log.d("status", "stopped");
                     break;
             }
         } catch (Exception e){
@@ -396,6 +397,9 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
                 break;
             case R.id.nav_score:
                 fragmentClass = PoliceFragmentScore.class;
+                break;
+            case R.id.nav_help:
+                fragmentClass = PoliceFragmentHelp.class;
                 break;
             default:
                 fragmentClass = PoliceFragmentLocations.class;

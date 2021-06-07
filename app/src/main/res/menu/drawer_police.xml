@@ -14,5 +14,9 @@
             android:id="@+id/nav_score"
             android:icon="@drawable/ic_baseline_back_hand_24"
             android:title="@string/label_police_score" />
+        <item
+            android:id="@+id/nav_help"
+            android:icon="@drawable/ic_baseline_help"
+            android:title="@string/label_help" />
     </group>
 </menu>

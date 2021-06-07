@@ -36,12 +36,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 public abstract class APIClass {
+    private final int OUTOFBOUNDS_AMOUNT = 4;
 
     protected Context context;
 
     protected String token;
     protected String URL;
     protected RequestQueue queue;
+
+    private int outOfBoundsCounter;
 
     private long lastToast;
 
@@ -50,17 +53,29 @@ public abstract class APIClass {
         this.token = token;
         URL = url;
         queue = Volley.newRequestQueue(context);
+        outOfBoundsCounter = 1;
     }
 
     public void checkOutOfBounds() {
         String requestURL = URL + "player/outofbounds/";
         StringRequest request = new StringRequest(Request.Method.GET, requestURL, response -> {
+//            Log.d("checkOutOfBoundsResponse", response);
+//            Log.d("int outOfBoundsCounter", "" + outOfBoundsCounter);
             if (response.equals("true")){
-                vibrateOutOfPlayingField();
-            } else if (response.equals("false")){
+                if (outOfBoundsCounter == 0){ //outOfBoundsCounter is set to 0 when out of bounds too many times
+                    vibrateOutOfPlayingField();
+                } else {
+                    outOfBoundsCounter++;
+                    if (outOfBoundsCounter >= OUTOFBOUNDS_AMOUNT){
+                        outOfBoundsCounter = 0;
+                    }
+                }
 
+            } else if (response.equals("false")){
+                outOfBoundsCounter = 1;
             }
         }, error -> {
+            Log.d("int outofbounds", "dsfgds");
             NetworkResponse response = error.networkResponse;
             if (error instanceof ServerError && response != null) {
                 try {
