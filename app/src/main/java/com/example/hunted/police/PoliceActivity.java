@@ -170,7 +170,8 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
     }
 
     public void setArrestedPlayers() {
-        arrestedText.setText("Er zijn " + arrestedThieves + " van de " + amountOfThieves + " gearresteerd.");
+        String totalArrestedText = getString(R.string.label_police_total_arrested_front) + arrestedThieves + getString(R.string.label_police_total_arrested_middle) + amountOfThieves + getString(R.string.label_police_total_arrested_end);
+        arrestedText.setText(totalArrestedText);
     }
 
     private TextView lootText;
@@ -182,7 +183,7 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
 
     public void getLootList() {
         if(loot.size() == 0) {
-            lootText.setText("Nog geen buit ingenomen");
+            lootText.setText(getString(R.string.label_police_nothing_stolen));
             return;
         }
 
@@ -190,7 +191,8 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
 
         for(int i = 0; i < loot.size(); i++) {
             int number = i+1;
-            lootText.setText(lootText.getText().toString() + number + ". " + loot.get(i) + "\n");
+            String lootSavedText = lootText.getText().toString() + number + ". " + loot.get(i) + "\n";
+            lootText.setText(lootSavedText);
         }
     }
 

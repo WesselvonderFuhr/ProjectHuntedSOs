@@ -13,12 +13,6 @@
     <string name="label_code_login">Code:</string>
     <string name="button_login">Log in</string>
     <string name="label_wrong_login">Combinatie gebruikersnaam en code onjuist!</string>
-    <string name="label_thief_nearby">Er is 1 boef in de buurt!</string>
-    <string name="label_thieves_nearby_front">Er zijn </string>
-    <string name="label_thieves_nearby_end"> boeven in de buurt!</string>
-    <string name="label_no_thieves_nearby">Er zijn geen boeven in de buurt.</string>
-    <string name="label_arrest_succes">De boef is gearresteerd!</string>
-    <string name="label_arrest_fail">De boef is ontsnapt!</string>
 
     <!--  POLICE  -->
     <string name="label_police_header">Politie</string>
@@ -27,6 +21,16 @@
     <string name="label_police_score">Ingenomen buit</string>
     <string name="label_police_amount_arrested">Boeven gearresteerd</string>
     <string name="button_police_arrest">Arresteer!</string>
+    <string name="label_thief_nearby">Er is 1 boef in de buurt!</string>
+    <string name="label_thieves_nearby_front">Er zijn </string>
+    <string name="label_thieves_nearby_end"> boeven in de buurt!</string>
+    <string name="label_no_thieves_nearby">Er zijn geen boeven in de buurt.</string>
+    <string name="label_arrest_succes">De boef is gearresteerd!</string>
+    <string name="label_arrest_fail">De boef is ontsnapt!</string>
+    <string name="label_police_total_arrested_front">Er zijn </string>
+    <string name="label_police_total_arrested_middle"> van de </string>
+    <string name="label_police_total_arrested_end"> gearresteerd.</string>
+    <string name="label_police_nothing_stolen">Nog geen buit ingenomen</string>
 
     <!--  THIEVES  -->
     <string name="label_thieves_header">Boeven</string>
@@ -40,6 +44,7 @@
     <string name="label_thieves_steal_stopped">Gestopt met stelen!</string>
     <string name="label_thieves_steal_already_stolen">Deze heb je al gestolen.</string>
     <string name="label_thieves_steal_non_existant">Dit is geen buit.</string>
+    <string name="label_thieves_nothing_stolen">Nog geen buit ingenomen</string>
     <string name="label_thieves_steal_retry">Stelen is mislukt, probeer opnieuw.</string>
     <string name="label_thieves_steal_error">Er ging iets mis.</string>
 
