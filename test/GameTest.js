@@ -23,10 +23,11 @@ describe('game get game by id ', async function(){
 //addGame
 describe('game add game', async function(){
     it('add game 200',  async () => {
+        let password = "Ridderbier"
         let body = {
             "name": "Karel"
         }
-        let result = await GameController.addGame(body);
+        let result = await GameController.addGame(body, password);
         expect(result.responseCode).to.equal(200);
     });
 });

@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+let Owner = require('../MongoDB/owner');
 let Jail = require('../MongoDB/jail');
 let Game = require('../MongoDB/game');
 let Accesscode = require('../MongoDB/accesscode');
@@ -6,9 +7,7 @@ let Player = require('../MongoDB/player');
 let Playfield = require('../MongoDB/playfield');
 let Loot = require('../MongoDB/loot');
 let Administrator = require('../MongoDB/administrator');
-const { setgameTime } = require('../Controllers/GameController');
-const jail = require('../MongoDB/jail');
-const game = require('../MongoDB/game');
+const bcrypt = require('bcrypt');
 
 before(async () => {  
     //connect
@@ -21,6 +20,7 @@ before(async () => {
 
 after(async () => {  
   //clear db
+  await Owner.deleteMany();
   await Loot.deleteMany();
   await Jail.deleteMany();
   await Game.deleteMany();
@@ -32,6 +32,10 @@ after(async () => {
 });
 
 async function FillDB(){
+  //owner
+  let owner = new Owner();
+  owner.password = bcrypt.hashSync("Ridderbier", 8);
+  await owner.save();
   //jail
   let jailModel = new Jail();
   jailModel.location = {

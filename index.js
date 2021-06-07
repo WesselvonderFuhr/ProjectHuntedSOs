@@ -12,6 +12,7 @@ const player = require('./Routes/player.js');
 const jail = require('./Routes/jail.js');
 const accesscode = require('./Routes/accesscode.js');
 const game = require('./Routes/game.js');
+const owner = require('./Routes/owner.js');
 
 require('./Authorization/passport-jwt');
 
@@ -22,6 +23,7 @@ app.use('/player', player);
 app.use('/jail', jail);
 app.use('/accesscode', accesscode);
 app.use('/game', game);
+app.use('/owner', owner);
 
 
 app.listen(process.env.PORT || 3000);

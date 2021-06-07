@@ -19,7 +19,7 @@ router.get('/', passport.authenticate('jwt', { session: false }), async function
 });
 
 router.post('/', async function (req, res) {
-    let result = await GameController.addGame(req.body);
+    let result = await GameController.addGame(req.body, req.query.password);
     ResponseHandler(result, req, res);
 });
 

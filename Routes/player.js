@@ -77,12 +77,10 @@ router.put('/arrest/:thief_id', passport.authenticate('jwt', { session: false })
     let thief = await Player.findOne({_id: req.params.thief_id})
     let loot = []
 
-    console.log(thief)
     if(thief.loot.length > 0) {
         for(var i =0; i < thief.loot.length; i++) {
             loot.push(thief.loot[i])
         }
-        console.log("loot: " + loot)
         let lootQuery = {loot: loot }
 
         await PlayerController.editPlayer(req.user.player_id, lootQuery);
@@ -111,13 +109,5 @@ router.put('/location', passport.authenticate('jwt', { session: false }),async  
     let result = await PlayerController.editPlayer(req.user.player_id, location);
     ResponseHandler(result, req, res);
 });
-
-
-
-// router.get('/getArrestedThieves', async function (req, res) {
-//     console.log("aids")
-//     let result = await PlayerController.getArrestedThieves("608bfc395e6f4c126818bee4");
-//     ResponseHandler(result, req, res);
-// });
 
 module.exports = router;
