@@ -139,7 +139,6 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
         setupDrawerContent(navigationView);
 
         CheckIfGameIsStopped();
-
     }
 
     private TextView timeText;
@@ -331,16 +330,13 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
             switch (string){
                 case "\"not started\"":
                     isPlaying = false;
-                    Log.d("status", "not started");
                     break;
                 case "\"in progress\"":
                     isPlaying = true;
-                    Log.d("status", "in progress");
                     break;
                 case "\"stopped\"":
                     isPlaying = false;
                     gameStopped = true;
-                    Log.d("status", "stopped");
                     break;
             }
         } catch (Exception e){
@@ -365,6 +361,12 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
 
     public void openGameStopped(){
         Intent intent = new Intent(getApplicationContext(), GameStoppedActivity.class);
+        //intent.putExtra("role", "police");
+        //intent.putExtra("thieves", amountOfThieves);
+        //intent.putExtra("arrestedThieves", arrestedThieves);
+
+        intent.putExtra("token", token.replaceAll("\"",""));
+
         startActivity(intent);
     }
 

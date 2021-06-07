@@ -93,7 +93,6 @@ public class MainActivity extends AppCompatActivity implements Observer {
 
     public void openGameActivity(String token, String role){
         Intent intent = null;
-        Log.d("role", role);
         if(role.equals("Agent")) {
             intent = new Intent(getApplicationContext(), PoliceActivity.class);
         } else if(role.equals("Boef")) {
@@ -121,15 +120,12 @@ public class MainActivity extends AppCompatActivity implements Observer {
             switch (string) {
                 case "\"not started\"":
                     gameStarted = false;
-                    Log.d("status", "not started");
                     break;
                 case "\"in progress\"":
                     gameStarted = true;
-                    Log.d("status", "in progress");
                     break;
                 case "\"stopped\"":
                     gameStarted = false;
-                    Log.d("status", "stopped");
                     break;
             }
         } catch (Exception e) {

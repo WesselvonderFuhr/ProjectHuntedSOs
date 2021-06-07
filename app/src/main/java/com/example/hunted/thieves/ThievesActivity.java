@@ -44,6 +44,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.hunted.GameStoppedActivity;
 import com.example.hunted.R;
 import com.example.hunted.police.PoliceActivity;
 import com.example.hunted.repeatingtask.RepeatingTask;
@@ -62,6 +63,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class ThievesActivity extends AppCompatActivity implements Observer {
     private final int LOCATION_REQUEST_CODE = 1234;
@@ -77,6 +80,9 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
     private RepeatingTask arrestedRepeatingTask;
 
     public String token;
+
+    private boolean isPlaying;
+    private boolean gameStopped;
 
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
@@ -126,6 +132,8 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
 
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         setupDrawerContent(navigationView);
+
+        CheckIfGameIsStopped();
     }
 
     private TextView timeText;
@@ -167,7 +175,6 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
 
         for(int i = 0; i < loot.size(); i++) {
             int number = i+1;
-            Log.d("loot:", loot.get(i));
             lootText.setText(lootText.getText().toString() + number + ". " + loot.get(i) + "\n");
         }
     }
@@ -249,6 +256,47 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
         if (ActivityCompat.checkSelfPermission(ThievesActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 0, locationListener);
         }
+    }
+
+    private void checkGameStatus(Object object){
+        String string;
+        try {
+            string = object.toString();
+            switch (string){
+                case "\"not started\"":
+                    isPlaying = false;
+                    break;
+                case "\"in progress\"":
+                    isPlaying = true;
+                    break;
+                case "\"stopped\"":
+                    isPlaying = false;
+                    gameStopped = true;
+                    break;
+            }
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+    }
+
+    public void CheckIfGameIsStopped() {
+        Timer timer = new Timer();
+        int begin = 0;
+        int timeInterval = 5000;
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if(gameStopped){
+                    timer.cancel();
+                    openGameStopped();
+                }
+            }
+        }, begin, timeInterval);
+    }
+
+    public void openGameStopped(){
+        Intent intent = new Intent(getApplicationContext(), GameStoppedActivity.class);
+        startActivity(intent);
     }
 
     @Override
