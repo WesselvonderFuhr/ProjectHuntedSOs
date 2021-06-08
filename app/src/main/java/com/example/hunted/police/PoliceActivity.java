@@ -39,10 +39,13 @@ import com.android.volley.toolbox.HttpHeaderParser;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.hunted.GameStoppedActivity;
 import com.example.hunted.R;
+import com.example.hunted.WaitingScreen;
 import com.example.hunted.repeatingtask.RepeatingTask;
 import com.example.hunted.repeatingtask.RepeatingTaskName;
 import com.example.hunted.repeatingtask.RepeatingTaskService;
+import com.example.hunted.thieves.ThievesActivity;
 import com.example.hunted.thieves.ThievesFragmentLocations;
 import com.google.android.material.navigation.NavigationView;
 
@@ -58,6 +61,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class PoliceActivity extends AppCompatActivity implements Observer {
     private final int PING_MS = 3000;
@@ -77,6 +82,7 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
 
     private boolean hasNotBound = true;
     private boolean isPlaying;
+    private boolean gameStopped;
 
     private DrawerLayout drawerLayout;
     private Toolbar toolbar;
@@ -105,6 +111,7 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
         setContentView(R.layout.activity_police);
 
         isPlaying = false;
+        gameStopped = false;
 
         URL = getString(R.string.url);
         queue = Volley.newRequestQueue(this);
@@ -131,6 +138,7 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
         navigationView = (NavigationView) findViewById(R.id.nav_view);
         setupDrawerContent(navigationView);
 
+        CheckIfGameIsStopped();
     }
 
     private TextView timeText;
@@ -322,24 +330,47 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
         String string;
         try {
             string = object.toString();
-//            Log.d("object  tostring ", string);
             switch (string){
                 case "\"not started\"":
                     isPlaying = false;
-//                    Log.d("status", "not started");
                     break;
                 case "\"in progress\"":
                     isPlaying = true;
-//                    Log.d("status", "in progress");
                     break;
                 case "\"stopped\"":
                     isPlaying = false;
-//                    Log.d("status", "stopped");
+                    gameStopped = true;
                     break;
             }
         } catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    public void CheckIfGameIsStopped() {
+        Timer timer = new Timer();
+        int begin = 0;
+        int timeInterval = 5000;
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if(gameStopped){
+                    timer.cancel();
+                    openGameStopped();
+                }
+            }
+        }, begin, timeInterval);
+    }
+
+    public void openGameStopped(){
+        Intent intent = new Intent(getApplicationContext(), GameStoppedActivity.class);
+        //intent.putExtra("role", "police");
+        //intent.putExtra("thieves", amountOfThieves);
+        //intent.putExtra("arrestedThieves", arrestedThieves);
+
+        intent.putExtra("token", token.replaceAll("\"",""));
+
+        startActivity(intent);
     }
 
     //sets the arrest button to active or non-active based on

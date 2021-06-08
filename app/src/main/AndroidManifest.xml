@@ -23,6 +23,7 @@
             android:exported="true" />
 
         <activity android:name=".thieves.ThievesActivity" />
+        <activity android:name=".GameStoppedActivity" />
         <activity android:name=".police.PoliceActivity" />
         <activity android:name=".MainActivity">
             <intent-filter>

@@ -19,6 +19,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.example.hunted.models.Player;
 import com.example.hunted.police.PoliceActivity;
 import com.example.hunted.police.PoliceFragmentLocations;
 import com.example.hunted.thieves.ThievesActivity;
@@ -33,6 +34,7 @@ import java.time.Duration;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public abstract class APIClass {
@@ -198,6 +200,66 @@ public abstract class APIClass {
                 (Request.Method.GET, getPlayfield, null, response -> {
                     try {
                         sendPlayfieldToFragmentLocations(response.getJSONArray("playfield"), fragment);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }, error -> {
+                    NetworkResponse response = error.networkResponse;
+                    if (error instanceof ServerError && response != null) {
+                        try {
+                            String res = new String(response.data, HttpHeaderParser.parseCharset(response.headers, "utf-8"));
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }){
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
+            }
+        };
+        queue.add(jsonObjectRequest);
+    }
+
+    public void getScores(List<Player> thievesList, List<Player> policeList) {
+        final String getScores = URL + "player/scores";
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest
+                (Request.Method.GET, getScores, null, response -> {
+                    try {
+                        JSONArray thieves = response.getJSONArray("thieves");
+                        JSONArray police = response.getJSONArray("police");
+
+                        for(int i = 0; i < thieves.length(); i++) {
+                            JSONArray tempLoot = thieves.getJSONObject(i).getJSONArray("loot");
+                            ArrayList<String> playerLoot = new ArrayList<>();
+                            if(tempLoot.length() != 0) {
+                                for(int j = 0; j < tempLoot.length(); j++) {
+                                    playerLoot.add(tempLoot.getString(j));
+                                }
+                            }
+
+                            Player player = new Player(thieves.getJSONObject(i).getString("name"), thieves.getJSONObject(i).getString("role"), thieves.getJSONObject(i).getBoolean("arrested"), playerLoot);
+                            thievesList.add(player);
+                        }
+
+                        for(int i = 0; i < police.length(); i++) {
+                            JSONArray tempLoot = police.getJSONObject(i).getJSONArray("loot");
+                            ArrayList<String> playerLoot = new ArrayList<>();
+
+                            if(tempLoot.length() != 0) {
+                                for(int j = 0; j < tempLoot.length(); j++) {
+                                    playerLoot.add(tempLoot.getString(j));
+                                }
+                            }
+
+                            Player player = new Player(police.getJSONObject(i).getString("name"), police.getJSONObject(i).getString("role"), police.getJSONObject(i).getBoolean("arrested"), playerLoot);
+                            policeList.add(player);
+                        }
+
+                        ((GameStoppedActivity) context).SetViewAfterDataIsLoaded();
+
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
