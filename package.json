@@ -4,6 +4,7 @@
   "description": "Hunted api",
   "main": "index.js",
   "dependencies": {
+    "bcrypt": "^5.0.1",
     "body-parser": "^1.19.0",
     "connect": "^3.7.0",
     "curl": "^0.1.4",

@@ -54,64 +54,6 @@ class AccesscodeController{
         }
     }
 
-    //Is deze method nodig?
-    async checkAssigned(code){
-        var accesscodeQuery = {code: code}
-
-        var accessCode = await Accesscode.findOne(accesscodeQuery)
-        if(accessCode == null){
-            return new Result(404, "Accesscode does not exist");
-        }
-        
-        if(accessCode.assignedTo != null) {
-            return new Result(401, "Accesscode already assigned");
-        } else {
-            return new Result(200, "Accesscode not assigned");
-        }
-    }
-
-    async checkCodeNameCombination(code, username){
-        var accesscodeQuery = {code: code}
-        var accessCode = await Accesscode.findOne(accesscodeQuery)
-
-        if(accessCode.assignedTo != null) {
-            var player = await Player.findOne({ _id: accessCode.assignedTo })
-                if(player == null){
-                        return new Result(404, 'Player does not exist')
-                }else{
-                    if(username == player.name) {
-                        return new Result(200, accessCode)
-                    } else {
-                        return new Result(400, 'Wrong player and code combination')
-                    }
-                }
-        } else {
-            return new Result(200, accesscode)
-        }
-    }
-
-    async assignCode(playerId, codeId){
-        var playerQuery = {_id: playerId}
-        var accesscodeQuery = {_id: codeId}
-        var code = await Accesscode.findOne(accesscodeQuery)
-        var player = await Player.findOne(playerQuery)
-
-        if(code == null){
-            return new Result(404, 'Code does not exist')
-        }
-
-        if(player == null){
-            return new Result(404, 'Player does not exist')
-        }
-
-        if (code.assignedTo != null){
-            return new Result(404, 'Accesscode is already assigned')
-        }else{
-            await Accesscode.updateOne(accesscodeQuery, {assignedTo: playerId})
-            return new Result(200, "Accesscode has been updated")
-        }
-    }
-
     async deleteCode(id, role, game_id){
         //TODO IMPLEMENT GAME_ID
 
