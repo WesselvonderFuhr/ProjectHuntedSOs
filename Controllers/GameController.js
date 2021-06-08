@@ -152,9 +152,9 @@ class GameController{
         let lootSet = (lootCount > 0) ? true : false;
 
         if(jailSet && playFieldSet && accessCodesSet && lootSet) {
-            return new Result(200, { "setup": "ready" });
+            return new Result(200, { "status": "ready" });
         }
-        return new Result(200, { "setup": "not ready" });
+        return new Result(200, { "status": "not ready" });
     }
 
     isValidDate(date) {
