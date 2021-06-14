@@ -11,7 +11,7 @@ class AdministratorController{
     async authenticate(name, code){
         let query = { name: name };
         let administrators = await Administrator.find(query);
-
+        
         let administrator = null;
         for(let i = 0; i < administrators.length; i++) {
             if(bcrypt.compareSync(code, administrators[i].code)) {

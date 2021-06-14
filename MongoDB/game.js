@@ -9,6 +9,7 @@ const gameSchema = new mongoose.Schema({
     accesscodes: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Accesscode'}],
     players: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Player' }],
     playfield: { type: mongoose.Schema.Types.ObjectId, ref: 'Playfield' },
+    messages: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Message' }],
     lootWinPercentage: { type: Number},
     start_time: { type: Date},
     end_time: { type: Date},
@@ -23,6 +24,10 @@ gameSchema.virtual('numberOfLoot').get(function () {
 
 gameSchema.virtual('numberOfPlayers').get(function () {
     return this.players.length;
+});
+
+gameSchema.virtual('numberOfMessages').get(function () {
+    return this.messages.length;
 });
 
 module.exports = Game = mongoose.model('Game', gameSchema);

@@ -62,6 +62,7 @@ class GameController{
             game.start_time = new Date(0);
             game.end_time = new Date(0);
             game.lootWinPercentage = 70;
+            game.messages = [];
 
             await game.save()
             return new Result(200, code);
