@@ -37,7 +37,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public abstract class APIClass {
+public class APIClass {
     private final int OUTOFBOUNDS_AMOUNT = 4;
 
     protected Context context;
