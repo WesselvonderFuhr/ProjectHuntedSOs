@@ -429,6 +429,9 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
             case R.id.nav_score:
                 fragmentClass = PoliceFragmentScore.class;
                 break;
+            case R.id.nav_messages:
+                fragmentClass = PoliceFragmentMessages.class;
+                break;
             case R.id.nav_help:
                 fragmentClass = PoliceFragmentHelp.class;
                 break;
