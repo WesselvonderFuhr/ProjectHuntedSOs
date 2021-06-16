@@ -17,7 +17,7 @@ router.post('/', passport.authenticate('jwt', { session: false }), async functio
   });
 
   router.get('/', passport.authenticate('jwt', { session: false }), async function (req, res) {
-    let unauthorized = await authorize.Administrator(req.user);
+    let unauthorized = await authorize.Player(req.user);
     if(unauthorized){
       return ResponseHandler(unauthorized, req, res);
     }
