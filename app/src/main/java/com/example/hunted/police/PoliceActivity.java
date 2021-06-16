@@ -67,6 +67,7 @@ import java.util.TimerTask;
 public class PoliceActivity extends AppCompatActivity implements Observer {
     private final int PING_MS = 3000;
     private final int PING_STATUS = 1000;
+    private final int PING_MESSAGES = 1500;
     private final int LOCATION_REQUEST_CODE = 1234;
 
     private PoliceAPIClass policeAPIClass;
@@ -235,7 +236,6 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
                     }
                 };
                 queue.add(stringRequest);
-                Log.d("int outofbounds", "dsfgds");
                 policeAPIClass.checkOutOfBounds();
             }
 
@@ -312,6 +312,14 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
             arrestableThieves = (JSONArray) object;
             policeFragmentArrest.giveArrestablePlayers(getArrestableThieves());
             policeFragmentArrest.setArrestButtonActive(shouldUpdateArrestButton());
+        }
+    }
+
+    private void checkMessages(Object object){
+        Fragment fragment = getCurrentFragment();
+        if(fragment instanceof PoliceFragmentMessages) {
+            PoliceFragmentMessages policeFragmentMessages = (PoliceFragmentMessages) fragment;
+            policeFragmentMessages.loadMessages(object);
         }
     }
 
@@ -484,6 +492,9 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
             case CHECK_GAME_STATUS:
                 runOnUiThread(() -> checkGameStatus(o));
                 break;
+            case CHECK_MESSAGES:
+                runOnUiThread(() -> checkMessages(o));
+                break;
         }
     }
 
@@ -505,6 +516,9 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
             statusTask.addObserver(PoliceActivity.this);
             mBoundService.addRepeatingTask(statusTask);
 
+            RepeatingTask messagesTask = new RepeatingTask(RepeatingTaskName.CHECK_MESSAGES, PING_MESSAGES);
+            messagesTask.addObserver(PoliceActivity.this);
+            mBoundService.addRepeatingTask(messagesTask);
         }
 
         public void onServiceDisconnected(ComponentName className) {

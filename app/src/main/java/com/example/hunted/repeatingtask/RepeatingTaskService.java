@@ -82,10 +82,45 @@ public class RepeatingTaskService extends Service {
             case CHECK_GAME_STATUS:
                 this.checkGameStatus(task);
                 break;
+            case CHECK_MESSAGES:
+                this.checkMessages(task);
+                break;
         }
     }
 
     // REPEATING TASK METHODS
+
+    private void checkMessages(RepeatingTask task){
+        final String getMessagesURL = URL + "message/";
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, getMessagesURL,
+                response -> {
+                    try {
+                        JSONArray obj = new JSONArray(response);
+                        //Observable
+                        task.notifyObservers(obj);
+                    } catch (Throwable t) {
+                        task.notifyObservers(R.string.label_service_status_fail);
+                    }
+                }, error -> {
+            NetworkResponse response = error.networkResponse;
+            if (error instanceof ServerError && response != null) {
+                try {
+                    String res = new String(response.data, HttpHeaderParser.parseCharset(response.headers, "utf-8"));
+                    task.notifyObservers(res);
+                } catch (Exception e) {
+                    task.notifyObservers(R.string.label_service_server_fail);
+                }
+            }
+        }) {
+            @Override
+            public Map<String, String> getHeaders() throws AuthFailureError {
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
+            }
+        };
+        queue.add(stringRequest);
+    }
 
     private void checkArrested(RepeatingTask task) {
         final String getArrestedUrl = URL + "player/";

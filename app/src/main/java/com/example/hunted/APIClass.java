@@ -77,7 +77,6 @@ public class APIClass {
                 outOfBoundsCounter = 1;
             }
         }, error -> {
-            Log.d("int outofbounds", "dsfgds");
             NetworkResponse response = error.networkResponse;
             if (error instanceof ServerError && response != null) {
                 try {
