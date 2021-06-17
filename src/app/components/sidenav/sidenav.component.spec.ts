@@ -8,6 +8,8 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 
 import { SidenavComponent } from './sidenav.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('SidenavComponent', () => {
   let component: SidenavComponent;
@@ -17,6 +19,8 @@ describe('SidenavComponent', () => {
     TestBed.configureTestingModule({
       declarations: [SidenavComponent],
       imports: [
+        HttpClientTestingModule,
+        RouterTestingModule,
         NoopAnimationsModule,
         LayoutModule,
         MatButtonModule,

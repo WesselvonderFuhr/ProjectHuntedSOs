@@ -1,3 +1,4 @@
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { GameOutOfBoundsMessageComponent } from './game-out-of-bounds-message.component';
@@ -8,6 +9,7 @@ describe('GameOutOfBoundsMessageComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
       declarations: [ GameOutOfBoundsMessageComponent ]
     })
     .compileComponents();

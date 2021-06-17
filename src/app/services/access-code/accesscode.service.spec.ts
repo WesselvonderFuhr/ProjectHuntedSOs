@@ -7,7 +7,9 @@ describe('AccesscodeService', () => {
   let httpMock: HttpTestingController;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({});
+    TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule]
+    });
     service = TestBed.inject(AccessCodeService);
   });
 
@@ -15,7 +17,4 @@ describe('AccesscodeService', () => {
     expect(service).toBeTruthy();
   });
 
-  afterEach(() => {
-    httpMock.verify();
-  });
 });

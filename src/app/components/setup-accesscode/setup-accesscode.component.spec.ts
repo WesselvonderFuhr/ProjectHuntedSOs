@@ -1,6 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SetupAccesscodeComponent } from './setup-accesscode.component';
+import { HttpClientTestingModule } from '@angular/common/http/testing'
+import { FormsModule } from '@angular/forms';
 
 describe('SetupAccesscodeComponent', () => {
   let component: SetupAccesscodeComponent;
@@ -8,6 +10,7 @@ describe('SetupAccesscodeComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule, FormsModule ],
       declarations: [ SetupAccesscodeComponent ]
     })
     .compileComponents();
