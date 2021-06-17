@@ -22,8 +22,6 @@ public class PoliceFragmentMessages extends Fragment {
 
     private ListView messagesView;
 
-    String[] messagesArray = {"Android","IPhone","WindowsMobile","Blackberry", "WebOS","Ubuntu","Windows7","Max OS X"};
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -32,10 +30,6 @@ public class PoliceFragmentMessages extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_police_messages, container, false);
-
-
-
-
         messagesView = (ListView) view.findViewById(R.id.messagesView);
         return view;
     }
