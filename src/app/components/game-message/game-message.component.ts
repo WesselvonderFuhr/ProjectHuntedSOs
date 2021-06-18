@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Pipe, PipeTransform } from '@angular/core';
 import { Message } from 'src/app/models/message.model';
 import { MessagePost } from 'src/app/models/message_post.model';
 import { MessageService } from 'src/app/services/message/message.service';
@@ -8,6 +8,8 @@ import { MessageService } from 'src/app/services/message/message.service';
   templateUrl: './game-message.component.html',
   styleUrls: ['./game-message.component.scss']
 })
+
+
 export class GameMessageComponent implements OnInit {
 
   public messageArray: Message[];

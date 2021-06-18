@@ -1,8 +1,8 @@
-<h2>Bericht toevoegen</h2>
+<h2>Bericht versturen</h2>
 <div>
     <form #messageData="ngForm" (ngSubmit)="onClickSubmit()" >
       <mat-form-field class="example-full-width" appearance="standard">
-        <mat-label>Message</mat-label>
+        <mat-label>Bericht</mat-label>
         <input matInput [(ngModel)]="messagePost.message" name="messagePost">
       </mat-form-field>
       <br/>
@@ -12,8 +12,12 @@
 <h4 class="mat-h4" *ngIf="showSaveConfirmation">Bericht opgeslagen</h4>
 
 <h2 matTooltipPosition="left">Berichten</h2>
-<div class="container">
-  <app-game-message-card *ngFor="let message of messageArray" [message]="message">
+<div class="container" *ngIf="messageArray.length != 0; else noMessages">
+  <app-game-message-card *ngFor="let message of messageArray.slice().reverse()" [message]="message">
   </app-game-message-card>
 </div>
+
+<ng-template #noMessages>
+    <p>Nog geen berichten verstuurd</p>
+</ng-template>
 
