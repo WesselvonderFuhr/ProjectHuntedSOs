@@ -1,0 +1,10 @@
+.container {
+    display: flex;
+    align-content: flex-start;
+    flex-direction: column;
+    flex-wrap: wrap;
+}
+
+label, h2 {
+    margin: 20px 0px 20px 0px;
+}

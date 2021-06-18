@@ -1,0 +1,19 @@
+<h2>Bericht toevoegen</h2>
+<div>
+    <form #messageData="ngForm" (ngSubmit)="onClickSubmit()" >
+      <mat-form-field class="example-full-width" appearance="standard">
+        <mat-label>Message</mat-label>
+        <input matInput [(ngModel)]="messagePost.message" name="messagePost">
+      </mat-form-field>
+      <br/>
+      <button mat-raised-button type="submit" color="primary">Bericht opslaan</button>
+   </form>
+</div>
+<h4 class="mat-h4" *ngIf="showSaveConfirmation">Bericht opgeslagen</h4>
+
+<h2 matTooltipPosition="left">Berichten</h2>
+<div class="container">
+  <app-game-message-card *ngFor="let message of messageArray" [message]="message">
+  </app-game-message-card>
+</div>
+

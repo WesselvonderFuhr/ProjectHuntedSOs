@@ -51,10 +51,14 @@ import { MatCardModule } from '@angular/material/card';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import  {MatDividerModule } from '@angular/material/divider';
 
+import { DatePipe } from '@angular/common';
+
 import { SetupTimeComponent } from './components/setup-time/setup-time.component';
 import { HelpComponent } from './components/help/help.component';
 import { PrintComponent } from './components/print/print.component';
 import { GameStatsComponent } from './components/game-stats/game-stats.component';
+import { GameMessageCardComponent } from './components/game-message-card/game-message-card.component';
+import { GameMessageComponent } from './components/game-message/game-message.component';
 
 
 @NgModule({
@@ -76,6 +80,8 @@ import { GameStatsComponent } from './components/game-stats/game-stats.component
     PrintComponent,
     GameStatsComponent,
     SetupLootwinpercComponent,
+    GameMessageCardComponent,
+    GameMessageComponent,
   ],
   imports: [
     BrowserModule,
@@ -101,6 +107,7 @@ import { GameStatsComponent } from './components/game-stats/game-stats.component
     MatDividerModule
   ],
   providers: [
+    DatePipe,
     ZoneService,
     JailService,
     LootService,
