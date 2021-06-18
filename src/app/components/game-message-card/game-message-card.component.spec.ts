@@ -1,3 +1,5 @@
+import { DatePipe } from '@angular/common';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { GameMessageCardComponent } from './game-message-card.component';
@@ -8,7 +10,9 @@ describe('GameMessageCardComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ GameMessageCardComponent ]
+      imports: [HttpClientTestingModule],
+      declarations: [ GameMessageCardComponent, DatePipe],
+      providers: [DatePipe]
     })
     .compileComponents();
   });

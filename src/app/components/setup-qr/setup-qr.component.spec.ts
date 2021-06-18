@@ -24,4 +24,5 @@ describe('SetupQrComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
 });
