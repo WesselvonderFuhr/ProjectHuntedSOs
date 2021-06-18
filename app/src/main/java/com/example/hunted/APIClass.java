@@ -61,8 +61,6 @@ public class APIClass {
     public void checkOutOfBounds() {
         String requestURL = URL + "player/outofbounds/";
         StringRequest request = new StringRequest(Request.Method.GET, requestURL, response -> {
-//            Log.d("checkOutOfBoundsResponse", response);
-//            Log.d("int outOfBoundsCounter", "" + outOfBoundsCounter);
             if (response.equals("true")){
                 if (outOfBoundsCounter == 0){ //outOfBoundsCounter is set to 0 when out of bounds too many times
                     vibrateOutOfPlayingField();

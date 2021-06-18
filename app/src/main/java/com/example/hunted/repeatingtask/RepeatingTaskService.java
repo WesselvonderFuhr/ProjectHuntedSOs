@@ -196,7 +196,6 @@ public class RepeatingTaskService extends Service {
         StringRequest stringRequest = new StringRequest(Request.Method.GET, getStatus,
                 response -> {
                     try {
-//                        JSONArray obj = new JSONArray(response);
                         //Observable
                         task.notifyObservers(response);
 

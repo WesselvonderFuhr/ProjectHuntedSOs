@@ -372,9 +372,6 @@ public class PoliceActivity extends AppCompatActivity implements Observer {
 
     public void openGameStopped(){
         Intent intent = new Intent(getApplicationContext(), GameStoppedActivity.class);
-        //intent.putExtra("role", "police");
-        //intent.putExtra("thieves", amountOfThieves);
-        //intent.putExtra("arrestedThieves", arrestedThieves);
 
         intent.putExtra("token", token.replaceAll("\"",""));
 
