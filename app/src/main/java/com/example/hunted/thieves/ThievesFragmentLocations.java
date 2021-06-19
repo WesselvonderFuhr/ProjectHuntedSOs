@@ -131,9 +131,6 @@ public class ThievesFragmentLocations extends Fragment {
         GeoPoint ownLoc = new GeoPoint(locLat, locLong);
         playerMarker.setPosition(ownLoc);
         osmMap.postInvalidate();
-
-//        Map kan niet meer bewogen worden als center steeds wordt gecalled
-//        osmMap.getController().setCenter(new GeoPoint(locLat, locLong));
     }
 
     public void setJail(JSONObject result){

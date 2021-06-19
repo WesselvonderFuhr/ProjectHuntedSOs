@@ -15,6 +15,10 @@
             android:icon="@drawable/ic_baseline_shopping_basket_24"
             android:title="@string/label_thieves_loot" />
         <item
+            android:id="@+id/nav_messages"
+            android:icon="@drawable/ic_baseline_message_24"
+            android:title="@string/label_messages" />
+        <item
             android:id="@+id/nav_help"
             android:icon="@drawable/ic_baseline_help"
             android:title="@string/label_help" />

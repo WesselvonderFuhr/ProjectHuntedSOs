@@ -15,6 +15,10 @@
             android:icon="@drawable/ic_baseline_back_hand_24"
             android:title="@string/label_police_score" />
         <item
+            android:id="@+id/nav_messages"
+            android:icon="@drawable/ic_baseline_message_24"
+            android:title="@string/label_messages" />
+        <item
             android:id="@+id/nav_help"
             android:icon="@drawable/ic_baseline_help"
             android:title="@string/label_help" />

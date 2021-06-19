@@ -47,6 +47,7 @@ import com.android.volley.toolbox.Volley;
 import com.example.hunted.GameStoppedActivity;
 import com.example.hunted.R;
 import com.example.hunted.police.PoliceActivity;
+import com.example.hunted.police.PoliceFragmentMessages;
 import com.example.hunted.repeatingtask.RepeatingTask;
 import com.example.hunted.repeatingtask.RepeatingTaskName;
 import com.example.hunted.repeatingtask.RepeatingTaskService;
@@ -68,12 +69,12 @@ import java.util.TimerTask;
 
 public class ThievesActivity extends AppCompatActivity implements Observer {
     private final int LOCATION_REQUEST_CODE = 1234;
+    private final int PING_MESSAGES = 1500;
 
     private ThievesAPIClass thievesAPIClass;
 
     private String URL;
     private RequestQueue queue;
-
     private LocationManager locationManager;
     private LocationListener locationListener;
 
@@ -280,6 +281,14 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
         }
     }
 
+    private void checkMessages(Object object){
+        Fragment fragment = getCurrentFragment();
+        if(fragment instanceof ThievesFragmentMessages) {
+            ThievesFragmentMessages thievesFragmentMessages = (ThievesFragmentMessages) fragment;
+            thievesFragmentMessages.loadMessages(object);
+        }
+    }
+
     public void CheckIfGameIsStopped() {
         Timer timer = new Timer();
         int begin = 0;
@@ -327,6 +336,9 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
                 break;
             case R.id.nav_stolen:
                 fragmentClass = ThievesFragmentLootScore.class;
+                break;
+            case R.id.nav_messages:
+                fragmentClass = ThievesFragmentMessages.class;
                 break;
             case R.id.nav_help:
                 fragmentClass = ThievesFragmentHelp.class;
@@ -465,6 +477,9 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
                 }
                 // method
                 break;
+            case CHECK_MESSAGES:
+                runOnUiThread(() -> checkMessages(o));
+                break;
         }
     }
 
@@ -480,8 +495,11 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
             // Add task to the service.
             arrestedRepeatingTask = new RepeatingTask(RepeatingTaskName.CHECK_ARRESTED, 3000);
             arrestedRepeatingTask.addObserver(ThievesActivity.this);
-
             mBoundService.addRepeatingTask(arrestedRepeatingTask);
+
+            RepeatingTask messagesTask = new RepeatingTask(RepeatingTaskName.CHECK_MESSAGES, PING_MESSAGES);
+            messagesTask.addObserver(ThievesActivity.this);
+            mBoundService.addRepeatingTask(messagesTask);
         }
 
         public void onServiceDisconnected(ComponentName className) {

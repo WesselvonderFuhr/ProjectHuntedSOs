@@ -17,24 +17,6 @@ import java.util.List;
 
 public class GameStoppedActivity extends AppCompatActivity {
 
-
-    //get playtime
-
-    //get amount of thieves
-    //get arrested thieves
-
-    //get amount of stolen loot
-    //get from every thief the loot they stole
-
-    //get from every police the loot they received
-
-
-    //OR JUST THIS:
-    //get winning team (police or thieves)
-    //api call get all players
-    //api call separate players in thieves and police
-    //api call get all players with highest loot in order
-
     private APIClass apiClass;
 
     public String URL;
