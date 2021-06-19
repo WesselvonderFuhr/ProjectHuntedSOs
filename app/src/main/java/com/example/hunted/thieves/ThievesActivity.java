@@ -282,7 +282,6 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
     }
 
     private void checkMessages(Object object){
-        Log.d("checkmessages in activity", object.toString());
         Fragment fragment = getCurrentFragment();
         if(fragment instanceof ThievesFragmentMessages) {
             ThievesFragmentMessages thievesFragmentMessages = (ThievesFragmentMessages) fragment;
