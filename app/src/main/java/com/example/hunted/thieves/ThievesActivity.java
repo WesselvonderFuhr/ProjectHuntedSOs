@@ -470,7 +470,6 @@ public class ThievesActivity extends AppCompatActivity implements Observer {
         RepeatingTask repeatingTask = (RepeatingTask) observable;
         switch(repeatingTask.getTask()){
             case CHECK_ARRESTED:
-                Log.d("boolean", o.toString());
                 if(o instanceof String){
                     Toast.makeText(this, "Error: " + getResources().getString(Integer.parseInt(o.toString())), Toast.LENGTH_SHORT).show();
                 } else if (o instanceof Integer || (boolean)o) {

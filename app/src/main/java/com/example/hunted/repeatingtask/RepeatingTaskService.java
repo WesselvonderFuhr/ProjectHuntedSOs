@@ -127,7 +127,6 @@ public class RepeatingTaskService extends Service {
         StringRequest stringRequest = new StringRequest(Request.Method.GET, getArrestedUrl,
                 response -> {
                     try {
-                        Log.d("repeatingtaskservcie", response);
                         response = response.replaceAll("[\\\\]{1}[\"]{1}","\"");
                         response = response.substring(response.indexOf("{"),response.lastIndexOf("}")+1);
 
