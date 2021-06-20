@@ -29,7 +29,6 @@ export class GameMessageComponent implements OnInit {
 
   onClickSubmit(): void {
     this.messageService.postMessage(this.messagePost).subscribe((res) => {
-      console.log('Added ' + this.messagePost.message + ' to messages');
       this.ngOnInit();
       this.showSaveConfirmation = true;
     })

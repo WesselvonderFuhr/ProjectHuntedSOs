@@ -34,7 +34,6 @@ export class SetupAccesscodeComponent implements OnInit {
     accessCodePost = this.accessCodePost;
 
     this.accessCodeService.generateCodes(this.accessCodePost).subscribe((res) => {
-      console.log('Added ' + this.accessCodePost.amount + ' new ' + this.accessCodePost.role + ' access codes!');
       this.ngOnInit();
       this.showSaveConfirmation = true;
     });

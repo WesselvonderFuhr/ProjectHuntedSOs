@@ -83,7 +83,7 @@ export class SetupZoneComponent implements AfterViewInit  {
       polygons.push(layer._latlngs);
     }
 
-    this.zoneService.updateZone(JSON.stringify(polygons)).subscribe( () => console.log('Updated the zone'));
+    this.zoneService.updateZone(JSON.stringify(polygons)).subscribe( () => console.log(''));
     this.showSaveConfirmation = true;
   }
 

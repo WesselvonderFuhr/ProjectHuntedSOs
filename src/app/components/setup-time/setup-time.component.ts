@@ -47,7 +47,6 @@ export class SetupTimeComponent implements OnInit {
       } else {
         if(confirm("Spel starten?")) {
           this.gameService.updateTime(this.time).subscribe( (res) => {
-            console.log('Updated the time - Game has now started');
             this.ngOnInit();
           });
         }
@@ -61,7 +60,6 @@ export class SetupTimeComponent implements OnInit {
       time.start_time = new Date(0);
       time.end_time = new Date();
       this.gameService.updateTime(time).subscribe( (res) => {
-        console.log("Updated end time - Game has now ended")
         this.ngOnInit();
       });
     }
@@ -73,7 +71,6 @@ export class SetupTimeComponent implements OnInit {
       time.start_time = new Date(0);
       time.end_time = new Date(0);
       this.gameService.updateTime(time).subscribe( (res) => {
-        console.log("Updated end time - Game has now restarted")
         this.ngOnInit();
       });
     }

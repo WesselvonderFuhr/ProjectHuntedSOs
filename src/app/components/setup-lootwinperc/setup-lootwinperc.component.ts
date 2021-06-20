@@ -30,7 +30,6 @@ export class SetupLootwinpercComponent implements OnInit {
     }else{
         this.showConfirmation = false;
         this.gameService.updateLootWinPercentage(this.lootWinPercentage).subscribe( (res) => {
-          console.log('Updated the lootwinpercentage');
           this.showConfirmation = true;
       });
     }

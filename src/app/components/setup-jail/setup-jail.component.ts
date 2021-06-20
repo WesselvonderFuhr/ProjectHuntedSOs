@@ -34,7 +34,6 @@ export class SetupJailComponent implements OnInit {
     jail.location = this.location;
 
     this.jailService.updateJail(jail).subscribe( (res) => {
-      console.log('Updated the jail');
       this.showConfirmation = true;
    });
   }

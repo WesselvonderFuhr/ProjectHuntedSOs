@@ -31,7 +31,6 @@ export class SetupQrComponent implements OnInit {
     this.resetConfirmations();
 
     this.lootService.postLoot(this.loot).subscribe((res) => {
-      console.log('Added ' + this.loot.name + ' to loot');
       this.ngOnInit();
       this.showSaveConfirmation = true;
     });
